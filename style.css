@@ -248,22 +248,22 @@ body {
 }
 /* IMAGES */
 .slideshow span:nth-child(1) {
-  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614554209357960/20250618_163007.jpg?ex=69761c18&is=6974ca98&hm=12701bef98aa5a0d3c5a35b458b539186ac270ae74363693e0ea0f673584a4ef&=&format=webp&width=1464&height=824");
+  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250618_163007.jpg?raw=true");
   animation-delay: 0s;
 }
 
 .slideshow span:nth-child(2) {
-  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614554611744893/20250620_150449.jpg?ex=69761c19&is=6974ca99&hm=68589a002d58d04b7aad3a8665284aea240dd592f023fcc27383081aef513b32&=&format=webp&width=1464&height=824");
+  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250620_150449.jpg?raw=true");
   animation-delay: 10s;
 }
 
 .slideshow span:nth-child(3) {
-  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614555010207744/20250623_170050.jpg?ex=69761c19&is=6974ca99&hm=ae4b6444c0f453d081a23e6a8d20d5e796549aa422a60192b99979facda87e7c&=&format=webp&width=1464&height=824");
+  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250622_212343.jpg?raw=true");
   animation-delay: 20s;
 }
 
 .slideshow span:nth-child(4) {
-  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614555463454730/20250622_212343.jpg?ex=69761c19&is=6974ca99&hm=aaff64ddbf8b062a061a8503f268f9a9c8ad35b9747e160e498b96ed85e6d34f&=&format=webp&width=1464&height=824");
+  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250623_170050.jpg?raw=true");
   animation-delay: 30s;
 }
 
