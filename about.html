@@ -61,48 +61,6 @@
 
 
 
-<script>
-  const buttons = document.querySelectorAll(".dropbtn");
-  const menus = document.querySelectorAll(".dropdown-menu");
-  const hamburger = document.querySelector(".hamburger");
-  const nav = document.querySelector(".nav-links");
-
-  buttons.forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
-
-      const menu = document.getElementById(btn.dataset.dropdown);
-
-      menus.forEach(m => {
-        if (m !== menu) m.classList.remove("active");
-      });
-
-      buttons.forEach(b => b.classList.remove("active"));
-
-      const isOpen = menu.classList.toggle("active");
-      btn.classList.toggle("active", isOpen);
-    });
-
-    btn.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") btn.click();
-      if (e.key === "Escape") closeAll();
-    });
-  });
-
-  function closeAll() {
-    menus.forEach(m => m.classList.remove("active"));
-    buttons.forEach(b => b.classList.remove("active"));
-  }
-
-  document.addEventListener("click", closeAll);
-
-  hamburger.addEventListener("click", () => {
-    const expanded = nav.classList.toggle("open");
-    hamburger.setAttribute("aria-expanded", expanded);
-  });
-</script>
-
-
 
 
 
@@ -268,6 +226,50 @@
   </div>
 </footer>
 
+
+
+
+
+<script>
+  const buttons = document.querySelectorAll(".dropbtn");
+  const menus = document.querySelectorAll(".dropdown-menu");
+  const hamburger = document.querySelector(".hamburger");
+  const nav = document.querySelector(".nav-links");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+
+      const menu = document.getElementById(btn.dataset.dropdown);
+
+      menus.forEach(m => {
+        if (m !== menu) m.classList.remove("active");
+      });
+
+      buttons.forEach(b => b.classList.remove("active"));
+
+      const isOpen = menu.classList.toggle("active");
+      btn.classList.toggle("active", isOpen);
+    });
+
+    btn.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") btn.click();
+      if (e.key === "Escape") closeAll();
+    });
+  });
+
+  function closeAll() {
+    menus.forEach(m => m.classList.remove("active"));
+    buttons.forEach(b => b.classList.remove("active"));
+  }
+
+  document.addEventListener("click", closeAll);
+
+  hamburger.addEventListener("click", () => {
+    const expanded = nav.classList.toggle("open");
+    hamburger.setAttribute("aria-expanded", expanded);
+  });
+</script>
 
 </body>
 </html>
