@@ -248,22 +248,22 @@ body {
 }
 /* IMAGES */
 .slideshow span:nth-child(1) {
-  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250618_163007.jpg?raw=true");
+  background-image: url("https://kunhvacid.github.io/ac/20250618_163007.jpg");
   animation-delay: 0s;
 }
 
 .slideshow span:nth-child(2) {
-  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250620_150449.jpg?raw=true");
+  background-image: url("https://kunhvacid.github.io/ac/20250620_150449.jpg");
   animation-delay: 10s;
 }
 
 .slideshow span:nth-child(3) {
-  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250622_212343.jpg?raw=true");
+  background-image: url("https://kunhvacid.github.io/ac/20250622_212343.jpg");
   animation-delay: 20s;
 }
 
 .slideshow span:nth-child(4) {
-  background-image: url("https://github.com/kunhvacid/kunhvacid.github.io/blob/main/ac/20250623_170050.jpg?raw=true");
+  background-image: url("https://kunhvacid.github.io/ac/20250623_170050.jpg");
   animation-delay: 30s;
 }
 
