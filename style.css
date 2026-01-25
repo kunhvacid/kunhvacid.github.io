@@ -19,41 +19,201 @@ body {
   align-items: center;
   padding: 1rem 2rem;
   background: #222;
+  position: relative;
 }
 
-.navbar /* CLICKABLE LOGO WITH BACKGROUND */
+/* CLICKABLE LOGO WITH BACKGROUND */
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-
-  text-decoration: none;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 600;
-
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
 }
 
-/* LOGO IMAGE (800x800 scaled down) */
 .logo img {
-  width: 40px;
-  height: 40px;
+  width: 240px;
+  height: auto;
   object-fit: contain;
+  display: block;
 }
 
-/* OPTIONAL HOVER EFFECT */
 .logo:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.navbar nav a {
-  color: #fff;
-  margin-left: 1.5rem;
+/* NAV LINKS */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.nav-links a,
+.dropbtn {
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  transition: background 0.2s ease;
+}
+
+.nav-links a:hover,
+.dropbtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+/* DROPDOWN */
+.dropdown {
+  position: relative;
+}
+
+/* DROPDOWN MENU (glass + animated) */
+.dropdown-menu {
+  position: absolute;
+  top: 130%;
+  left: 0;
+  min-width: 170px;
+
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 14px;
+  padding: 6px 0;
+
+  opacity: 0;
+  transform: translateY(-12px) scale(0.98);
+  pointer-events: none;
+
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 100;
+}
+
+/* ACTIVE STATE (JS toggles .active) */
+.dropdown-menu.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* MENU ITEMS */
+.dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  color: white;
   text-decoration: none;
 }
+
+.dropdown-menu a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ARROW ROTATION */
+.arrow {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.dropbtn.active .arrow {
+  transform: rotate(180deg);
+}
+
+/* HAMBURGER BUTTON */
+.hamburger {
+  display: none;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+/* MOBILE LAYOUT */
+@media (max-width: 800px) {
+  .hamburger {
+    display: block;
+  }
+
+  /* CENTERED MOBILE MENU */
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: min(90vw, 360px);
+
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-radius: 18px;
+    padding: 16px;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    display: none;
+    z-index: 200;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  /* DROPDOWN: AUTO-EXPANDING, NO GAP */
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    position: static;
+    transform: none;
+
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 6px;
+
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+  }
+
+  .dropdown-menu.active {
+    opacity: 1;
+    max-height: 500px;
+  }
+
+  /* FULL-WIDTH CLICK TARGETS */
+  .nav-links a,
+  .dropbtn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .dropdown-menu a {
+    text-align: center;
+  }
+}
+
+
+
 
 
 
@@ -124,25 +284,39 @@ body {
   z-index: 1;
 }
 
+
+
+
 /* HERO CONTENT CENTERED + JUSTIFIED */
 .hero-content {
   position: relative;
   z-index: 2;
   max-width: 700px;
   margin: 0 auto;
-  text-align: justify;        /* justify text */
-  text-align-last: center;    /* last line centered */
+  text-align: justify;
+  text-align-last: center;
 }
 
-/* TITLES */
-.hero-content h2 {
+/* MAIN TITLE */
+.hero-content h1 {
   text-align: center;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.2;
+  margin-bottom: 16px;
 }
 
 /* SUBTITLES */
+.subtitle-main {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+
+
+/* KEEP JUSTIFY + CENTER */
 .subtitle-main,
-.subtitle-secondary,
-.for-you {
+.subtitle-secondary {
   text-align: justify;
   text-align-last: center;
   margin-left: auto;
@@ -156,6 +330,74 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+.for-you {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 20px 20px;
+  border-radius: 20px;
+  max-width: 1300px;
+  margin: 60px auto;
+  font-family: 'Montserrat', sans-serif;
+}
+ 
+.for-you h2 {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 2 rows when 6 items */
+  gap: 24px;
+}
+
+.video-card {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+.video-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+.video-info {
+  margin-top: 10px;
+}
+
+.video-info h3 {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.video-info p {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 
 
@@ -197,78 +439,12 @@ body {
 
 
 
-/* FOR YOU SECTION — FULL BACKGROUND BLOCK (LIKE LOGO AREA) */
-.for-you {
-  padding: 3rem 2rem;
-  background: rgba(0, 0, 0, 0.04);   /* soft background block */
-  border-radius: 20px;
-
-  max-width: 1300px;
-  margin: 4rem auto;
-}
-
-/* OPTIONAL CONTRAST ON DARK PAGES */
-body {
-  background-color: #f8f9fb;
-}
 
 
 
 
 
 
-/* VIDEO GRID — ROW FIRST (DESKTOP) */
-.video-grid {
-  display: flex;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* VIDEO CARD */
-/* MAKE ENTIRE CARD CLICKABLE WITHOUT LINK STYLES */
-.video-card {
-  text-decoration: none;
-  color: inherit;
-  flex: 1;
-  min-width: 0;
-  cursor: pointer;
-}
-
-/* OPTIONAL HOVER FEEDBACK */
-.video-card:hover img {
-  filter: brightness(0.9);
-}
-
-
-/* FIX THUMBNAIL RATIO (TRUE 16:9) */
-.video-card img {
-  width: 100%;
-  aspect-ratio: 16 / 9;   /* enforces 16:9 */
-  object-fit: cover;      /* fills frame correctly */
-  border-radius: 12px;
-  display: block;
-}
-
-/* TEXT */
-.video-card h3 {
-  font-size: 1rem;
-  margin-top: 0.6rem;
-  font-weight: 600;
-}
-
-.video-card p {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 0.2rem;
-}
-
-/* RESPONSIVE — STACK VERTICALLY ON SMALL SCREENS */
-@media (max-width: 768px) {
-  .video-grid {
-    flex-direction: column;
-  }
-}
 
 
 .hero-content p {
@@ -420,4 +596,15 @@ body {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
+}
+
+
+
+
+.about-container a {
+  color: inherit;
+  text-decoration: none;
+}
+.about-container a:hover {
+  text-decoration: underline;
 }
