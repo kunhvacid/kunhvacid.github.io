@@ -1,0 +1,423 @@
+/* BASE STYLES (desktop-first) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+
+
+body {
+  line-height: 1.6;
+  color: #333;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #222;
+}
+
+.navbar /* CLICKABLE LOGO WITH BACKGROUND */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+}
+
+/* LOGO IMAGE (800x800 scaled down) */
+.logo img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* OPTIONAL HOVER EFFECT */
+.logo:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.navbar nav a {
+  color: #fff;
+  margin-left: 1.5rem;
+  text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+/* HERO BASE */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+}
+
+/* SLIDESHOW — TRUE CROSSFADE (IMAGE MIX, NO GRAY GAP) */
+.slideshow span {
+  position: absolute;
+  inset: 0;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #000;
+  opacity: 0;
+  animation: slideshow 40s infinite;
+}
+/* IMAGES */
+.slideshow span:nth-child(1) {
+  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614554209357960/20250618_163007.jpg?ex=69761c18&is=6974ca98&hm=12701bef98aa5a0d3c5a35b458b539186ac270ae74363693e0ea0f673584a4ef&=&format=webp&width=1464&height=824");
+  animation-delay: 0s;
+}
+
+.slideshow span:nth-child(2) {
+  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614554611744893/20250620_150449.jpg?ex=69761c19&is=6974ca99&hm=68589a002d58d04b7aad3a8665284aea240dd592f023fcc27383081aef513b32&=&format=webp&width=1464&height=824");
+  animation-delay: 10s;
+}
+
+.slideshow span:nth-child(3) {
+  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614555010207744/20250623_170050.jpg?ex=69761c19&is=6974ca99&hm=ae4b6444c0f453d081a23e6a8d20d5e796549aa422a60192b99979facda87e7c&=&format=webp&width=1464&height=824");
+  animation-delay: 20s;
+}
+
+.slideshow span:nth-child(4) {
+  background-image: url("https://media.discordapp.net/attachments/1266340060802973751/1464614555463454730/20250622_212343.jpg?ex=69761c19&is=6974ca99&hm=aaff64ddbf8b062a061a8503f268f9a9c8ad35b9747e160e498b96ed85e6d34f&=&format=webp&width=1464&height=824");
+  animation-delay: 30s;
+}
+
+/* OVERLAPPING OPACITY = MIXING TRANSITION */
+@keyframes slideshow {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }   /* fade in */
+  33%  { opacity: 1; }   /* stay visible */
+  41%  { opacity: 0; }   /* fade out while next fades in */
+  100% { opacity: 0; }
+}
+
+/* DARK OVERLAY */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+/* HERO CONTENT CENTERED + JUSTIFIED */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: justify;        /* justify text */
+  text-align-last: center;    /* last line centered */
+}
+
+/* TITLES */
+.hero-content h2 {
+  text-align: center;
+}
+
+/* SUBTITLES */
+.subtitle-main,
+.subtitle-secondary,
+.for-you {
+  text-align: justify;
+  text-align-last: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* YOUTUBE EMBED SECTION — FULL BLOCK */
+.youtube-embed {
+  max-width: 1300px;
+  margin: 4rem auto;
+  padding: 3rem 2rem;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.youtube-embed h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* RESPONSIVE 16:9 EMBED */
+.embed-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 ratio */
+}
+
+.embed-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+}
+
+
+
+/* FOR YOU SECTION — FULL BACKGROUND BLOCK (LIKE LOGO AREA) */
+.for-you {
+  padding: 3rem 2rem;
+  background: rgba(0, 0, 0, 0.04);   /* soft background block */
+  border-radius: 20px;
+
+  max-width: 1300px;
+  margin: 4rem auto;
+}
+
+/* OPTIONAL CONTRAST ON DARK PAGES */
+body {
+  background-color: #f8f9fb;
+}
+
+
+
+
+
+
+/* VIDEO GRID — ROW FIRST (DESKTOP) */
+.video-grid {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* VIDEO CARD */
+/* MAKE ENTIRE CARD CLICKABLE WITHOUT LINK STYLES */
+.video-card {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+/* OPTIONAL HOVER FEEDBACK */
+.video-card:hover img {
+  filter: brightness(0.9);
+}
+
+
+/* FIX THUMBNAIL RATIO (TRUE 16:9) */
+.video-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* enforces 16:9 */
+  object-fit: cover;      /* fills frame correctly */
+  border-radius: 12px;
+  display: block;
+}
+
+/* TEXT */
+.video-card h3 {
+  font-size: 1rem;
+  margin-top: 0.6rem;
+  font-weight: 600;
+}
+
+.video-card p {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+/* RESPONSIVE — STACK VERTICALLY ON SMALL SCREENS */
+@media (max-width: 768px) {
+  .video-grid {
+    flex-direction: column;
+  }
+}
+
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background: #fff;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  background: #f4f4f4;
+}
+
+.feature-box {
+  flex: 1;
+  max-width: 300px;
+  background: #fff;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 6px;
+}
+
+
+
+
+
+
+
+/*=======================================================================*/
+/* FOOTER BASE */
+.site-footer {
+  background: #4894ea;
+  color: #fff;
+  padding: 3rem 2rem 2rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* TOP ROW */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO TEXT */
+.footer-logo {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+/*=============================================*/
+
+/* SOCIAL ICONS */
+.social-icons {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.social-icons a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.social-icons a:hover {
+  color: #fff;
+}
+
+/* DIVIDER */
+.site-footer hr {
+  border: none;
+  border-top: 1px solid #ffffff;
+  margin: 2rem 0 1.5rem;
+}
+
+/* BOTTOM TEXT */
+.footer-bottom {
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+}
+
+
+
+
+
+
+
+
+/* TABLET (≤ 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-content h2 {
+    font-size: 2.2rem;
+  }
+
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-box {
+    max-width: 90%;
+  }
+}
+
+/* MOBILE (≤ 480px) */
+@media (max-width: 480px) {
+  .navbar nav a {
+    margin: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .hero {
+    height: auto;
+    padding: 4rem 1.5rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
