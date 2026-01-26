@@ -1,140 +1,38 @@
-const gallery = document.getElementById("gallery");
-
-const searchInput = document.getElementById("searchInput");
-const locationFilter = document.getElementById("locationFilter");
-const deviceFilter = document.getElementById("deviceFilter");
-const oemFilter = document.getElementById("oemFilter");
-const rarityFilter = document.getElementById("rarityFilter");
-const sortFilter = document.getElementById("sortFilter");
-
-const modal = document.getElementById("modal");
-const modalImg = document.getElementById("modal-img");
-const modalMeta = document.getElementById("modal-meta");
-
-let data = [];
-let filtered = [];
-
-fetch("gallery/gallery.json")
-  .then(res => {
-    if (!res.ok) throw new Error("gallery.json not found");
-    return res.json();
-  })
-  .then(json => {
-    data = json;
-    populateFilters();
-    applyFilters();
-  })
-  .catch(err => console.error(err));
-
-function populateFilters() {
-  const unique = arr => [...new Set(arr)];
-
-  unique(data.map(i => i.location)).forEach(v =>
-    locationFilter.append(new Option(v, v))
-  );
-
-  unique(data.map(i => i.device)).forEach(v =>
-    deviceFilter.append(new Option(v, v))
-  );
-
-  unique(data.map(i => i.oem || "Unknown")).forEach(v =>
-    oemFilter.append(new Option(v, v))
-  );
-
-  unique(data.map(i => i.rarity || "Unknown")).forEach(v =>
-    rarityFilter.append(new Option(v, v))
-  );
-}
-
-function applyFilters() {
-  const q = searchInput.value.toLowerCase();
-  const loc = locationFilter.value;
-  const dev = deviceFilter.value;
-  const oem = oemFilter.value;
-  const rar = rarityFilter.value;
-
-  filtered = data.filter(i => {
-    const text = [
-      i.location,
-      i.device,
-      i.oem,
-      i.rarity,
-      ...(i.tags || [])
-    ].join(" ").toLowerCase();
-
-    return (
-      text.includes(q) &&
-      (loc === "all" || i.location === loc) &&
-      (dev === "all" || i.device === dev) &&
-      (oem === "all" || (i.oem || "Unknown") === oem) &&
-      (rar === "all" || (i.rarity || "Unknown") === rar)
-    );
-  });
-
-  applySort();
-}
-
-function applySort() {
-  const v = sortFilter.value;
-
-  if (v === "newest") filtered.sort((a,b) => b.date.localeCompare(a.date));
-  if (v === "oldest") filtered.sort((a,b) => a.date.localeCompare(b.date));
-  if (v === "az") filtered.sort((a,b) => a.location.localeCompare(b.location));
-  if (v === "za") filtered.sort((a,b) => b.location.localeCompare(a.location));
-
-  render();
-}
-
-function render() {
-  gallery.innerHTML = "";
-  filtered.forEach(item => gallery.append(createCard(item)));
-}
-
-function createCard(item) {
-  const card = document.createElement("div");
-  card.className = "gallery-card";
-
-  const img = document.createElement("img");
-  img.src = item.src;
-  img.loading = "lazy";
-
-  const overlay = document.createElement("div");
-  overlay.className = "overlay";
-  overlay.innerHTML = `
-    <strong>${item.tags?.[0] || ""}</strong><br>
-    ${item.location}<br>
-    ${item.date}<br>
-    ${item.device}
-  `;
-
-  card.append(img, overlay);
-  card.onclick = () => openModal(item);
-  return card;
-}
-
-function openModal(item) {
-  modalImg.src = item.src;
-  modalMeta.innerHTML = `
-    <p><strong>Date:</strong> ${item.date}</p>
-    <p><strong>Location:</strong> ${item.location}</p>
-    <p><strong>Device:</strong> ${item.device}</p>
-    <p><strong>OEM:</strong> ${item.oem}</p>
-    <p><strong>Rarity:</strong> ${item.rarity}</p>
-    <p><strong>Tags:</strong> ${item.tags.join(", ")}</p>
-  `;
-  modal.classList.add("open");
-}
-
-document.querySelector(".close").onclick = () =>
-  modal.classList.remove("open");
-
-modal.onclick = e => {
-  if (e.target === modal) modal.classList.remove("open");
-};
-
-searchInput.addEventListener("input", applyFilters);
-locationFilter.addEventListener("change", applyFilters);
-deviceFilter.addEventListener("change", applyFilters);
-oemFilter.addEventListener("change", applyFilters);
-rarityFilter.addEventListener("change", applyFilters);
-sortFilter.addEventListener("change", applySort);
+[
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20250108_160030.jpg",
+    "date": "2025-01-08",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_GKP", "CS-PC18GKP"]
+  },
+{
+    "src": "https://kunhvacid.github.io/ac/IMG_20250108_155442.jpg",
+    "date": "2025-01-08",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "tags": ["Panasonic", "Split AC", "Standard", "Indonesia", "2.0 HP", "Indoor", "PN_WKJ", "CS-PN18WKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20250108_153231.jpg",
+    "date": "2025-01-08",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_JKP", "CS-PC18JKP"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241229_142703.jpg",
+    "date": "2025-01-08",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Midea",
+    "rarity": "Very Rare",
+    "tags": ["Sanken", "Split AC", "Standard", "Unknown", "0.5 HP", "Outdoor", "Unknown"]
+  }
+]
