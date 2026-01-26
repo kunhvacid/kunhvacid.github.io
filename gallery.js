@@ -24,24 +24,27 @@ function unique(arr) {
 }
 
 function populateFilters() {
+  fill(brandFilter, unique(data.map(i => i.brand)));
+  fill(oemFilter, unique(data.map(i => i.oem)));
   fill(locationFilter, unique(data.map(i => i.location)));
   fill(deviceFilter, unique(data.map(i => i.device)));
-  fill(oemFilter, unique(data.map(i => i.oem)));
   fill(rarityFilter, unique(data.map(i => i.rarity)));
-
-  // Brand comes from FIRST tag (Panasonic, Sanken, etc.)
-  fill(brandFilter, unique(data.map(i => i.tags[0])));
 }
+
 
 function fill(select, values) {
-  values.forEach(v => {
-    if (!v) return;
-    const o = document.createElement("option");
-    o.value = v;
-    o.textContent = v;
-    select.appendChild(o);
-  });
+  select.innerHTML = `<option value="">All</option>`;
+  values
+    .filter(Boolean)
+    .sort()
+    .forEach(v => {
+      const o = document.createElement("option");
+      o.value = v.toLowerCase(); // normalized
+      o.textContent = v;
+      select.appendChild(o);
+    });
 }
+
 
 function applyFilters() {
   const q = search.value.toLowerCase();
@@ -59,7 +62,7 @@ function applyFilters() {
     if (q && !text.includes(q)) return false;
     if (locationFilter.value && i.location !== locationFilter.value) return false;
     if (deviceFilter.value && i.device !== deviceFilter.value) return false;
-    if (brandFilter.value && i.brand !== brandFilter.value) return false;
+    if (brandFilter.value && i.brand.toLowerCase() !== brandFilter.value) return false;
     if (oemFilter.value && i.oem !== oemFilter.value) return false;
     if (rarityFilter.value && i.rarity !== rarityFilter.value) return false;
 
