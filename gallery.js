@@ -47,17 +47,41 @@ function fill(select, values) {
 
 
 function applyFilters() {
-  const q = search.value.toLowerCase();
+  const q = search.value.trim().toLowerCase();
 
   filtered = data.filter(i => {
-const text = [
-  i.brand,
-  i.location,
-  i.device,
-  i.oem,
-  i.rarity,
-  ...(Array.isArray(i.tags) ? i.tags : [])
-].join(" ").toLowerCase();
+    const text = [
+      i.brand,
+      i.location,
+      i.device,
+      i.oem,
+      i.rarity,
+      ...(Array.isArray(i.tags) ? i.tags : [])
+    ].join(" ").toLowerCase();
+
+    if (q && !text.includes(q)) return false;
+
+    if (locationFilter.value &&
+        i.location.toLowerCase() !== locationFilter.value) return false;
+
+    if (deviceFilter.value &&
+        i.device.toLowerCase() !== deviceFilter.value) return false;
+
+    if (brandFilter.value &&
+        i.brand.toLowerCase() !== brandFilter.value) return false;
+
+    if (oemFilter.value &&
+        i.oem.toLowerCase() !== oemFilter.value) return false;
+
+    if (rarityFilter.value &&
+        i.rarity.toLowerCase() !== rarityFilter.value) return false;
+
+    return true;
+  });
+
+  applySort();
+}
+
 
 
 if (locationFilter.value && i.location.toLowerCase() !== locationFilter.value) return false;
