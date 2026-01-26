@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+}
+
+.gallery-hero {
+  text-align: center;
+  padding: 4rem 1rem 2rem;
+}
+
+.gallery-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 1rem;
+  justify-content: center;
+}
+
+.gallery-controls input,
+.gallery-controls select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.gallery-card {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000;
+  border-radius: 12px;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  opacity: 0;
+  padding: 10px;
+  font-size: 0.85rem;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-card:hover .overlay {
+  opacity: 1;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+}
+
+.modal .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 2rem;
+  cursor: pointer;
+}
