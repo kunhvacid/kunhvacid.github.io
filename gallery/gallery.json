@@ -6,7 +6,7 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
     "rarity": "Uncommon",
-    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_GKP", "CS-PC18GKP"]
+    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_GKP", "CS-PC18GKP", "OEM: Inhouse"]
   },
 {
     "src": "https://kunhvacid.github.io/ac/IMG_20250108_155442.jpg",
@@ -15,7 +15,7 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
     "rarity": "Common",
-    "tags": ["Panasonic", "Split AC", "Standard", "Indonesia", "2.0 HP", "Indoor", "PN_WKJ", "CS-PN18WKJ"]
+    "tags": ["Panasonic", "Split AC", "Standard", "Indonesia", "2.0 HP", "Indoor", "PN_WKJ", "CS-PN18WKJ", "OEM: Inhouse"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20250108_153231.jpg",
@@ -24,7 +24,7 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
     "rarity": "Uncommon",
-    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_JKP", "CS-PC18JKP"]
+    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_JKP", "CS-PC18JKP", "OEM: Inhouse"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241229_142703.jpg",
@@ -33,6 +33,6 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Midea",
     "rarity": "Very Rare",
-    "tags": ["Sanken", "Split AC", "Standard", "Unknown", "0.5 HP", "Outdoor", "Unknown"]
+    "tags": ["Sanken", "Split AC", "Standard", "Unknown", "0.5 HP", "Outdoor", "Unknown", "OEM: Midea"]
   }
 ]
