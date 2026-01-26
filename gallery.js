@@ -1,31 +1,65 @@
-// ===== ELEMENTS =====
 const gallery = document.getElementById("gallery");
 const search = document.getElementById("search");
 const sort = document.getElementById("sort");
+
 const locationFilter = document.getElementById("locationFilter");
 const deviceFilter = document.getElementById("deviceFilter");
 const oemFilter = document.getElementById("oemFilter");
 const rarityFilter = document.getElementById("rarityFilter");
 
-// ===== STATE =====
 let data = [];
 let filtered = [];
 
-// ===== LOAD DATA =====
+/* ========= DETECTION RULES ========= */
+
+const OEM_KEYWORDS = [
+  "Midea OEM", "GREE OEM"
+];
+
+const RARITY_KEYWORDS = [
+  "common", "uncommon", "rare", "very rare", "prototype"
+];
+
+function detectOEM(tags = []) {
+  return tags.find(t =>
+    OEM_KEYWORDS.includes(t.toLowerCase())
+  ) || "";
+}
+
+function detectRarity(tags = []) {
+  return tags.find(t =>
+    RARITY_KEYWORDS.includes(t.toLowerCase())
+  ) || "";
+}
+
+/* ========= LOAD DATA ========= */
+
 fetch("gallery/gallery.json")
-  .then(res => {
-    if (!res.ok) throw new Error("JSON not found");
-    return res.json();
-  })
+  .then(r => r.json())
   .then(json => {
-    data = json;
+    data = json.map(item => ({
+      ...item,
+      oem: detectOEM(item.tags),
+      rarity: detectRarity(item.tags)
+    }));
+
     filtered = [...data];
     populateFilters();
-    applyFilters();
+    render(filtered);
   })
-  .catch(err => console.error("Gallery load failed:", err));
+  .catch(err => console.error(err));
 
-// ===== FILTER DROPDOWNS =====
+/* ========= FILTER POPULATION ========= */
+
+function addOptions(select, values) {
+  [...values].sort().forEach(v => {
+    const o = document.createElement("option");
+    o.value = v;
+    o.textContent = v;
+    select.appendChild(o);
+  });
+}
+
 function populateFilters() {
   const locations = new Set();
   const devices = new Set();
@@ -45,116 +79,103 @@ function populateFilters() {
   addOptions(rarityFilter, rarities);
 }
 
-function addOptions(select, values) {
-  values.forEach(v => {
-    const o = document.createElement("option");
-    o.value = v;
-    o.textContent = v;
-    select.appendChild(o);
-  });
+/* ========= RENDER ========= */
+
+function createCard(item) {
+  const card = document.createElement("div");
+  card.className = "gallery-card";
+
+  const img = document.createElement("img");
+  img.src = item.src;
+  img.loading = "lazy";
+
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <strong>${item.tags?.[0] || ""}</strong><br>
+    ${item.location}<br>
+    ${item.device}<br>
+    ${item.date}
+  `;
+
+  card.append(img, overlay);
+  card.onclick = () => openModal(item);
+  return card;
 }
 
-// ===== RENDER =====
 function render(items) {
   gallery.innerHTML = "";
-  if (!items.length) return;
-
-  items.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "gallery-card";
-
-    const img = document.createElement("img");
-    img.src = item.src;
-    img.loading = "lazy";
-
-    const overlay = document.createElement("div");
-    overlay.className = "overlay";
-    overlay.innerHTML = `
-      <strong>${item.tags?.[0] || ""}</strong><br>
-      ${item.location || ""}<br>
-      ${item.date || ""}<br>
-      ${item.device || ""}
-    `;
-
-    card.append(img, overlay);
-    card.addEventListener("click", () => openModal(item));
-    gallery.appendChild(card);
-  });
+  items.forEach(i => gallery.appendChild(createCard(i)));
 }
 
-// ===== FILTERING =====
+/* ========= FILTER + SEARCH ========= */
+
 function applyFilters() {
-  const q = search.value.trim().toLowerCase();
+  const q = search.value.toLowerCase();
   const loc = locationFilter.value;
   const dev = deviceFilter.value;
   const oem = oemFilter.value;
   const rarity = rarityFilter.value;
 
-  filtered = data.filter(item => {
+  filtered = data.filter(i => {
     const text = [
-      item.location,
-      item.device,
-      item.oem,
-      item.rarity,
-      ...(item.tags || [])
+      i.location,
+      i.device,
+      ...(i.tags || [])
     ].join(" ").toLowerCase();
 
-    const textMatch = !q || text.includes(q);
-    const locMatch = !loc || item.location === loc;
-    const devMatch = !dev || item.device === dev;
-    const oemMatch = !oem || item.oem === oem;
-    const rarityMatch = !rarity || item.rarity === rarity;
+    if (q && !text.includes(q)) return false;
+    if (loc && i.location !== loc) return false;
+    if (dev && i.device !== dev) return false;
+    if (oem && i.oem !== oem) return false;
+    if (rarity && i.rarity !== rarity) return false;
 
-    return textMatch && locMatch && devMatch && oemMatch && rarityMatch;
+    return true;
   });
 
   applySort();
 }
 
-// ===== SORT =====
 function applySort() {
   const v = sort.value;
 
-  if (v === "newest")
-    filtered.sort((a, b) => b.date.localeCompare(a.date));
-  else if (v === "oldest")
-    filtered.sort((a, b) => a.date.localeCompare(b.date));
-  else if (v === "az")
-    filtered.sort((a, b) => a.location.localeCompare(b.location));
-  else if (v === "za")
-    filtered.sort((a, b) => b.location.localeCompare(a.location));
+  if (v === "newest") filtered.sort((a,b) => b.date.localeCompare(a.date));
+  if (v === "oldest") filtered.sort((a,b) => a.date.localeCompare(b.date));
+  if (v === "az") filtered.sort((a,b) => a.location.localeCompare(b.location));
+  if (v === "za") filtered.sort((a,b) => b.location.localeCompare(a.location));
 
   render(filtered);
 }
 
-// ===== MODAL =====
-const modal = document.getElementById("modal");
-const modalImg = document.getElementById("modal-img");
-const modalMeta = document.getElementById("modal-meta");
-const closeBtn = document.querySelector(".close");
+/* ========= EVENTS ========= */
 
-function openModal(item) {
-  modalImg.src = item.src;
-  modalMeta.innerHTML = `
-    <p>${item.date || ""}</p>
-    <p>${item.location || ""}</p>
-    <p>${item.device || ""}</p>
-    <p>${item.oem || ""}</p>
-    <p>${item.rarity || ""}</p>
-    <p>${(item.tags || []).join(", ")}</p>
-  `;
-  modal.classList.add("open");
-}
-
-closeBtn.addEventListener("click", () => modal.classList.remove("open"));
-modal.addEventListener("click", e => {
-  if (e.target === modal) modal.classList.remove("open");
-});
-
-// ===== EVENTS =====
 search.addEventListener("input", applyFilters);
 locationFilter.addEventListener("change", applyFilters);
 deviceFilter.addEventListener("change", applyFilters);
 oemFilter.addEventListener("change", applyFilters);
 rarityFilter.addEventListener("change", applyFilters);
 sort.addEventListener("change", applySort);
+
+/* ========= MODAL ========= */
+
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modal-img");
+const modalMeta = document.getElementById("modal-meta");
+
+function openModal(item) {
+  modalImg.src = item.src;
+  modalMeta.innerHTML = `
+    <p>${item.date}</p>
+    <p>${item.location}</p>
+    <p>${item.device}</p>
+    <p>${item.tags.join(", ")}</p>
+  `;
+  modal.classList.add("open");
+}
+
+document.querySelector(".close").onclick = () =>
+  modal.classList.remove("open");
+
+modal.onclick = e => {
+  if (e.target === modal) modal.classList.remove("open");
+};
