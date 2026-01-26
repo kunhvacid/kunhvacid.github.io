@@ -83,21 +83,6 @@ function applyFilters() {
 }
 
 
-
-if (locationFilter.value && i.location.toLowerCase() !== locationFilter.value) return false;
-if (deviceFilter.value && i.device.toLowerCase() !== deviceFilter.value) return false;
-if (brandFilter.value && i.brand.toLowerCase() !== brandFilter.value) return false;
-if (oemFilter.value && i.oem.toLowerCase() !== oemFilter.value) return false;
-if (rarityFilter.value && i.rarity.toLowerCase() !== rarityFilter.value) return false;
-
-
-    return true;
-  });
-
-  applySort();
-}
-
-
 function applySort() {
   const v = sort.value;
   if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
