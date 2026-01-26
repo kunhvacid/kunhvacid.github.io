@@ -5,61 +5,64 @@
 
 body {
   margin: 0;
-  background: #111;
+  background: #0e0e0e;
   color: #fff;
 }
 
+/* HERO */
 .gallery-hero {
+  padding: 3rem 1.5rem;
   text-align: center;
-  padding: 4rem 1rem 2rem;
+  background: #111;
 }
 
+/* CONTROLS */
 .gallery-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 1rem;
-  justify-content: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  padding: 1.5rem;
+  background: #161616;
 }
 
 .gallery-controls input,
 .gallery-controls select {
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 8px;
   border: none;
+  font-size: 0.9rem;
 }
 
+/* GRID */
 .gallery-grid {
+  padding: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
 }
 
 .gallery-card {
   position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
   cursor: pointer;
-  background: #000;
-  border-radius: 12px;
 }
 
 .gallery-card img {
   width: 100%;
   height: 100%;
+  border-radius: 14px;
   object-fit: cover;
-  display: block;
 }
 
+/* OVERLAY */
 .overlay {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0.65);
   opacity: 0;
-  padding: 10px;
-  font-size: 0.85rem;
+  padding: 12px;
+  border-radius: 14px;
   transition: opacity 0.2s ease;
+  font-size: 0.85rem;
 }
 
 .gallery-card:hover .overlay {
@@ -94,4 +97,10 @@ body {
   right: 30px;
   font-size: 2rem;
   cursor: pointer;
+}
+
+#modal-meta {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.9rem;
 }
