@@ -1,151 +1,165 @@
-const gallery = document.getElementById("gallery");
-const search = document.getElementById("search");
-const sort = document.getElementById("sort");
+/* =========================
+   GALLERY – CLEAN, FIXED VERSION
+   ========================= */
 
-const locationFilter = document.getElementById("locationFilter");
-const deviceFilter = document.getElementById("deviceFilter");
-const brandFilter = document.getElementById("brandFilter");
-const oemFilter = document.getElementById("oemFilter");
-const rarityFilter = document.getElementById("rarityFilter");
+document.addEventListener("DOMContentLoaded", () => {
+  /* ELEMENTS */
+  const gallery = document.getElementById("gallery");
+  const search = document.getElementById("search");
+  const sort = document.getElementById("sort");
 
-let data = [];
-let filtered = [];
+  const locationFilter = document.getElementById("locationFilter");
+  const deviceFilter = document.getElementById("deviceFilter");
+  const brandFilter = document.getElementById("brandFilter");
+  const oemFilter = document.getElementById("oemFilter");
+  const rarityFilter = document.getElementById("rarityFilter");
 
-fetch("gallery/gallery.json")
-  .then(r => r.json())
-  .then(json => {
-    data = json;
-    populateFilters();
-    applyFilters();
-  });
+  const modal = document.getElementById("modal");
+  const modalImg = document.getElementById("modal-img");
+  const modalMeta = document.getElementById("modal-meta");
+  const modalClose = document.querySelector(".close");
 
-function unique(arr) {
-  return [...new Set(arr)].sort();
-}
+  let data = [];
+  let filtered = [];
 
-function populateFilters() {
-  fill(brandFilter, unique(data.map(i => i.brand)));
-  fill(oemFilter, unique(data.map(i => i.oem)));
-  fill(locationFilter, unique(data.map(i => i.location)));
-  fill(deviceFilter, unique(data.map(i => i.device)));
-  fill(rarityFilter, unique(data.map(i => i.rarity)));
-}
+  /* LOAD DATA */
+  fetch("gallery/gallery.json")
+    .then(r => r.json())
+    .then(json => {
+      data = json;
+      populateFilters();
+      filtered = [...data];   // NO filtering on load
+      applySort();
+    })
+    .catch(err => console.error("Gallery load failed:", err));
 
+  /* HELPERS */
+  function unique(values) {
+    return [...new Set(values.filter(Boolean))].sort();
+  }
 
-function fill(select, values) {
-  select.innerHTML = `<option value="">All</option>`;
-  values
-    .filter(Boolean)
-    .sort()
-    .forEach(v => {
+  function fill(select, values) {
+    select.innerHTML = `<option value="">All</option>`;
+    values.forEach(v => {
       const o = document.createElement("option");
-      o.value = v.toLowerCase(); // normalized
+      o.value = v;           // IMPORTANT: raw value
       o.textContent = v;
       select.appendChild(o);
     });
-}
+  }
 
+  /* POPULATE FILTERS */
+  function populateFilters() {
+    fill(brandFilter, unique(data.map(i => i.brand)));
+    fill(oemFilter, unique(data.map(i => i.oem)));
+    fill(rarityFilter, unique(data.map(i => i.rarity)));
+    fill(locationFilter, unique(data.map(i => i.location)));
+    fill(deviceFilter, unique(data.map(i => i.device)));
+  }
 
-function applyFilters() {
-  const q = search.value.trim().toLowerCase();
+  /* FILTERING */
+  function applyFilters() {
+    const q = search.value.trim().toLowerCase();
 
-  filtered = data.filter(i => {
-    const text = [
-      i.brand,
-      i.location,
-      i.device,
-      i.oem,
-      i.rarity,
-      ...(Array.isArray(i.tags) ? i.tags : [])
-    ].join(" ").toLowerCase();
+    filtered = data.filter(i => {
+      const searchableText = [
+        i.brand,
+        i.oem,
+        i.rarity,
+        i.location,
+        i.device,
+        ...(i.tags || [])
+      ].join(" ").toLowerCase();
 
-    if (q && !text.includes(q)) return false;
+      if (q && !searchableText.includes(q)) return false;
+      if (brandFilter.value && i.brand !== brandFilter.value) return false;
+      if (oemFilter.value && i.oem !== oemFilter.value) return false;
+      if (rarityFilter.value && i.rarity !== rarityFilter.value) return false;
+      if (locationFilter.value && i.location !== locationFilter.value) return false;
+      if (deviceFilter.value && i.device !== deviceFilter.value) return false;
 
-    if (locationFilter.value &&
-        i.location.toLowerCase() !== locationFilter.value) return false;
+      return true;
+    });
 
-    if (deviceFilter.value &&
-        i.device.toLowerCase() !== deviceFilter.value) return false;
+    applySort();
+  }
 
-    if (brandFilter.value &&
-        i.brand.toLowerCase() !== brandFilter.value) return false;
+  /* SORTING */
+  function applySort() {
+    const v = sort.value;
 
-    if (oemFilter.value &&
-        i.oem.toLowerCase() !== oemFilter.value) return false;
+    if (v === "newest") {
+      filtered.sort((a, b) => b.date.localeCompare(a.date));
+    }
+    if (v === "oldest") {
+      filtered.sort((a, b) => a.date.localeCompare(b.date));
+    }
+    if (v === "az") {
+      filtered.sort((a, b) => a.brand.localeCompare(b.brand));
+    }
+    if (v === "za") {
+      filtered.sort((a, b) => b.brand.localeCompare(a.brand));
+    }
 
-    if (rarityFilter.value &&
-        i.rarity.toLowerCase() !== rarityFilter.value) return false;
+    render();
+  }
 
-    return true;
-  });
+  /* RENDER */
+  function render() {
+    gallery.innerHTML = "";
 
-  applySort();
-}
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "gallery-card";
 
+      const img = document.createElement("img");
+      img.src = item.src;
+      img.loading = "lazy";
+      img.alt = item.brand;
 
-function applySort() {
-  const v = sort.value;
-  if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
-  if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
-  if (v === "az") filtered.sort((a,b)=>a.location.localeCompare(b.location));
-  if (v === "za") filtered.sort((a,b)=>b.location.localeCompare(a.location));
-  render();
-}
+      img.addEventListener("click", () => openModal(item));
 
-function render() {
-  gallery.innerHTML = "";
-  filtered.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "gallery-card";
+      const overlay = document.createElement("div");
+      overlay.className = "overlay";
+      overlay.innerHTML = `
+        <strong>${item.brand}</strong><br>
+        ${item.location}<br>
+        ${item.date}
+      `;
 
-    const img = document.createElement("img");
-    img.src = item.src;
-    img.loading = "lazy";
-    img.onclick = () => openModal(item);
+      card.append(img, overlay);
+      gallery.appendChild(card);
+    });
+  }
 
-    const overlay = document.createElement("div");
-    overlay.className = "overlay";
-    overlay.innerHTML = `
-      <strong>${item.tags[0]}</strong><br>
-      ${item.location}<br>
-      ${item.device}<br>
-      ${item.date}
+  /* MODAL */
+  function openModal(item) {
+    modalImg.src = item.src;
+    modalMeta.innerHTML = `
+      <p><b>Brand:</b> ${item.brand}</p>
+      <p><b>OEM:</b> ${item.oem}</p>
+      <p><b>Rarity:</b> ${item.rarity}</p>
+      <p><b>Location:</b> ${item.location}</p>
+      <p><b>Device:</b> ${item.device}</p>
+      <p><b>Tags:</b> ${item.tags.join(", ")}</p>
     `;
+    modal.classList.add("open");
+  }
 
-    card.append(img, overlay);
-    gallery.appendChild(card);
+  modalClose.addEventListener("click", () => {
+    modal.classList.remove("open");
   });
-}
 
-/* MODAL (zoom in/out) */
-const modal = document.getElementById("modal");
-const modalImg = document.getElementById("modal-img");
-const modalMeta = document.getElementById("modal-meta");
+  modal.addEventListener("click", e => {
+    if (e.target === modal) modal.classList.remove("open");
+  });
 
-function openModal(item) {
-  modalImg.src = item.src;
-  modalMeta.innerHTML = `
-    <p><b>Brand:</b> ${item.brand}</p>
-
-    <p><b>OEM:</b> ${item.oem}</p>
-    <p><b>Rarity:</b> ${item.rarity}</p>
-    <p>${item.tags.join(", ")}</p>
-  `;
-  modal.classList.add("open");
-}
-
-document.querySelector(".close").onclick = () =>
-  modal.classList.remove("open");
-
-modal.onclick = e => {
-  if (e.target === modal) modal.classList.remove("open");
-};
-
-/* EVENTS */
-search.addEventListener("input", applyFilters);
-locationFilter.addEventListener("change", applyFilters);
-deviceFilter.addEventListener("change", applyFilters);
-brandFilter.addEventListener("change", applyFilters);
-oemFilter.addEventListener("change", applyFilters);
-rarityFilter.addEventListener("change", applyFilters);
-sort.addEventListener("change", applySort);
+  /* EVENTS */
+  search.addEventListener("input", applyFilters);
+  brandFilter.addEventListener("change", applyFilters);
+  oemFilter.addEventListener("change", applyFilters);
+  rarityFilter.addEventListener("change", applyFilters);
+  locationFilter.addEventListener("change", applyFilters);
+  deviceFilter.addEventListener("change", applyFilters);
+  sort.addEventListener("change", applySort);
+});
