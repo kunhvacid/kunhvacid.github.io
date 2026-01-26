@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AC Sightings Library</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AC Sightings Gallery</title>
 
+  <link rel="stylesheet" href="gallery.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="gallery.css">
 </head>
-
 <body>
 
-<section class="gallery-hero">
+<header class="gallery-hero">
   <h1>AC Sightings Library</h1>
   <p>Public archive of air conditioner sightings</p>
-</section>
+</header>
 
 <section class="gallery-controls">
-  <input id="searchInput" placeholder="Search tags, brand, model">
+  <input id="search" type="text" placeholder="Search tags, model, brand…" />
 
   <select id="locationFilter">
-    <option value="all">All locations</option>
+    <option value="">All locations</option>
   </select>
 
   <select id="deviceFilter">
-    <option value="all">All devices</option>
+    <option value="">All devices</option>
   </select>
 
   <select id="oemFilter">
-    <option value="all">All OEMs</option>
+    <option value="">All OEMs</option>
   </select>
 
   <select id="rarityFilter">
-    <option value="all">All rarities</option>
+    <option value="">All rarities</option>
   </select>
 
-  <select id="sortFilter">
+  <select id="sort">
     <option value="newest">Newest first</option>
     <option value="oldest">Oldest first</option>
     <option value="az">Location A–Z</option>
@@ -45,10 +45,11 @@
 
 <section id="gallery" class="gallery-grid"></section>
 
+<!-- MODAL -->
 <div id="modal" class="modal">
   <span class="close">×</span>
-  <img id="modalImg">
-  <div id="modalMeta"></div>
+  <img id="modal-img">
+  <div id="modal-meta"></div>
 </div>
 
 <script src="gallery.js"></script>
