@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AC Sightings Library</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="gallery.css">
 </head>
 
 <body>
@@ -19,11 +17,7 @@
 </section>
 
 <section class="gallery-controls">
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="Search tags, brand, model, location"
-  >
+  <input id="searchInput" placeholder="Search tags, brand, model">
 
   <select id="locationFilter">
     <option value="all">All locations</option>
@@ -49,23 +43,14 @@
   </select>
 </section>
 
-<section class="gallery-grid" id="gallery"></section>
+<section id="gallery" class="gallery-grid"></section>
 
 <div id="modal" class="modal">
   <span class="close">×</span>
-  <img id="modal-img">
-  <div id="modal-meta"></div>
+  <img id="modalImg">
+  <div id="modalMeta"></div>
 </div>
 
-<section class="video-section">
-  <h2>AC Videos</h2>
-  <iframe
-    src="https://www.youtube-nocookie.com/embed/videoseries?list=PLwfI_mhf-BUDHCFlizDc4det9d2-4hF9q"
-    allowfullscreen>
-  </iframe>
-</section>
-
-<script src="gallery.js" defer></script>
-
+<script src="gallery.js"></script>
 </body>
 </html>
