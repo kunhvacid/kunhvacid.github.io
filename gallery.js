@@ -87,6 +87,10 @@ function applySort() {
   render(filtered);
 }
 
+if (selectedOEM !== "all" && item.oem !== selectedOEM) return false;
+if (selectedRarity !== "all" && item.rarity !== selectedRarity) return false;
+
+
 search.addEventListener("input", applyFilters);
 locationFilter.addEventListener("change", applyFilters);
 deviceFilter.addEventListener("change", applyFilters);
