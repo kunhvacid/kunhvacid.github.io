@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kunhvac_about</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+
+
+  <link rel="stylesheet" href="style.css" />
+
+
+
+
+
+
+</head>
+<body>
+<header class="navbar">
+  <a href="index.html" class="logo">
+    <img src="https://media.discordapp.net/attachments/1388309054061023342/1464953466668585113/kunhvac_id_150_x_150_px_800_x_139_px_20260125_192814_0000.png?ex=697757bb&is=6976063b&hm=08ea5fb78ec3175874ad177298d5de9616b6074aff74dc36813864139c80c2b0&=&format=webp&quality=lossless&width=1856&height=322" alt="Logo">
+  </a>
+
+<button class="hamburger" aria-label="Menu" aria-expanded="false">
+    ☰
+  </button>
+
+  <nav class="nav-links">
+    <a href="about.html">About</a>
+
+    <div class="dropdown">
+      <button class="dropbtn" data-dropdown="ACS">
+        Library <span class="arrow">▾</span>
+      </button>
+      <div class="dropdown-menu" id="ACS">
+        <a href="gallery.html">AC Sightings Gallery</a>
+        <a href="#project2">My AC Videos</a>
+        <a href="#project3">idk</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button class="dropbtn" data-dropdown="social">
+        Social <span class="arrow">▾</span>
+      </button>
+      <div class="dropdown-menu" id="social">
+        <a href="https://youtube.com/@kunhvac_id" target="_blank">YouTube</a>
+        <a href="https://instagram.com" target="_blank">Instagram</a>
+        <a href="https://github.com" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+
+
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <title>AC Sightings Gallery</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="gallery-hero">
+  <h1>AC Sightings Library</h1>
+  <p>Public archive of air conditioner sightings</p>
+</section>
+
+<section class="gallery-controls">
+  <input type="text" id="search" placeholder="Search location or device">
+
+  <select id="sort">
+    <option value="newest">Newest first</option>
+    <option value="oldest">Oldest first</option>
+    <option value="az">Location A–Z</option>
+    <option value="za">Location Z–A</option>
+    <option value="device">Device used</option>
+  </select>
+</section>
+
+<section class="gallery-grid" id="gallery"></section>
+
+
+<div id="modal" class="modal">
+  <span class="close">×</span>
+  <img id="modal-img">
+  <div id="modal-meta"></div>
+</div>
+
+
+<div id="pagination"></div>
+
+
+
+<section class="video-section">
+  <h2>AC Videos</h2>
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/videoseries?list=PLwfI_mhf-BUDHCFlizDc4det9d2-4hF9q"
+    allowfullscreen>
+  </iframe>
+</section>
+
+<script src="gallery.js" defer></script>
+
+
+
+<section class="gallery-controls">
+  <input type="text" id="search" placeholder="Search tags (brand, type, etc)">
+
+  <select id="locationFilter">
+    <option value="">All locations</option>
+  </select>
+
+  <select id="deviceFilter">
+    <option value="">All devices</option>
+  </select>
+
+  <select id="sort">
+    <option value="newest">Newest first</option>
+    <option value="oldest">Oldest first</option>
+    <option value="az">Location A–Z</option>
+    <option value="za">Location Z–A</option>
+  </select>
+</section>
+
+<section class="gallery-grid" id="gallery"></section>
+
+<div id="modal" class="modal">
+  <span class="close">×</span>
+  <img id="modal-img">
+  <div id="modal-meta"></div>
+</div>
+
+<script src="gallery.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <span class="footer-logo">kunhvac_id</span>
+
+    <div class="social-icons">
+  <a href="https://youtube.com/@kunhvac_id" target="_blank" aria-label="YouTube">
+    <i class="fa-brands fa-youtube"></i>
+    </a>
+  <a href="https://www.instagram.com/kunhvac_id?igsh=MXE5cGNsOWl3OXd5aw==" target="_blank" aria-label="Instagram">
+    <i class="fa-brands fa-instagram"></i>
+    </a>
+  <a href="https://www.tiktok.com/@kunhvac_id?_t=ZS-8sze2pMPyp6&_r=1" target="_blank" aria-label="TikTok">
+    <i class="fa-brands fa-tiktok"></i>
+    </a>
+  <a href="https://discord.gg/2QsVysZHJW" target="_blank" aria-label="Discord">
+    <i class="fa-brands fa-discord"></i>
+  </a>
+</div>
+
+  </div>
+  <hr />
+  <div class="footer-bottom">
+    <p>© 2026 kunhvac_id | All Rights Reserved.</p>
+  </div>
+</footer>
+
+
+
+
+
+<script>
+  const buttons = document.querySelectorAll(".dropbtn");
+  const menus = document.querySelectorAll(".dropdown-menu");
+  const hamburger = document.querySelector(".hamburger");
+  const nav = document.querySelector(".nav-links");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+
+      const menu = document.getElementById(btn.dataset.dropdown);
+
+      menus.forEach(m => {
+        if (m !== menu) m.classList.remove("active");
+      });
+
+      buttons.forEach(b => b.classList.remove("active"));
+
+      const isOpen = menu.classList.toggle("active");
+      btn.classList.toggle("active", isOpen);
+    });
+
+    btn.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") btn.click();
+      if (e.key === "Escape") closeAll();
+    });
+  });
+
+  function closeAll() {
+    menus.forEach(m => m.classList.remove("active"));
+    buttons.forEach(b => b.classList.remove("active"));
+  }
+
+  document.addEventListener("click", closeAll);
+
+  hamburger.addEventListener("click", () => {
+    const expanded = nav.classList.toggle("open");
+    hamburger.setAttribute("aria-expanded", expanded);
+  });
+</script>
+
+</body>
+</html>
