@@ -10,51 +10,31 @@ const rarityFilter = document.getElementById("rarityFilter");
 let data = [];
 let filtered = [];
 
-/* ========= DETECTION RULES ========= */
-
-const OEM_KEYWORDS = [
-  "midea", "gree", "panasonic", "daikin",
-  "lg", "samsung", "sharp", "hitachi",
-  "aux", "hisense", "toshiba"
-];
-
-const RARITY_KEYWORDS = [
-  "common", "uncommon", "rare", "very rare", "prototype"
-];
-
-function detectOEM(tags = []) {
-  return tags.find(t =>
-    OEM_KEYWORDS.includes(t.toLowerCase())
-  ) || "";
-}
-
-function detectRarity(tags = []) {
-  return tags.find(t =>
-    RARITY_KEYWORDS.includes(t.toLowerCase())
-  ) || "";
-}
-
-/* ========= LOAD DATA ========= */
-
+/* LOAD JSON */
 fetch("gallery/gallery.json")
   .then(r => r.json())
   .then(json => {
-    data = json.map(item => ({
-      ...item,
-      oem: detectOEM(item.tags),
-      rarity: detectRarity(item.tags)
-    }));
-
+    data = json;
     filtered = [...data];
     populateFilters();
-    render(filtered);
+    applyFilters();
   })
-  .catch(err => console.error(err));
+  .catch(err => console.error("Gallery load failed:", err));
 
-/* ========= FILTER POPULATION ========= */
+/* POPULATE DROPDOWNS */
+function populateFilters() {
+  fill(locationFilter, unique("location"));
+  fill(deviceFilter, unique("device"));
+  fill(oemFilter, unique("oem"));
+  fill(rarityFilter, unique("rarity"));
+}
 
-function addOptions(select, values) {
-  [...values].sort().forEach(v => {
+function unique(key) {
+  return [...new Set(data.map(i => i[key]).filter(Boolean))].sort();
+}
+
+function fill(select, values) {
+  values.forEach(v => {
     const o = document.createElement("option");
     o.value = v;
     o.textContent = v;
@@ -62,56 +42,7 @@ function addOptions(select, values) {
   });
 }
 
-function populateFilters() {
-  const locations = new Set();
-  const devices = new Set();
-  const oems = new Set();
-  const rarities = new Set();
-
-  data.forEach(i => {
-    if (i.location) locations.add(i.location);
-    if (i.device) devices.add(i.device);
-    if (i.oem) oems.add(i.oem);
-    if (i.rarity) rarities.add(i.rarity);
-  });
-
-  addOptions(locationFilter, locations);
-  addOptions(deviceFilter, devices);
-  addOptions(oemFilter, oems);
-  addOptions(rarityFilter, rarities);
-}
-
-/* ========= RENDER ========= */
-
-function createCard(item) {
-  const card = document.createElement("div");
-  card.className = "gallery-card";
-
-  const img = document.createElement("img");
-  img.src = item.src;
-  img.loading = "lazy";
-
-  const overlay = document.createElement("div");
-  overlay.className = "overlay";
-  overlay.innerHTML = `
-    <strong>${item.tags?.[0] || ""}</strong><br>
-    ${item.location}<br>
-    ${item.device}<br>
-    ${item.date}
-  `;
-
-  card.append(img, overlay);
-  card.onclick = () => openModal(item);
-  return card;
-}
-
-function render(items) {
-  gallery.innerHTML = "";
-  items.forEach(i => gallery.appendChild(createCard(i)));
-}
-
-/* ========= FILTER + SEARCH ========= */
-
+/* FILTER + SEARCH */
 function applyFilters() {
   const q = search.value.toLowerCase();
   const loc = locationFilter.value;
@@ -123,6 +54,8 @@ function applyFilters() {
     const text = [
       i.location,
       i.device,
+      i.oem,
+      i.rarity,
       ...(i.tags || [])
     ].join(" ").toLowerCase();
 
@@ -138,6 +71,7 @@ function applyFilters() {
   applySort();
 }
 
+/* SORT */
 function applySort() {
   const v = sort.value;
 
@@ -146,20 +80,38 @@ function applySort() {
   if (v === "az") filtered.sort((a,b) => a.location.localeCompare(b.location));
   if (v === "za") filtered.sort((a,b) => b.location.localeCompare(a.location));
 
-  render(filtered);
+  render();
 }
 
-/* ========= EVENTS ========= */
+/* RENDER */
+function render() {
+  gallery.innerHTML = "";
+  filtered.forEach(i => gallery.appendChild(card(i)));
+}
 
-search.addEventListener("input", applyFilters);
-locationFilter.addEventListener("change", applyFilters);
-deviceFilter.addEventListener("change", applyFilters);
-oemFilter.addEventListener("change", applyFilters);
-rarityFilter.addEventListener("change", applyFilters);
-sort.addEventListener("change", applySort);
+function card(item) {
+  const c = document.createElement("div");
+  c.className = "gallery-card";
 
-/* ========= MODAL ========= */
+  const img = document.createElement("img");
+  img.src = item.src;
+  img.loading = "lazy";
 
+  const o = document.createElement("div");
+  o.className = "overlay";
+  o.innerHTML = `
+    <strong>${item.tags[0]}</strong><br>
+    ${item.location}<br>
+    ${item.device}<br>
+    ${item.date}
+  `;
+
+  c.append(img, o);
+  c.onclick = () => openModal(item);
+  return c;
+}
+
+/* MODAL */
 const modal = document.getElementById("modal");
 const modalImg = document.getElementById("modal-img");
 const modalMeta = document.getElementById("modal-meta");
@@ -167,9 +119,11 @@ const modalMeta = document.getElementById("modal-meta");
 function openModal(item) {
   modalImg.src = item.src;
   modalMeta.innerHTML = `
-    <p>${item.date}</p>
-    <p>${item.location}</p>
-    <p>${item.device}</p>
+    <p><strong>Date:</strong> ${item.date}</p>
+    <p><strong>Location:</strong> ${item.location}</p>
+    <p><strong>Device:</strong> ${item.device}</p>
+    <p><strong>OEM:</strong> ${item.oem}</p>
+    <p><strong>Rarity:</strong> ${item.rarity}</p>
     <p>${item.tags.join(", ")}</p>
   `;
   modal.classList.add("open");
@@ -181,3 +135,11 @@ document.querySelector(".close").onclick = () =>
 modal.onclick = e => {
   if (e.target === modal) modal.classList.remove("open");
 };
+
+/* EVENTS */
+search.addEventListener("input", applyFilters);
+locationFilter.addEventListener("change", applyFilters);
+deviceFilter.addEventListener("change", applyFilters);
+oemFilter.addEventListener("change", applyFilters);
+rarityFilter.addEventListener("change", applyFilters);
+sort.addEventListener("change", applySort);
