@@ -48,6 +48,7 @@ function applyFilters() {
 
   filtered = data.filter(i => {
     const text = [
+      i.brand,
       i.location,
       i.device,
       i.oem,
@@ -58,7 +59,7 @@ function applyFilters() {
     if (q && !text.includes(q)) return false;
     if (locationFilter.value && i.location !== locationFilter.value) return false;
     if (deviceFilter.value && i.device !== deviceFilter.value) return false;
-    if (brandFilter.value && i.tags[0] !== brandFilter.value) return false;
+    if (brandFilter.value && i.brand !== brandFilter.value) return false;
     if (oemFilter.value && i.oem !== oemFilter.value) return false;
     if (rarityFilter.value && i.rarity !== rarityFilter.value) return false;
 
@@ -67,6 +68,7 @@ function applyFilters() {
 
   applySort();
 }
+
 
 function applySort() {
   const v = sort.value;
