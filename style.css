@@ -626,6 +626,9 @@ body {
 
 
 
+
+
+
 .modal {
   position: fixed;
   inset: 0;
@@ -658,18 +661,19 @@ body {
 
 
 
+
+
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  padding: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
 }
 
 .gallery-card {
   position: relative;
+  cursor: pointer;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #111;
 }
 
 .gallery-card img {
@@ -677,4 +681,18 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  opacity: 0;
+  padding: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-card:hover .overlay {
+  opacity: 1;
 }
