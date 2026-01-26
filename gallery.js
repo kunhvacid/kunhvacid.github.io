@@ -50,21 +50,22 @@ function applyFilters() {
   const q = search.value.toLowerCase();
 
   filtered = data.filter(i => {
-    const text = [
-      i.brand,
-      i.location,
-      i.device,
-      i.oem,
-      i.rarity,
-      ...i.tags
-    ].join(" ").toLowerCase();
+const text = [
+  i.brand,
+  i.location,
+  i.device,
+  i.oem,
+  i.rarity,
+  ...(Array.isArray(i.tags) ? i.tags : [])
+].join(" ").toLowerCase();
 
-    if (q && !text.includes(q)) return false;
-    if (locationFilter.value && i.location !== locationFilter.value) return false;
-    if (deviceFilter.value && i.device !== deviceFilter.value) return false;
-    if (brandFilter.value && i.brand.toLowerCase() !== brandFilter.value) return false;
-    if (oemFilter.value && i.oem !== oemFilter.value) return false;
-    if (rarityFilter.value && i.rarity !== rarityFilter.value) return false;
+
+if (locationFilter.value && i.location.toLowerCase() !== locationFilter.value) return false;
+if (deviceFilter.value && i.device.toLowerCase() !== deviceFilter.value) return false;
+if (brandFilter.value && i.brand.toLowerCase() !== brandFilter.value) return false;
+if (oemFilter.value && i.oem.toLowerCase() !== oemFilter.value) return false;
+if (rarityFilter.value && i.rarity.toLowerCase() !== rarityFilter.value) return false;
+
 
     return true;
   });
@@ -115,7 +116,8 @@ const modalMeta = document.getElementById("modal-meta");
 function openModal(item) {
   modalImg.src = item.src;
   modalMeta.innerHTML = `
-    <p><b>Brand:</b> ${item.tags[0]}</p>
+    <p><b>Brand:</b> ${item.brand}</p>
+
     <p><b>OEM:</b> ${item.oem}</p>
     <p><b>Rarity:</b> ${item.rarity}</p>
     <p>${item.tags.join(", ")}</p>
