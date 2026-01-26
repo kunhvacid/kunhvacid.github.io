@@ -1,122 +1,116 @@
+
+
+
+
+
+
+
 const gallery = document.getElementById("gallery");
-const search = document.getElementById("search");
-const sort = document.getElementById("sort");
+
+const searchInput = document.getElementById("searchInput");
 const locationFilter = document.getElementById("locationFilter");
 const deviceFilter = document.getElementById("deviceFilter");
+const oemFilter = document.getElementById("oemFilter");
+const rarityFilter = document.getElementById("rarityFilter");
+const sortFilter = document.getElementById("sortFilter");
+
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+const modalMeta = document.getElementById("modalMeta");
 
 let data = [];
 let filtered = [];
 
 fetch("gallery/gallery.json")
-  .then(res => res.json())
-  .then(json => {
-    data = json;
-    filtered = [...data];
+  .then(r => r.json())
+  .then(j => {
+    data = j;
     populateFilters();
-    render(filtered);
-  })
-  .catch(err => console.error("Gallery load failed", err));
+    applyFilters();
+  });
 
 function populateFilters() {
-  const locations = [...new Set(data.map(i => i.location))];
-  const devices = [...new Set(data.map(i => i.device))];
+  const uniq = arr => [...new Set(arr)];
 
-  locations.forEach(l => {
-    const o = document.createElement("option");
-    o.value = l;
-    o.textContent = l;
-    locationFilter.appendChild(o);
-  });
-
-  devices.forEach(d => {
-    const o = document.createElement("option");
-    o.value = d;
-    o.textContent = d;
-    deviceFilter.appendChild(o);
-  });
-}
-
-function createCard(item) {
-  const card = document.createElement("div");
-  card.className = "gallery-card";
-
-  const img = document.createElement("img");
-  img.src = item.src;
-  img.loading = "lazy";
-
-  const overlay = document.createElement("div");
-  overlay.className = "overlay";
-  overlay.innerHTML = `
-    <strong>${item.tags?.[0] || ""}</strong><br>
-    ${item.location}<br>
-    ${item.date}<br>
-    ${item.device}
-  `;
-
-  card.append(img, overlay);
-  card.onclick = () => openModal(item);
-  return card;
-}
-
-function render(items) {
-  gallery.innerHTML = "";
-  items.forEach(i => gallery.appendChild(createCard(i)));
+  uniq(data.map(i => i.location)).forEach(v =>
+    locationFilter.add(new Option(v, v))
+  );
+  uniq(data.map(i => i.device)).forEach(v =>
+    deviceFilter.add(new Option(v, v))
+  );
+  uniq(data.map(i => i.oem)).forEach(v =>
+    oemFilter.add(new Option(v, v))
+  );
+  uniq(data.map(i => i.rarity)).forEach(v =>
+    rarityFilter.add(new Option(v, v))
+  );
 }
 
 function applyFilters() {
-  const q = search.value.toLowerCase();
-  const loc = locationFilter.value;
-  const dev = deviceFilter.value;
+  const q = searchInput.value.toLowerCase();
 
   filtered = data.filter(i => {
-    const tagMatch = i.tags?.join(" ").toLowerCase().includes(q);
-    const locMatch = !loc || i.location === loc;
-    const devMatch = !dev || i.device === dev;
-    return tagMatch && locMatch && devMatch;
+    const text = [i.location, i.device, i.oem, i.rarity, ...i.tags].join(" ").toLowerCase();
+    return (
+      text.includes(q) &&
+      (locationFilter.value === "all" || i.location === locationFilter.value) &&
+      (deviceFilter.value === "all" || i.device === deviceFilter.value) &&
+      (oemFilter.value === "all" || i.oem === oemFilter.value) &&
+      (rarityFilter.value === "all" || i.rarity === rarityFilter.value)
+    );
   });
 
-  applySort();
+  sortAndRender();
 }
 
-function applySort() {
-  const v = sort.value;
-  if (v === "newest") filtered.sort((a,b) => b.date.localeCompare(a.date));
-  if (v === "oldest") filtered.sort((a,b) => a.date.localeCompare(b.date));
-  if (v === "az") filtered.sort((a,b) => a.location.localeCompare(b.location));
-  if (v === "za") filtered.sort((a,b) => b.location.localeCompare(a.location));
-  render(filtered);
+function sortAndRender() {
+  const v = sortFilter.value;
+  if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
+  if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
+  if (v === "az") filtered.sort((a,b)=>a.location.localeCompare(b.location));
+  if (v === "za") filtered.sort((a,b)=>b.location.localeCompare(a.location));
+  render();
 }
 
-if (selectedOEM !== "all" && item.oem !== selectedOEM) return false;
-if (selectedRarity !== "all" && item.rarity !== selectedRarity) return false;
+function render() {
+  gallery.innerHTML = "";
+  filtered.forEach(i => {
+    const c = document.createElement("div");
+    c.className = "gallery-card";
 
+    c.innerHTML = `
+      <img src="${i.src}" loading="lazy">
+      <div class="overlay">
+        <strong>${i.tags[0]}</strong><br>
+        ${i.location}<br>
+        ${i.date}<br>
+        ${i.device}
+      </div>
+    `;
 
-search.addEventListener("input", applyFilters);
-locationFilter.addEventListener("change", applyFilters);
-deviceFilter.addEventListener("change", applyFilters);
-sort.addEventListener("change", applySort);
+    c.onclick = () => openModal(i);
+    gallery.appendChild(c);
+  });
+}
 
-
-
-
-const modal = document.getElementById("modal");
-const modalImg = document.getElementById("modal-img");
-const modalMeta = document.getElementById("modal-meta");
-
-function openModal(item) {
-  modalImg.src = item.src;
+function openModal(i) {
+  modalImg.src = i.src;
   modalMeta.innerHTML = `
-    <p>${item.date}</p>
-    <p>${item.location}</p>
-    <p>${item.device}</p>
-    <p>${item.tags.join(", ")}</p>
+    <p>${i.date}</p>
+    <p>${i.location}</p>
+    <p>${i.device}</p>
+    <p>${i.oem} • ${i.rarity}</p>
+    <p>${i.tags.join(", ")}</p>
   `;
   modal.classList.add("open");
 }
 
-document.querySelector(".close").onclick = () =>
-  modal.classList.remove("open");
+document.querySelector(".close").onclick = () => modal.classList.remove("open");
+modal.onclick = e => e.target === modal && modal.classList.remove("open");
 
-modal.onclick = e => {
-  if (e.target === modal) modal.classList.remove("open");
-};
+searchInput.oninput =
+locationFilter.onchange =
+deviceFilter.onchange =
+oemFilter.onchange =
+rarityFilter.onchange =
+sortFilter.onchange = applyFilters;
