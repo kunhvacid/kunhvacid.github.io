@@ -6,7 +6,8 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
     "rarity": "Uncommon",
-    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_GKP", "CS-PC18GKP", "OEM: Inhouse"]
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_GKP", "CS-PC18GKP"]
   },
 {
     "src": "https://kunhvacid.github.io/ac/IMG_20250108_155442.jpg",
@@ -15,7 +16,8 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
     "rarity": "Common",
-    "tags": ["Panasonic", "Split AC", "Standard", "Indonesia", "2.0 HP", "Indoor", "PN_WKJ", "CS-PN18WKJ", "OEM: Inhouse"]
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Indonesia", "2.0 HP", "Indoor", "PN_WKJ", "CS-PN18WKJ"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20250108_153231.jpg",
@@ -24,7 +26,28 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
     "rarity": "Uncommon",
-    "tags": ["Panasonic", "Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_JKP", "CS-PC18JKP", "OEM: Inhouse"]
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Malaysia", "2.0 HP", "Indoor", "PC_JKP", "CS-PC18JKP"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20251227_123043.jpg",
+    "date": "2025-12-27",
+    "location": "Surabaya",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "LG",
+    "tags": ["Split AC", "Inverter", "Thailand", "5.0 HP", "Outdoor", "ZUAD", "ZUAD3"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG-20260118-WA0000.jpg",
+    "date": "2026-01-18",
+    "location": "Balikpapan",
+    "device": "Xiaomi 14",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "Hitachi",
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Uknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241229_142703.jpg",
@@ -33,6 +56,7 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Midea",
     "rarity": "Very Rare",
-    "tags": ["Sanken", "Split AC", "Standard", "Unknown", "0.5 HP", "Outdoor", "Unknown", "OEM: Midea"]
+    "brand": "Sanken",
+    "tags": ["Split AC", "Standard", "Unknown", "0.5 HP", "Outdoor", "Unknown"]
   }
 ]
