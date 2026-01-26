@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AC Sightings Gallery</title>
-
   <link rel="stylesheet" href="gallery.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -17,7 +14,7 @@
 </header>
 
 <section class="gallery-controls">
-  <input id="search" type="text" placeholder="Search tags, model, brand…" />
+  <input id="search" type="text" placeholder="Search (brand, model, tags…)" />
 
   <select id="locationFilter">
     <option value="">All locations</option>
@@ -25,6 +22,10 @@
 
   <select id="deviceFilter">
     <option value="">All devices</option>
+  </select>
+
+  <select id="brandFilter">
+    <option value="">All brands</option>
   </select>
 
   <select id="oemFilter">
