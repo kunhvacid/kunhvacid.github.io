@@ -1,27 +1,21 @@
-* {
-  box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
-}
-
 body {
   margin: 0;
-  background: #0e0e0e;
+  background: #0f0f0f;
   color: #fff;
+  font-family: system-ui, sans-serif;
 }
 
-/* HERO */
 .gallery-hero {
   padding: 3rem 1.5rem;
   text-align: center;
   background: #111;
 }
 
-/* CONTROLS */
 .gallery-controls {
   display: grid;
-  gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  padding: 1.5rem;
+  gap: 10px;
+  padding: 1rem;
   background: #161616;
 }
 
@@ -30,30 +24,27 @@ body {
   padding: 10px;
   border-radius: 8px;
   border: none;
-  font-size: 0.9rem;
 }
 
-/* GRID */
 .gallery-grid {
   padding: 1.5rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 18px;
+  gap: 16px;
 }
 
 .gallery-card {
   position: relative;
-  cursor: pointer;
 }
 
 .gallery-card img {
   width: 100%;
   height: 100%;
-  border-radius: 14px;
   object-fit: cover;
+  border-radius: 14px;
+  cursor: zoom-in;
 }
 
-/* OVERLAY */
 .overlay {
   position: absolute;
   inset: 0;
@@ -61,7 +52,7 @@ body {
   opacity: 0;
   padding: 12px;
   border-radius: 14px;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s;
   font-size: 0.85rem;
 }
 
@@ -78,7 +69,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .modal.open {
@@ -86,9 +77,10 @@ body {
 }
 
 .modal img {
-  max-width: 90vw;
-  max-height: 80vh;
+  max-width: 95vw;
+  max-height: 85vh;
   border-radius: 12px;
+  cursor: zoom-out;
 }
 
 .modal .close {
@@ -97,10 +89,4 @@ body {
   right: 30px;
   font-size: 2rem;
   cursor: pointer;
-}
-
-#modal-meta {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 0.9rem;
 }
