@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let data = [];
   let filtered = [];
 
-  const PER_PAGE = 12;
+  const PER_PAGE = 8;
   let currentPage = 1;
 
   /* LOAD DATA */
@@ -196,3 +196,4 @@ document.addEventListener("DOMContentLoaded", () => {
   deviceFilter.addEventListener("change", applyFilters);
   sort.addEventListener("change", applySort);
 });
+
