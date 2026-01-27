@@ -85,5 +85,83 @@
 <script src="gallery.js"></script>
 <script src="nav.js"></script>
 
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <span class="footer-logo">kunhvac_id</span>
+
+    <div class="social-icons">
+  <a href="https://youtube.com/@kunhvac_id" target="_blank" aria-label="YouTube">
+    <i class="fa-brands fa-youtube"></i>
+    </a>
+  <a href="https://www.instagram.com/kunhvac_id?igsh=MXE5cGNsOWl3OXd5aw==" target="_blank" aria-label="Instagram">
+    <i class="fa-brands fa-instagram"></i>
+    </a>
+  <a href="https://www.tiktok.com/@kunhvac_id?_t=ZS-8sze2pMPyp6&_r=1" target="_blank" aria-label="TikTok">
+    <i class="fa-brands fa-tiktok"></i>
+    </a>
+  <a href="https://discord.gg/2QsVysZHJW" target="_blank" aria-label="Discord">
+    <i class="fa-brands fa-discord"></i>
+  </a>
+</div>
+
+  </div>
+  <hr />
+  <div class="footer-bottom">
+    <p>© 2026 kunhvac_id | All Rights Reserved.</p>
+  </div>
+</footer>
+
+
+
+
+
+
+
+<script>
+  const buttons = document.querySelectorAll(".dropbtn");
+  const menus = document.querySelectorAll(".dropdown-menu");
+  const hamburger = document.querySelector(".hamburger");
+  const nav = document.querySelector(".nav-links");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+
+      const menu = document.getElementById(btn.dataset.dropdown);
+
+      menus.forEach(m => {
+        if (m !== menu) m.classList.remove("active");
+      });
+
+      buttons.forEach(b => b.classList.remove("active"));
+
+      const isOpen = menu.classList.toggle("active");
+      btn.classList.toggle("active", isOpen);
+    });
+
+    btn.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") btn.click();
+      if (e.key === "Escape") closeAll();
+    });
+  });
+
+  function closeAll() {
+    menus.forEach(m => m.classList.remove("active"));
+    buttons.forEach(b => b.classList.remove("active"));
+  }
+
+  document.addEventListener("click", closeAll);
+
+  hamburger.addEventListener("click", () => {
+    const expanded = nav.classList.toggle("open");
+    hamburger.setAttribute("aria-expanded", expanded);
+  });
+</script>
+
+
+
+
+
 </body>
 </html>
