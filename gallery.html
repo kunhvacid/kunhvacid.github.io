@@ -55,35 +55,49 @@
 
 <!-- FILTER BAR -->
 <section class="gallery-controls">
-  <input type="text" id="search" placeholder="Search…">
 
-  <select id="brandFilter">
-    <option value="" disabled selected>Brand</option>
-  </select>
+  <div class="filter-group">
+    <label for="search">Search</label>
+    <input type="text" id="search" placeholder="Search…">
+  </div>
 
-  <select id="oemFilter">
-    <option value="" disabled selected>OEM</option>
-  </select>
+  <div class="filter-group">
+    <label for="brandFilter">Brand</label>
+    <select id="brandFilter"></select>
+  </div>
 
-  <select id="rarityFilter">
-    <option value="" disabled selected>Rarity</option>
-  </select>
+  <div class="filter-group">
+    <label for="oemFilter">OEM</label>
+    <select id="oemFilter"></select>
+  </div>
 
-  <select id="locationFilter">
-    <option value="" disabled selected>Location</option>
-  </select>
+  <div class="filter-group">
+    <label for="rarityFilter">Rarity</label>
+    <select id="rarityFilter"></select>
+  </div>
 
-  <select id="deviceFilter">
-    <option value="" disabled selected>Device</option>
-  </select>
+  <div class="filter-group">
+    <label for="locationFilter">Location</label>
+    <select id="locationFilter"></select>
+  </div>
 
-  <select id="sort">
-    <option value="newest">Sort: Newest</option>
-    <option value="oldest">Sort: Oldest</option>
-    <option value="az">Sort: Brand A–Z</option>
-    <option value="za">Sort: Brand Z–A</option>
-  </select>
+  <div class="filter-group">
+    <label for="deviceFilter">Device</label>
+    <select id="deviceFilter"></select>
+  </div>
+
+  <div class="filter-group">
+    <label for="sort">Sort</label>
+    <select id="sort">
+      <option value="newest">Newest</option>
+      <option value="oldest">Oldest</option>
+      <option value="az">Brand A–Z</option>
+      <option value="za">Brand Z–A</option>
+    </select>
+  </div>
+
 </section>
+
 
 <!-- GALLERY GRID -->
 <main id="gallery" class="gallery-grid"></main>
