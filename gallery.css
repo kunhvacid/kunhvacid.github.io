@@ -1,9 +1,27 @@
+/* =========================
+   BASE
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   background: #0f0f0f;
   color: #fff;
   font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
+
+/* =========================
+   HERO
+========================= */
 
 .gallery-hero {
   padding: 3rem 1.5rem;
@@ -11,20 +29,51 @@ body {
   background: #111;
 }
 
+/* =========================
+   FILTER CONTROLS
+========================= */
+
 .gallery-controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   padding: 1rem;
   background: #161616;
 }
 
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+}
+
+.filter-group label {
+  margin-bottom: 4px;
+  opacity: 0.7;
+}
+
+/* INPUTS & SELECTS */
 .gallery-controls input,
 .gallery-controls select {
-  padding: 10px;
+  font-family: "Montserrat", sans-serif;
+  padding: 6px 10px;
   border-radius: 8px;
   border: none;
+  outline: none;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 0.9rem;
+  min-width: 140px;
 }
+
+/* SEARCH BAR */
+#search {
+  flex: 1 1 20px;
+}
+
+/* =========================
+   GALLERY GRID
+========================= */
 
 .gallery-grid {
   padding: 1.5rem;
@@ -33,18 +82,22 @@ body {
   gap: 16px;
 }
 
+/* CARD */
 .gallery-card {
   position: relative;
 }
 
+/* IMAGE */
 .gallery-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 14px;
   cursor: zoom-in;
+  display: block;
 }
 
+/* OVERLAY (hover info) */
 .overlay {
   position: absolute;
   inset: 0;
@@ -52,15 +105,19 @@ body {
   opacity: 0;
   padding: 12px;
   border-radius: 14px;
-  transition: opacity 0.2s;
   font-size: 0.85rem;
+  transition: opacity 0.2s ease;
+  pointer-events: none; /* IMPORTANT: allow image click */
 }
 
 .gallery-card:hover .overlay {
   opacity: 1;
 }
 
-/* MODAL */
+/* =========================
+   MODAL (ZOOM VIEW)
+========================= */
+
 .modal {
   position: fixed;
   inset: 0;
@@ -69,7 +126,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 .modal.open {
@@ -91,60 +148,35 @@ body {
   cursor: pointer;
 }
 
+/* =========================
+   PAGINATION
+========================= */
 
-
-
-
-
-
-
-
-.gallery-controls {
+.pagination {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 0px 0;
+  justify-content: center;
+  gap: 8px;
+  margin: 32px 0;
 }
 
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.8rem;
-}
-
-.filter-group label {
-  margin-bottom: 4px;
-  opacity: 0.7;
-}
-
-/* INPUT & SELECT */
-.gallery-controls input,
-.gallery-controls select {
-  font-family: "Montserrat", sans-serif;
-  padding: 6px 10px;          /* thinner height */
-  border-radius: 8px;         /* less chunky */
+.pagination button {
+  padding: 6px 12px;
+  border-radius: 8px;
   border: none;
-  outline: none;
-  background: rgba(0,0,0,0.75);
-  color: #fff;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-size: 0.9rem;
-  min-width: 140px;
-}
-
-/* SEARCH BAR */
-#search {
-  flex: 1 1 20px;
-}
-
-/* DROPDOWNS */
-.gallery-controls select {
-  flex: 0 1 15px;
   cursor: pointer;
+  background: #222;
+  color: #fff;
 }
 
-/* TABLET */
+.pagination button.active {
+  background: #fff;
+  color: #000;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
 @media (max-width: 900px) {
   .gallery-controls {
     justify-content: center;
@@ -159,7 +191,6 @@ body {
   }
 }
 
-/* MOBILE */
 @media (max-width: 500px) {
   .gallery-controls {
     padding: 10px;
@@ -167,7 +198,7 @@ body {
 
   .gallery-controls input,
   .gallery-controls select {
-    padding: 10px 12px;      /* thicker only on mobile */
+    padding: 10px 12px;
     font-size: 0.95rem;
   }
 
@@ -177,49 +208,14 @@ body {
   }
 }
 
+/* =========================
+   FOOTER SUPPORT
+========================= */
 
-
-
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin: 32px 0;
-}
-
-.pagination button {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.pagination button.active {
-  background: #000;
-  color: #fff;
-}
-
-
-
-
-/* MAKE PAGE HEIGHT FULL */
-html, body {
-  height: 100%;
-}
-
-/* FLEX LAYOUT FOR BODY */
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-/* MAIN CONTENT EXPANDS */
 main {
   flex: 1 0 auto;
 }
 
-/* FOOTER STAYS AT BOTTOM */
 .site-footer {
   margin-top: auto;
 }
