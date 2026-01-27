@@ -1,10 +1,13 @@
 /* =========================
-   GALLERY – CLEAN, FIXED VERSION
+   GALLERY – PAGINATED + FIXED MODAL
    ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
   /* ELEMENTS */
   const gallery = document.getElementById("gallery");
+  const pagination = document.getElementById("pagination");
+
   const search = document.getElementById("search");
   const sort = document.getElementById("sort");
 
@@ -19,8 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalMeta = document.getElementById("modal-meta");
   const modalClose = document.querySelector(".close");
 
+  /* STATE */
   let data = [];
   let filtered = [];
+
+  const PER_PAGE = 12;
+  let currentPage = 1;
 
   /* LOAD DATA */
   fetch("gallery/gallery.json")
@@ -28,21 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(json => {
       data = json;
       populateFilters();
-      filtered = [...data];   // NO filtering on load
+      filtered = [...data];
       applySort();
     })
     .catch(err => console.error("Gallery load failed:", err));
 
   /* HELPERS */
-  function unique(values) {
-    return [...new Set(values.filter(Boolean))].sort();
-  }
+  const unique = arr => [...new Set(arr.filter(Boolean))].sort();
 
   function fill(select, values) {
     select.innerHTML = `<option value="">All</option>`;
     values.forEach(v => {
       const o = document.createElement("option");
-      o.value = v;           // IMPORTANT: raw value
+      o.value = v;
       o.textContent = v;
       select.appendChild(o);
     });
@@ -60,9 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
   /* FILTERING */
   function applyFilters() {
     const q = search.value.trim().toLowerCase();
+    currentPage = 1; // RESET PAGE
 
     filtered = data.filter(i => {
-      const searchableText = [
+      const text = [
         i.brand,
         i.oem,
         i.rarity,
@@ -71,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ...(i.tags || [])
       ].join(" ").toLowerCase();
 
-      if (q && !searchableText.includes(q)) return false;
+      if (q && !text.includes(q)) return false;
       if (brandFilter.value && i.brand !== brandFilter.value) return false;
       if (oemFilter.value && i.oem !== oemFilter.value) return false;
       if (rarityFilter.value && i.rarity !== rarityFilter.value) return false;
@@ -88,27 +94,23 @@ document.addEventListener("DOMContentLoaded", () => {
   function applySort() {
     const v = sort.value;
 
-    if (v === "newest") {
-      filtered.sort((a, b) => b.date.localeCompare(a.date));
-    }
-    if (v === "oldest") {
-      filtered.sort((a, b) => a.date.localeCompare(b.date));
-    }
-    if (v === "az") {
-      filtered.sort((a, b) => a.brand.localeCompare(b.brand));
-    }
-    if (v === "za") {
-      filtered.sort((a, b) => b.brand.localeCompare(a.brand));
-    }
+    if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
+    if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
+    if (v === "az") filtered.sort((a,b)=>a.brand.localeCompare(b.brand));
+    if (v === "za") filtered.sort((a,b)=>b.brand.localeCompare(a.brand));
 
     render();
   }
 
-  /* RENDER */
+  /* RENDER (PAGINATED) */
   function render() {
     gallery.innerHTML = "";
 
-    filtered.forEach(item => {
+    const start = (currentPage - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    const pageItems = filtered.slice(start, end);
+
+    pageItems.forEach(item => {
       const card = document.createElement("div");
       card.className = "gallery-card";
 
@@ -117,7 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
       img.loading = "lazy";
       img.alt = item.brand;
 
-      img.addEventListener("click", () => openModal(item));
+      // FIXED CLICK HANDLER
+      img.addEventListener("click", e => {
+        e.stopPropagation();
+        openModal(item);
+      });
 
       const overlay = document.createElement("div");
       overlay.className = "overlay";
@@ -130,37 +136,56 @@ document.addEventListener("DOMContentLoaded", () => {
       card.append(img, overlay);
       gallery.appendChild(card);
     });
+
+    renderPagination();
   }
 
-  /* MODAL */
+  /* PAGINATION */
+  function renderPagination() {
+    pagination.innerHTML = "";
 
-function openModal(item) {
-  modalImg.src = item.src;
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+    if (totalPages <= 1) return;
 
-  modalMeta.innerHTML = `
-    <p><b>Brand:</b> ${item.brand}</p>
-    <p><b>OEM:</b> ${item.oem}</p>
-    <p><b>Rarity:</b> ${item.rarity}</p>
-    <p><b>Location:</b> ${item.location}</p>
-    <p><b>Device:</b> ${item.device}</p>
-    <p>${item.tags.join(", ")}</p>
-  `;
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = i === currentPage ? "active" : "";
 
-  modal.classList.add("open");
-}
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
 
-modalClose.addEventListener("click", () => {
-  modal.classList.remove("open");
-  modalImg.src = "";
-});
+      pagination.appendChild(btn);
+    }
+  }
 
-modal.addEventListener("click", e => {
-  if (e.target === modal) {
+  /* MODAL (CLICK-TO-ZOOM FIXED) */
+  function openModal(item) {
+    modalImg.src = item.src;
+    modalMeta.innerHTML = `
+      <p><b>Brand:</b> ${item.brand}</p>
+      <p><b>OEM:</b> ${item.oem}</p>
+      <p><b>Rarity:</b> ${item.rarity}</p>
+      <p><b>Location:</b> ${item.location}</p>
+      <p><b>Device:</b> ${item.device}</p>
+      <p>${item.tags.join(", ")}</p>
+    `;
+    modal.classList.add("open");
+  }
+
+  modalClose.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", e => {
+    if (e.target === modal) closeModal();
+  });
+
+  function closeModal() {
     modal.classList.remove("open");
     modalImg.src = "";
   }
-});
-
 
   /* EVENTS */
   search.addEventListener("input", applyFilters);
