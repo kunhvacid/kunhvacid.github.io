@@ -11,14 +11,41 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-  <!-- Main CSS -->
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="gallery.css" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden; /* FIX RIGHT SCROLL */
+    }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(rgba(0,0,0,0.7), rgba(49,102,163,0.4)),
+        url("https://kunhvacid.github.io/ac/IMG_20251228_112338.jpg");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- NAVBAR (added) -->
+<!-- NAVBAR -->
 <header class="navbar">
   <a href="index.html" class="logo">
     <img src="https://kunhvacid.github.io/ac/kunhvac_id_logo.png" alt="Logo">
@@ -53,30 +80,8 @@
   </nav>
 </header>
 
-
-
-  <style>
-  body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.7), rgba(49, 102, 163, 0.4)),
-    url("https://kunhvacid.github.io/ac/IMG_20251228_112338.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: #ffffff;
-}
-</style>
-
-
-
-
-
 <!-- FILTER BAR -->
 <section class="gallery-controls">
-
   <div class="filter-group">
     <label for="search">Search</label>
     <input type="text" id="search" placeholder="Search…">
@@ -116,113 +121,51 @@
       <option value="za">Brand Z–A</option>
     </select>
   </div>
-
 </section>
 
-
-<!-- GALLERY GRID -->
-<main id="gallery" class="gallery-grid"></main>
-
-<div id="pagination" class="pagination"></div>
-
+<!-- GALLERY -->
+<main>
+  <section id="gallery" class="gallery-grid"></section>
+  <div id="pagination" class="pagination"></div>
+</main>
 
 <!-- MODAL -->
 <div id="modal" class="modal">
   <span class="close">&times;</span>
-  <img id="modal-img" />
+
   <div class="nav-arrow prev">❮</div>
-<div class="nav-arrow next">❯</div>
-<div class="modal-info">
-  <div class="info-grid">
-    <p><strong>Brand:</strong> GREE</p>
-    <p><strong>OEM:</strong> Inhouse</p>
-    <p><strong>Rarity:</strong> Very Rare</p>
-    <p><strong>Location:</strong> Yogyakarta</p>
-    <p><strong>Device:</strong> Redmi Note 12 Pro 5G</p>
-    <p><strong>Notes:</strong> Split AC, Standard, China, 2.0 HP</p>
+  <div class="nav-arrow next">❯</div>
+
+  <img id="modal-img" alt="Zoomed image">
+
+  <div class="modal-info">
+    <div id="modal-meta" class="info-grid"></div>
   </div>
 </div>
 
-<!-- JS -->
-<script src="gallery.js"></script>
-<script src="nav.js"></script>
-
-<!-- FOOTER -->
+<!-- FOOTER (RESTORED & STICKY) -->
 <footer class="site-footer">
   <div class="footer-top">
     <span class="footer-logo">kunhvac_id</span>
 
     <div class="social-icons">
-  <a href="https://youtube.com/@kunhvac_id" target="_blank" aria-label="YouTube">
-    <i class="fa-brands fa-youtube"></i>
-    </a>
-  <a href="https://www.instagram.com/kunhvac_id?igsh=MXE5cGNsOWl3OXd5aw==" target="_blank" aria-label="Instagram">
-    <i class="fa-brands fa-instagram"></i>
-    </a>
-  <a href="https://www.tiktok.com/@kunhvac_id?_t=ZS-8sze2pMPyp6&_r=1" target="_blank" aria-label="TikTok">
-    <i class="fa-brands fa-tiktok"></i>
-    </a>
-  <a href="https://discord.gg/2QsVysZHJW" target="_blank" aria-label="Discord">
-    <i class="fa-brands fa-discord"></i>
-  </a>
-</div>
-
+      <a href="https://youtube.com/@kunhvac_id" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+      <a href="https://www.instagram.com/kunhvac_id" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@kunhvac_id" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://discord.gg/2QsVysZHJW" target="_blank"><i class="fa-brands fa-discord"></i></a>
+    </div>
   </div>
-  <hr />
+
+  <hr>
+
   <div class="footer-bottom">
     <p>© 2026 kunhvac_id | All Rights Reserved.</p>
   </div>
 </footer>
 
-
-
-
-
-
-
-<script>
-  const buttons = document.querySelectorAll(".dropbtn");
-  const menus = document.querySelectorAll(".dropdown-menu");
-  const hamburger = document.querySelector(".hamburger");
-  const nav = document.querySelector(".nav-links");
-
-  buttons.forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
-
-      const menu = document.getElementById(btn.dataset.dropdown);
-
-      menus.forEach(m => {
-        if (m !== menu) m.classList.remove("active");
-      });
-
-      buttons.forEach(b => b.classList.remove("active"));
-
-      const isOpen = menu.classList.toggle("active");
-      btn.classList.toggle("active", isOpen);
-    });
-
-    btn.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") btn.click();
-      if (e.key === "Escape") closeAll();
-    });
-  });
-
-  function closeAll() {
-    menus.forEach(m => m.classList.remove("active"));
-    buttons.forEach(b => b.classList.remove("active"));
-  }
-
-  document.addEventListener("click", closeAll);
-
-  hamburger.addEventListener("click", () => {
-    const expanded = nav.classList.toggle("open");
-    hamburger.setAttribute("aria-expanded", expanded);
-  });
-</script>
-
-
-
+<!-- JS -->
+<script src="gallery.js"></script>
+<script src="nav.js"></script>
 
 </body>
 </html>
