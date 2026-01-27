@@ -57,17 +57,31 @@
 <section class="gallery-controls">
   <input type="text" id="search" placeholder="Search…">
 
-  <select id="brandFilter"></select>
-  <select id="oemFilter"></select>
-  <select id="rarityFilter"></select>
-  <select id="locationFilter"></select>
-  <select id="deviceFilter"></select>
+  <select id="brandFilter">
+    <option value="" disabled selected>Brand</option>
+  </select>
+
+  <select id="oemFilter">
+    <option value="" disabled selected>OEM</option>
+  </select>
+
+  <select id="rarityFilter">
+    <option value="" disabled selected>Rarity</option>
+  </select>
+
+  <select id="locationFilter">
+    <option value="" disabled selected>Location</option>
+  </select>
+
+  <select id="deviceFilter">
+    <option value="" disabled selected>Device</option>
+  </select>
 
   <select id="sort">
-    <option value="newest">Newest</option>
-    <option value="oldest">Oldest</option>
-    <option value="az">Brand A–Z</option>
-    <option value="za">Brand Z–A</option>
+    <option value="newest">Sort: Newest</option>
+    <option value="oldest">Sort: Oldest</option>
+    <option value="az">Sort: Brand A–Z</option>
+    <option value="za">Sort: Brand Z–A</option>
   </select>
 </section>
 
