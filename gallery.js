@@ -133,26 +133,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* MODAL */
-  function openModal(item) {
-    modalImg.src = item.src;
-    modalMeta.innerHTML = `
-      <p><b>Brand:</b> ${item.brand}</p>
-      <p><b>OEM:</b> ${item.oem}</p>
-      <p><b>Rarity:</b> ${item.rarity}</p>
-      <p><b>Location:</b> ${item.location}</p>
-      <p><b>Device:</b> ${item.device}</p>
-      <p><b>Tags:</b> ${item.tags.join(", ")}</p>
-    `;
-    modal.classList.add("open");
-  }
 
-  modalClose.addEventListener("click", () => {
+function openModal(item) {
+  modalImg.src = item.src;
+
+  modalMeta.innerHTML = `
+    <p><b>Brand:</b> ${item.brand}</p>
+    <p><b>OEM:</b> ${item.oem}</p>
+    <p><b>Rarity:</b> ${item.rarity}</p>
+    <p><b>Location:</b> ${item.location}</p>
+    <p><b>Device:</b> ${item.device}</p>
+    <p>${item.tags.join(", ")}</p>
+  `;
+
+  modal.classList.add("open");
+}
+
+modalClose.addEventListener("click", () => {
+  modal.classList.remove("open");
+  modalImg.src = "";
+});
+
+modal.addEventListener("click", e => {
+  if (e.target === modal) {
     modal.classList.remove("open");
-  });
+    modalImg.src = "";
+  }
+});
 
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.classList.remove("open");
-  });
 
   /* EVENTS */
   search.addEventListener("input", applyFilters);
