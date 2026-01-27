@@ -1,10 +1,10 @@
 /* =========================
-   GALLERY – PAGINATED + FIXED MODAL
+   GALLERY – CLEAN REWRITE (MODAL + NAV + ZOOM FIXED)
    ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ELEMENTS */
+  /* ========= ELEMENTS ========= */
   const gallery = document.getElementById("gallery");
   const pagination = document.getElementById("pagination");
 
@@ -12,35 +12,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const sort = document.getElementById("sort");
 
   const locationFilter = document.getElementById("locationFilter");
-  const deviceFilter = document.getElementById("deviceFilter");
-  const brandFilter = document.getElementById("brandFilter");
-  const oemFilter = document.getElementById("oemFilter");
-  const rarityFilter = document.getElementById("rarityFilter");
+  const deviceFilter   = document.getElementById("deviceFilter");
+  const brandFilter    = document.getElementById("brandFilter");
+  const oemFilter      = document.getElementById("oemFilter");
+  const rarityFilter   = document.getElementById("rarityFilter");
 
-  const modal = document.getElementById("modal");
-  const modalImg = document.getElementById("modal-img");
+  const modal     = document.getElementById("modal");
+  const modalImg  = document.getElementById("modal-img");
   const modalMeta = document.getElementById("modal-meta");
-  const modalClose = document.querySelector(".close");
+  const modalClose = modal.querySelector(".close");
+  const nextBtn = modal.querySelector(".next");
+  const prevBtn = modal.querySelector(".prev");
 
-  /* STATE */
+  /* ========= STATE ========= */
   let data = [];
   let filtered = [];
+  let currentIndex = 0;
+  let isZoomed = false;
 
   const PER_PAGE = 8;
   let currentPage = 1;
 
-  /* LOAD DATA */
+  /* ========= LOAD DATA ========= */
   fetch("gallery/gallery.json")
     .then(r => r.json())
     .then(json => {
       data = json;
-      populateFilters();
       filtered = [...data];
+      populateFilters();
       applySort();
     })
     .catch(err => console.error("Gallery load failed:", err));
 
-  /* HELPERS */
+  /* ========= HELPERS ========= */
   const unique = arr => [...new Set(arr.filter(Boolean))].sort();
 
   function fill(select, values) {
@@ -53,36 +57,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* POPULATE FILTERS */
+  /* ========= FILTERS ========= */
   function populateFilters() {
-    fill(brandFilter, unique(data.map(i => i.brand)));
-    fill(oemFilter, unique(data.map(i => i.oem)));
-    fill(rarityFilter, unique(data.map(i => i.rarity)));
+    fill(brandFilter,    unique(data.map(i => i.brand)));
+    fill(oemFilter,      unique(data.map(i => i.oem)));
+    fill(rarityFilter,   unique(data.map(i => i.rarity)));
     fill(locationFilter, unique(data.map(i => i.location)));
-    fill(deviceFilter, unique(data.map(i => i.device)));
+    fill(deviceFilter,   unique(data.map(i => i.device)));
   }
 
-  /* FILTERING */
   function applyFilters() {
-    const q = search.value.trim().toLowerCase();
-    currentPage = 1; // RESET PAGE
+    const q = search.value.toLowerCase().trim();
+    currentPage = 1;
 
     filtered = data.filter(i => {
       const text = [
-        i.brand,
-        i.oem,
-        i.rarity,
-        i.location,
-        i.device,
+        i.brand, i.oem, i.rarity, i.location, i.device,
         ...(i.tags || [])
       ].join(" ").toLowerCase();
 
       if (q && !text.includes(q)) return false;
-      if (brandFilter.value && i.brand !== brandFilter.value) return false;
-      if (oemFilter.value && i.oem !== oemFilter.value) return false;
-      if (rarityFilter.value && i.rarity !== rarityFilter.value) return false;
+      if (brandFilter.value    && i.brand    !== brandFilter.value) return false;
+      if (oemFilter.value      && i.oem      !== oemFilter.value) return false;
+      if (rarityFilter.value   && i.rarity   !== rarityFilter.value) return false;
       if (locationFilter.value && i.location !== locationFilter.value) return false;
-      if (deviceFilter.value && i.device !== deviceFilter.value) return false;
+      if (deviceFilter.value   && i.device   !== deviceFilter.value) return false;
 
       return true;
     });
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applySort();
   }
 
-  /* SORTING */
+  /* ========= SORT ========= */
   function applySort() {
     const v = sort.value;
 
@@ -102,28 +101,25 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   }
 
-  /* RENDER (PAGINATED) */
+  /* ========= RENDER ========= */
   function render() {
     gallery.innerHTML = "";
 
     const start = (currentPage - 1) * PER_PAGE;
-    const end = start + PER_PAGE;
-    const pageItems = filtered.slice(start, end);
+    const pageItems = filtered.slice(start, start + PER_PAGE);
 
     pageItems.forEach(item => {
+      const index = data.indexOf(item);
+
       const card = document.createElement("div");
       card.className = "gallery-card";
 
       const img = document.createElement("img");
       img.src = item.src;
-      img.loading = "lazy";
       img.alt = item.brand;
+      img.loading = "lazy";
 
-      // FIXED CLICK HANDLER
-      img.addEventListener("click", e => {
-        e.stopPropagation();
-        openModal(item);
-      });
+      img.addEventListener("click", () => openModal(index));
 
       const overlay = document.createElement("div");
       overlay.className = "overlay";
@@ -140,10 +136,8 @@ document.addEventListener("DOMContentLoaded", () => {
     renderPagination();
   }
 
-  /* PAGINATION */
   function renderPagination() {
     pagination.innerHTML = "";
-
     const totalPages = Math.ceil(filtered.length / PER_PAGE);
     if (totalPages <= 1) return;
 
@@ -151,85 +145,77 @@ document.addEventListener("DOMContentLoaded", () => {
       const btn = document.createElement("button");
       btn.textContent = i;
       btn.className = i === currentPage ? "active" : "";
-
-      btn.addEventListener("click", () => {
+      btn.onclick = () => {
         currentPage = i;
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-
+      };
       pagination.appendChild(btn);
     }
   }
 
-  /* MODAL (CLICK-TO-ZOOM FIXED) */
-  function openModal(item) {
+  /* ========= MODAL ========= */
+  function openModal(index) {
+    currentIndex = index;
+    const item = data[index];
+
     modalImg.src = item.src;
     modalMeta.innerHTML = `
-      <p><b>Brand:</b> ${item.brand}</p>
-      <p><b>OEM:</b> ${item.oem}</p>
-      <p><b>Rarity:</b> ${item.rarity}</p>
-      <p><b>Location:</b> ${item.location}</p>
-      <p><b>Device:</b> ${item.device}</p>
-      <p>${item.tags.join(", ")}</p>
+      <div class="info-grid">
+        <p><b>Brand:</b> ${item.brand}</p>
+        <p><b>OEM:</b> ${item.oem}</p>
+        <p><b>Rarity:</b> ${item.rarity}</p>
+        <p><b>Location:</b> ${item.location}</p>
+        <p><b>Device:</b> ${item.device}</p>
+        <p>${(item.tags || []).join(", ")}</p>
+      </div>
     `;
+
+    isZoomed = false;
+    modalImg.classList.remove("zoomed");
     modal.classList.add("open");
+    document.body.style.overflow = "hidden";
   }
-
-  modalClose.addEventListener("click", closeModal);
-
-  modal.addEventListener("click", e => {
-    if (e.target === modal) closeModal();
-  });
 
   function closeModal() {
     modal.classList.remove("open");
     modalImg.src = "";
+    document.body.style.overflow = "";
   }
 
-let isZoomed = false;
+  modalClose.onclick = closeModal;
+  modal.onclick = e => { if (e.target === modal) closeModal(); };
 
-modalImg.addEventListener("click", () => {
-  isZoomed = !isZoomed;
-  modalImg.classList.toggle("zoomed", isZoomed);
-});
+  /* ========= ZOOM ========= */
+  modalImg.addEventListener("click", e => {
+    e.stopPropagation();
+    isZoomed = !isZoomed;
+    modalImg.classList.toggle("zoomed", isZoomed);
+  });
 
-let currentIndex = 0;
+  /* ========= NAV ========= */
+  nextBtn.onclick = e => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % data.length;
+    openModal(currentIndex);
+  };
 
-function openModal(index) {
-  currentIndex = index;
-  modalImg.src = images[index].src;
-  modal.classList.add("open");
-  isZoomed = false;
-  modalImg.classList.remove("zoomed");
-}
+  prevBtn.onclick = e => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + data.length) % data.length;
+    openModal(currentIndex);
+  };
 
-document.querySelector(".nav-arrow.next").onclick = () => {
-  currentIndex = (currentIndex + 1) % images.length;
-  openModal(currentIndex);
-};
+  /* ========= SWIPE ========= */
+  let startX = 0;
+  modal.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+  modal.addEventListener("touchend", e => {
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 60) prevBtn.click();
+    if (diff < -60) nextBtn.click();
+  });
 
-document.querySelector(".nav-arrow.prev").onclick = () => {
-  currentIndex = (currentIndex - 1 + images.length) % images.length;
-  openModal(currentIndex);
-};
-
-
-
-let startX = 0;
-
-modal.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-
-modal.addEventListener("touchend", e => {
-  const diff = e.changedTouches[0].clientX - startX;
-  if (diff > 50) document.querySelector(".prev").click();
-  if (diff < -50) document.querySelector(".next").click();
-});
-
-
-  /* EVENTS */
+  /* ========= EVENTS ========= */
   search.addEventListener("input", applyFilters);
   brandFilter.addEventListener("change", applyFilters);
   oemFilter.addEventListener("change", applyFilters);
@@ -237,4 +223,5 @@ modal.addEventListener("touchend", e => {
   locationFilter.addEventListener("change", applyFilters);
   deviceFilter.addEventListener("change", applyFilters);
   sort.addEventListener("change", applySort);
+
 });
