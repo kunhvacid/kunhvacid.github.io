@@ -187,6 +187,48 @@ document.addEventListener("DOMContentLoaded", () => {
     modalImg.src = "";
   }
 
+let isZoomed = false;
+
+modalImg.addEventListener("click", () => {
+  isZoomed = !isZoomed;
+  modalImg.classList.toggle("zoomed", isZoomed);
+});
+
+let currentIndex = 0;
+
+function openModal(index) {
+  currentIndex = index;
+  modalImg.src = images[index].src;
+  modal.classList.add("open");
+  isZoomed = false;
+  modalImg.classList.remove("zoomed");
+}
+
+document.querySelector(".nav-arrow.next").onclick = () => {
+  currentIndex = (currentIndex + 1) % images.length;
+  openModal(currentIndex);
+};
+
+document.querySelector(".nav-arrow.prev").onclick = () => {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  openModal(currentIndex);
+};
+
+
+
+let startX = 0;
+
+modal.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+});
+
+modal.addEventListener("touchend", e => {
+  const diff = e.changedTouches[0].clientX - startX;
+  if (diff > 50) document.querySelector(".prev").click();
+  if (diff < -50) document.querySelector(".next").click();
+});
+
+
   /* EVENTS */
   search.addEventListener("input", applyFilters);
   brandFilter.addEventListener("change", applyFilters);
@@ -196,4 +238,3 @@ document.addEventListener("DOMContentLoaded", () => {
   deviceFilter.addEventListener("change", applyFilters);
   sort.addEventListener("change", applySort);
 });
-
