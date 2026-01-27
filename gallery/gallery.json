@@ -50,6 +50,66 @@
     "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Uknown Model"]
   },
   {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241226_183645.jpg",
+    "date": "2024-12-26",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "AUX",
+    "rarity": "Very Rare",
+    "brand": "Fujiaire",
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Indoor", "Unknown Model", "Uknown Model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241226_181714.jpg",
+    "date": "2024-12-26",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "AUX",
+    "rarity": "Very Rare",
+    "brand": "Fujiaire",
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Indoor", "Unknown Model", "Uknown Model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241226_174709.jpg",
+    "date": "2024-12-26",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Midea",
+    "rarity": "Very Rare",
+    "brand": "Carrier",
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Uknown Model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241226_171412.jpg",
+    "date": "2024-12-26",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "LG",
+    "tags": ["Split AC", "VRF", "Thailand", "Unknown HP", "Outdoor", "Multi V5", "Uknown Model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241226_153043.jpg",
+    "date": "204-12-26",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "LG",
+    "tags": ["Split AC", "VRF", "Thailand", "Unknown HP", "Indoor", "Multi V5", "Uknown Model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/20250622_212343.jpg",
+    "date": "2025-12-26",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "GREE",
+    "tags": ["Split AC", "Standard", "China", "2.0 HP", "Outdoor", "C3E", "GWC-18C3E"]
+  },
+  {
     "src": "https://kunhvacid.github.io/ac/IMG_20241229_142703.jpg",
     "date": "2025-01-08",
     "location": "Yogyakarta",
