@@ -213,17 +213,18 @@ body {
 
 
 
-.badge-multi{
-  position:absolute;
-  top:8px;
-  left:8px;
-  background:#ff9800;
-  color:#000;
-  font-size:12px;
-  padding:4px 8px;
-  border-radius:999px;
-  z-index:3;
+.unit-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ffb000;
+  color: #000;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
 }
+
 
 
 /* ==================================================
