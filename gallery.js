@@ -69,7 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 }
 
-
   /* ========= FILTERS ========= */
   function populateFilters() {
     fill(brandFilter,    unique(data.map(i => i.brand)));
