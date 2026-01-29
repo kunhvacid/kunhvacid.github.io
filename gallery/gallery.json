@@ -185,7 +185,7 @@
     "device": "Redmi Note 12 Pro 5G",
     "oem": ["Inhouse"],
     "rarity": ["Common", "Uncommon"],
-    "brand": "GREE",
+    "brand": ["GREE"],
     "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "2.5 HP", "Outdoor", "MOO5A", "U-Match", "GU_T/A-K", "GWC-18MOO5A/O", "GUL71W/A-M"]
   }
 ]
