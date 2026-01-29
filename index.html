@@ -90,16 +90,23 @@
      "Random AC Enthusiast"
    </p>
 
-   <a href="#features" class="btn">change this button</a>
-
 </section>
 
 
 
 
+<section id="youtube-embed" class="youtube-embed">
+  <h2>My AC videos!</h2>
 
-<section class="for-you">
-  <h2>Heres some of my AC videos!</h2>
+  <div class="embed-wrapper">
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/7kVL-A5zBUo?rel=0&controls=1&autoplay=1&mute=0&start=0"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+  </div>
   <div id="video-grid-1" class="video-grid"></div>
   <br>
   <br>
@@ -171,20 +178,66 @@
 
 
 
-<section id="youtube-embed" class="youtube-embed">
-  <h2>And my most popular video!</h2>
 
-  <div class="embed-wrapper">
-    <iframe
-      src="https://www.youtube-nocookie.com/embed/7kVL-A5zBUo?rel=0&controls=1&autoplay=1&mute=0&start=0"
-      title="YouTube video player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin">
-    </iframe>
+
+
+
+
+
+
+<section id="music-embed" class="music-embed">
+  <h2>Oh and some of my favourite songs</h2>
+
+  <div class="music-layout">
+    <!-- Album / cover changes per slide -->
+    <div class="album-cover">
+      <img id="albumImage" src="cover1.jpg" alt="Album cover">
+    </div>
+
+    <div class="player-wrapper">
+      <iframe
+        id="spotifyPlayer"
+        src="https://open.spotify.com/embed/album/0hJloArA2Kb9xNBIv34osS"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+      </iframe>
+
+      <!-- arrows -->
+      <button class="nav prev" onclick="prevEmbed()">‹</button>
+      <button class="nav next" onclick="nextEmbed()">›</button>
+    </div>
   </div>
 </section>
 
+<script>
+const embeds = [
+  {
+    src: "https://open.spotify.com/embed/album/0hJloArA2Kb9xNBIv34osS",
+    img: "https://lh3.googleusercontent.com/JTVWSbs80_4HQgci4CNNt4jkRtqUrIEkYzGMs2afjIsP49AZsp998CJ6q4m6yJr8_a3dVyeWQBxJYu9s=w544-h544-l90-rj"
+  },
+  {
+    src: "https://open.spotify.com/embed/playlist/7tggzWGzVusg9SEKqbJYpt",
+    img: "https://lh3.googleusercontent.com/ql1fy4aKaaJfHm1DKrdrT7CCWkZZ_h8Pl0zkWzRDW8yy00s5OLQNyG8U6i9eQH61xUZOZpfkwgy0pdUF=w544-h544-l90-rj"
+  }
+];
+
+let index = 0;
+
+function updateEmbed() {
+  document.getElementById("spotifyPlayer").src = embeds[index].src;
+  document.getElementById("albumImage").src = embeds[index].img;
+}
+
+function nextEmbed() {
+  index = (index + 1) % embeds.length;
+  updateEmbed();
+}
+
+function prevEmbed() {
+  index = (index - 1 + embeds.length) % embeds.length;
+  updateEmbed();
+}
+</script>
 
 
 
@@ -198,20 +251,7 @@
 
 
 
-  <section id="features" class="features">
-    <div class="feature-box">
-      <h3>Fast</h3>
-      <p>Lightweight and optimized structure.</p>
-    </div>
-    <div class="feature-box">
-      <h3>Responsive</h3>
-      <p>Works on desktop and mobile devices.</p>
-    </div>
-    <div class="feature-box">
-      <h3>Simple</h3>
-      <p>Clean layout using only HTML and CSS.</p>
-    </div>
-  </section>
+
 
 
 
@@ -298,6 +338,3 @@
 
 </body>
 </html>
-
-
-
