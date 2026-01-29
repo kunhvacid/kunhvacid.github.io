@@ -206,6 +206,26 @@ body {
   }
 }
 
+
+
+
+
+
+
+
+.badge-multi{
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:#ff9800;
+  color:#000;
+  font-size:12px;
+  padding:4px 8px;
+  border-radius:999px;
+  z-index:3;
+}
+
+
 /* ==================================================
    PAGINATION
 ================================================== */
@@ -277,3 +297,4 @@ main {
 .site-footer {
   margin-top: auto;
 }
+
