@@ -188,56 +188,60 @@
 <section id="music-embed" class="music-embed">
   <h2>Oh and some of my favourite songs</h2>
 
-  <div class="music-layout">
-    <!-- Album / cover changes per slide -->
-    <div class="album-cover">
-      <img id="albumImage" src="cover1.jpg" alt="Album cover">
-    </div>
+  <div class="player-wrapper">
+    <iframe
+      id="spotifyPlayer"
+      src="https://open.spotify.com/embed/album/0hJloArA2Kb9xNBIv34osS"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
 
-    <div class="player-wrapper">
-      <iframe
-        id="spotifyPlayer"
-        src="https://open.spotify.com/embed/album/0hJloArA2Kb9xNBIv34osS"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy">
-      </iframe>
-
-      <!-- arrows -->
-      <button class="nav prev" onclick="prevEmbed()">‹</button>
-      <button class="nav next" onclick="nextEmbed()">›</button>
-    </div>
+    <button class="nav prev" onclick="prevEmbed()">‹</button>
+    <button class="nav next" onclick="nextEmbed()">›</button>
   </div>
 </section>
 
+
 <script>
 const embeds = [
-  {
-    src: "https://open.spotify.com/embed/album/0hJloArA2Kb9xNBIv34osS",
-    img: "https://lh3.googleusercontent.com/JTVWSbs80_4HQgci4CNNt4jkRtqUrIEkYzGMs2afjIsP49AZsp998CJ6q4m6yJr8_a3dVyeWQBxJYu9s=w544-h544-l90-rj"
-  },
-  {
-    src: "https://open.spotify.com/embed/playlist/7tggzWGzVusg9SEKqbJYpt",
-    img: "https://lh3.googleusercontent.com/ql1fy4aKaaJfHm1DKrdrT7CCWkZZ_h8Pl0zkWzRDW8yy00s5OLQNyG8U6i9eQH61xUZOZpfkwgy0pdUF=w544-h544-l90-rj"
-  }
+  "https://open.spotify.com/embed/album/0hJloArA2Kb9xNBIv34osS",
+  "https://open.spotify.com/embed/album/575TQDOQqc0MAheeEeKWUR",
+  "https://open.spotify.com/embed/album/2IjkSbisATTpSpVIlFVNkN",
+  "https://open.spotify.com/embed/album/0gEu9SrHjLrpTemne6OO1L"
 ];
 
 let index = 0;
+const wrapper = document.querySelector(".player-wrapper");
 
-function updateEmbed() {
-  document.getElementById("spotifyPlayer").src = embeds[index].src;
-  document.getElementById("albumImage").src = embeds[index].img;
+function renderEmbed() {
+  wrapper.querySelector("iframe")?.remove();
+
+  const iframe = document.createElement("iframe");
+  iframe.src = embeds[index];
+  iframe.allow =
+    "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+  iframe.loading = "lazy";
+  iframe.style.width = "100%";
+  iframe.style.height = "380px";
+  iframe.style.border = "none";
+  iframe.style.borderRadius = "16px";
+
+  wrapper.prepend(iframe);
 }
 
 function nextEmbed() {
   index = (index + 1) % embeds.length;
-  updateEmbed();
+  renderEmbed();
 }
 
 function prevEmbed() {
   index = (index - 1 + embeds.length) % embeds.length;
-  updateEmbed();
+  renderEmbed();
 }
+
+renderEmbed();
 </script>
+
 
 
 
