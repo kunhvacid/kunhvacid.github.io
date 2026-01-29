@@ -6,7 +6,14 @@
   font-family: "Montserrat", sans-serif;
 }
 
-
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden; /* HARD FIX: no horizontal scroll */
+}
 
 body {
   line-height: 1.6;
@@ -455,41 +462,21 @@ body {
 
 
 
-/* full section background */
 .music-embed {
-  position: relative;
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 96px 32px;
-  background:rgba(0, 0, 0, 0.04);
+  background: rgba(0,0,0,0.04);
   border-radius: 32px;
 }
 
-/* title stays readable */
 .music-embed h2 {
   margin-bottom: 40px;
   text-align: center;
 }
 
-/* layout */
-.music-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 40px;
-  align-items: center;
-}
-
-/* album */
-.album-cover img {
-  width: 100%;
-  border-radius: 20px;
-}
-
-/* player container (now transparent) */
 .player-wrapper {
   position: relative;
-  padding: 0;
-  background: transparent;
 }
 
 .player-wrapper iframe {
@@ -499,7 +486,6 @@ body {
   border-radius: 16px;
 }
 
-/* arrows */
 .nav {
   position: absolute;
   top: 50%;
@@ -517,15 +503,11 @@ body {
 .nav.prev { left: -64px; }
 .nav.next { right: -64px; }
 
-/* mobile */
 @media (max-width: 900px) {
-  .music-layout {
-    grid-template-columns: 1fr;
-  }
-
   .nav.prev { left: 8px; }
   .nav.next { right: 8px; }
 }
+
 
 
 
