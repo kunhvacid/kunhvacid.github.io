@@ -111,12 +111,22 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241229_142703.jpg",
-    "date": "2025-01-08",
+    "date": "2024-12-29",
     "location": "Yogyakarta",
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Midea",
     "rarity": "Very Rare",
     "brand": "Sanken",
     "tags": ["Split AC", "Standard", "Unknown", "0.5 HP", "Outdoor", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4489.JPG",
+    "date": "2025-01-08",
+    "location": "Jakarta",
+    "device": "idk",
+    "oem": "Inhouse",
+    "rarity": ["Rare", "Extremely Rare"],
+    "brand": ["GREE", "Daikin"],
+    "tags": ["Split AC", "Standard", "Inverter", "Multi Split", "China", "Thailand", "Unknown HP", "Outdoor", "idk model"]
   }
 ]
