@@ -1,301 +1,256 @@
-/* ==================================================
-   RESET & BASE
-================================================== */
+/* =========================
+   GALLERY – CLEAN REWRITE (MODAL + NAV + ZOOM FIXED)
+   ========================= */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-  overflow-x: hidden; /* HARD FIX: no horizontal scroll */
-}
+  /* ========= ELEMENTS ========= */
+  const gallery = document.getElementById("gallery");
+  const pagination = document.getElementById("pagination");
 
-body {
-  font-family: "Montserrat", system-ui, sans-serif;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-}
+  const search = document.getElementById("search");
+  const sort = document.getElementById("sort");
 
-/* ==================================================
-   FILTER CONTROLS
-================================================== */
+  const locationFilter = document.getElementById("locationFilter");
+  const deviceFilter   = document.getElementById("deviceFilter");
+  const brandFilter    = document.getElementById("brandFilter");
+  const oemFilter      = document.getElementById("oemFilter");
+  const rarityFilter   = document.getElementById("rarityFilter");
+  const unitFilter = document.getElementById("unitFilter");
 
-.gallery-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 1rem;
-  background: rgba(15, 15, 15, 0.9);
-  backdrop-filter: blur(10px);
-}
+  const modal     = document.getElementById("modal");
+  const modalImg  = document.getElementById("modal-img");
+  const modalMeta = document.getElementById("modal-meta");
+  const modalClose = modal.querySelector(".close");
+  const nextBtn = modal.querySelector(".next");
+  const prevBtn = modal.querySelector(".prev");
 
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.8rem;
-}
+  /* ========= STATE ========= */
+  let data = [];
+  let filtered = [];
+  let currentIndex = 0;
+  let isZoomed = false;
 
-.filter-group label {
-  margin-bottom: 4px;
-  opacity: 0.7;
-}
+  const PER_PAGE = 8;
+  let currentPage = 1;
 
-/* INPUTS */
-.gallery-controls input,
-.gallery-controls select {
-  font-family: "Montserrat", sans-serif;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  font-size: 0.9rem;
-  min-width: 140px;
-}
+  /* ========= LOAD DATA ========= */
+  fetch("gallery/gallery.json")
+    .then(r => r.json())
+    .then(json => {
+      data = json.map(normalize);
+      filtered = [...data];
+      populateFilters();
+      applySort();
+    })
+    .catch(err => console.error("Gallery load failed:", err));
 
-/* SEARCH FLEX */
-#search {
-  flex: 1 1 30px;
-}
+  /* ========= HELPERS ========= */
+  const unique = arr => [...new Set(arr.filter(Boolean))].sort();
 
-/* ==================================================
-   GALLERY GRID
-================================================== */
-
-.gallery-grid {
-  width: 100%;
-  padding: 1.5rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-/* CARD */
-.gallery-card {
-  position: relative;
-  width: 100%;
-}
-
-/* IMAGE */
-.gallery-card img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  border-radius: 14px;
-  cursor: zoom-in;
-}
-
-/* OVERLAY */
-.overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.65);
-  opacity: 0;
-  padding: 12px;
-  font-size: 0.85rem;
-  transition: opacity 0.2s ease;
-  pointer-events: none; /* allow click-through */
-}
-
-.gallery-card:hover .overlay {
-  opacity: 1;
-}
-
-/* ==================================================
-   MODAL
-================================================== */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.92);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 9999;
-  padding: 16px;
-}
-
-.modal.open {
-  display: flex;
-}
-
-/* IMAGE */
-.modal img {
-  max-width: 95vw;
-  max-height: 80vh;
-  border-radius: 12px;
-  cursor: zoom-in;
-  transition: transform 0.25s ease;
-}
-
-.modal img.zoomed {
-  transform: scale(2.2);
-  cursor: zoom-out;
-}
-
-/* CLOSE */
-.modal .close {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-/* INFO */
-.modal-info {
-  margin-top: 16px;
-  max-width: 95vw;
-}
-
-/* TWO-COLUMN INFO GRID */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 24px;
-  font-size: 0.9rem;
-}
-
-/* MOBILE INFO */
-@media (max-width: 600px) {
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ==================================================
-   MODAL NAV ARROWS
-================================================== */
-
-.nav-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2.5rem;
-  padding: 14px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.nav-arrow.prev {
-  left: 8px;
-}
-
-.nav-arrow.next {
-  right: 8px;
-}
-
-/* MOBILE TAP TARGET */
-@media (max-width: 600px) {
-  .nav-arrow {
-    font-size: 3rem;
-    padding: 20px;
-  }
-}
-
-
-
-
-
-
-
-
-.unit-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: #ffb000;
-  color: #000;
-  font-size: 0.75rem;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-
-
-/* ==================================================
-   PAGINATION
-================================================== */
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin: 32px 0;
-}
-
-.pagination button {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background: #222;
-  color: #fff;
-}
-
-.pagination button.active {
-  background: #fff;
-  color: #000;
-}
-
-/* ==================================================
-   RESPONSIVE FILTERS
-================================================== */
-
-@media (max-width: 900px) {
-  .gallery-controls {
-    justify-content: center;
+  function fill(select, values) {
+    select.innerHTML = `<option value="">All</option>`;
+    values.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      select.appendChild(o);
+    });
   }
 
-  #search {
-    flex: 1 1 100%;
-  }
-
-  .gallery-controls select {
-    flex: 1 1 45%;
-  }
+  function normalize(item) {
+  return {
+    ...item,
+    brandArr: Array.isArray(item.brand) ? item.brand : [item.brand],
+    rarityArr: Array.isArray(item.rarity) ? item.rarity : [item.rarity],
+    units: (Array.isArray(item.brand) || Array.isArray(item.rarity))
+      ? "Multiple"
+      : "Single"
+  };
 }
 
-@media (max-width: 500px) {
-  .gallery-controls {
-    padding: 10px;
+
+  /* ========= FILTERS ========= */
+  function populateFilters() {
+    fill(brandFilter,    unique(data.map(i => i.brand)));
+    fill(oemFilter,      unique(data.map(i => i.oem)));
+    fill(rarityFilter,   unique(data.map(i => i.rarity)));
+    fill(locationFilter, unique(data.map(i => i.location)));
+    fill(deviceFilter,   unique(data.map(i => i.device)));
+    fill(unitFilter, ["Single", "Multiple"]);
   }
 
-  .gallery-controls input,
-  .gallery-controls select {
-    padding: 10px 12px;
-    font-size: 0.95rem;
+  function applyFilters() {
+    const q = search.value.toLowerCase().trim();
+    currentPage = 1;
+
+filtered = data.filter(i => {
+  const text = [
+    ...i.brandArr,
+    ...i.rarityArr,
+    i.oem,
+    i.location,
+    i.device,
+    ...(i.tags || [])
+  ].join(" ").toLowerCase();
+
+  if (q && !text.includes(q)) return false;
+  if (brandFilter.value && !i.brandArr.includes(brandFilter.value)) return false;
+  if (rarityFilter.value && !i.rarityArr.includes(rarityFilter.value)) return false;
+  if (oemFilter.value && i.oem !== oemFilter.value) return false;
+  if (locationFilter.value && i.location !== locationFilter.value) return false;
+  if (deviceFilter.value && i.device !== deviceFilter.value) return false;
+  if (unitFilter.value && i.units !== unitFilter.value) return false;
+
+  return true;
+});
+
+
+    applySort();
   }
 
-  .gallery-controls select,
-  #search {
-    flex: 1 1 100%;
+  /* ========= SORT ========= */
+  function applySort() {
+    const v = sort.value;
+
+    if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
+    if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
+    if (v === "az") filtered.sort((a,b)=>a.brand.localeCompare(b.brand));
+    if (v === "za") filtered.sort((a,b)=>b.brand.localeCompare(a.brand));
+
+    render();
   }
+
+  /* ========= RENDER ========= */
+  function render() {
+    gallery.innerHTML = "";
+
+    const start = (currentPage - 1) * PER_PAGE;
+    const pageItems = filtered.slice(start, start + PER_PAGE);
+
+    pageItems.forEach(item => {
+      const index = data.indexOf(item);
+
+      const card = document.createElement("div");
+      card.className = "gallery-card";
+
+      const img = document.createElement("img");
+      img.src = item.src;
+      img.alt = item.brand;
+      img.loading = "lazy";
+
+      img.addEventListener("click", () => openModal(index));
+
+      const overlay = document.createElement("div");
+      overlay.className = "overlay";
+      overlay.innerHTML = `
+        <strong>${item.brand}</strong><br>
+        ${item.location}<br>
+        ${item.date}
+      `;
+
+      if (item.units === "Multiple") {
+  const badge = document.createElement("div");
+  badge.className = "unit-badge";
+  badge.textContent = "Multiple units";
+  card.appendChild(badge);
 }
 
-/* ==================================================
-   FOOTER SUPPORT
-================================================== */
+      card.append(img, overlay);
+      gallery.appendChild(card);
+    });
 
-main {
-  flex: 1 0 auto;
-}
+    renderPagination();
+  }
 
-.site-footer {
-  margin-top: auto;
-}
+  function renderPagination() {
+    pagination.innerHTML = "";
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+    if (totalPages <= 1) return;
 
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = i === currentPage ? "active" : "";
+      btn.onclick = () => {
+        currentPage = i;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+      pagination.appendChild(btn);
+    }
+  }
+
+  /* ========= MODAL ========= */
+  function openModal(index) {
+    currentIndex = index;
+    const item = data[index];
+
+    modalImg.src = item.src;
+   modalMeta.innerHTML = `
+  <div class="info-grid">
+    <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
+    <p><b>OEM:</b> ${item.oem}</p>
+    <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
+    <p><b>Units:</b> ${item.units}</p>
+    <p><b>Location:</b> ${item.location}</p>
+    <p><b>Device:</b> ${item.device}</p>
+    <p>${(item.tags || []).join(", ")}</p>
+  </div>
+`;
+
+
+    isZoomed = false;
+    modalImg.classList.remove("zoomed");
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    modalImg.src = "";
+    document.body.style.overflow = "";
+  }
+
+  modalClose.onclick = closeModal;
+  modal.onclick = e => { if (e.target === modal) closeModal(); };
+
+  /* ========= ZOOM ========= */
+  modalImg.addEventListener("click", e => {
+    e.stopPropagation();
+    isZoomed = !isZoomed;
+    modalImg.classList.toggle("zoomed", isZoomed);
+  });
+
+  /* ========= NAV ========= */
+  nextBtn.onclick = e => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % data.length;
+    openModal(currentIndex);
+  };
+
+  prevBtn.onclick = e => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + data.length) % data.length;
+    openModal(currentIndex);
+  };
+
+  /* ========= SWIPE ========= */
+  let startX = 0;
+  modal.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+  modal.addEventListener("touchend", e => {
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 60) prevBtn.click();
+    if (diff < -60) nextBtn.click();
+  });
+
+  /* ========= EVENTS ========= */
+  search.addEventListener("input", applyFilters);
+  brandFilter.addEventListener("change", applyFilters);
+  oemFilter.addEventListener("change", applyFilters);
+  rarityFilter.addEventListener("change", applyFilters);
+  locationFilter.addEventListener("change", applyFilters);
+  deviceFilter.addEventListener("change", applyFilters);
+  sort.addEventListener("change", applySort);
+
+});
