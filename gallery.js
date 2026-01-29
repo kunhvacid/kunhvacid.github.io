@@ -1,5 +1,6 @@
 /* =========================
-   GALLERY – CLEAN REWRITE (MODAL + NAV + ZOOM FIXED)
+   GALLERY – FULL REPLACEMENT
+   Multi-brand + single/multiple units + modal nav + zoom
    ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,13 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandFilter    = document.getElementById("brandFilter");
   const oemFilter      = document.getElementById("oemFilter");
   const rarityFilter   = document.getElementById("rarityFilter");
+  const unitFilter     = document.getElementById("unitFilter"); // NEW
 
-  const modal     = document.getElementById("modal");
-  const modalImg  = document.getElementById("modal-img");
-  const modalMeta = document.getElementById("modal-meta");
+  const modal      = document.getElementById("modal");
+  const modalImg   = document.getElementById("modal-img");
+  const modalMeta  = document.getElementById("modal-meta");
   const modalClose = modal.querySelector(".close");
-  const nextBtn = modal.querySelector(".next");
-  const prevBtn = modal.querySelector(".prev");
+  const nextBtn    = modal.querySelector(".next");
+  const prevBtn    = modal.querySelector(".prev");
 
   /* ========= STATE ========= */
   let data = [];
@@ -32,6 +34,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const PER_PAGE = 8;
   let currentPage = 1;
+
+  /* ========= HELPERS ========= */
+  const unique = arr => [...new Set(arr.filter(Boolean))].sort();
+
+  const toArray = v => {
+    if (Array.isArray(v)) return v;
+    if (v === undefined || v === null) return [];
+    return [v];
+  };
+
+  const isMultiple = item => toArray(item.brand).length > 1;
+
+  function fill(select, values) {
+    if (!select) return;
+    select.innerHTML = `<option value="">All</option>`;
+    values.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      select.appendChild(o);
+    });
+  }
 
   /* ========= LOAD DATA ========= */
   fetch("gallery/gallery.json")
@@ -44,44 +68,48 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => console.error("Gallery load failed:", err));
 
-  /* ========= HELPERS ========= */
-  const unique = arr => [...new Set(arr.filter(Boolean))].sort();
-
-  function fill(select, values) {
-    select.innerHTML = `<option value="">All</option>`;
-    values.forEach(v => {
-      const o = document.createElement("option");
-      o.value = v;
-      o.textContent = v;
-      select.appendChild(o);
-    });
-  }
-
-  /* ========= FILTERS ========= */
+  /* ========= FILTER POPULATION ========= */
   function populateFilters() {
-    fill(brandFilter,    unique(data.map(i => i.brand)));
-    fill(oemFilter,      unique(data.map(i => i.oem)));
-    fill(rarityFilter,   unique(data.map(i => i.rarity)));
+    fill(brandFilter,    unique(data.flatMap(i => toArray(i.brand))));
+    fill(oemFilter,      unique(data.flatMap(i => toArray(i.oem))));
+    fill(rarityFilter,   unique(data.flatMap(i => toArray(i.rarity))));
     fill(locationFilter, unique(data.map(i => i.location)));
     fill(deviceFilter,   unique(data.map(i => i.device)));
+
+    if (unitFilter) {
+      unitFilter.innerHTML = `
+        <option value="">All</option>
+        <option value="single">Single unit</option>
+        <option value="multiple">Multiple units</option>
+      `;
+    }
   }
 
+  /* ========= FILTER LOGIC ========= */
   function applyFilters() {
     const q = search.value.toLowerCase().trim();
     currentPage = 1;
 
     filtered = data.filter(i => {
+      const brands  = toArray(i.brand);
+      const oems    = toArray(i.oem);
+      const rar     = toArray(i.rarity);
+
       const text = [
-        i.brand, i.oem, i.rarity, i.location, i.device,
+        ...brands, ...oems, ...rar,
+        i.location, i.device,
         ...(i.tags || [])
       ].join(" ").toLowerCase();
 
       if (q && !text.includes(q)) return false;
-      if (brandFilter.value    && i.brand    !== brandFilter.value) return false;
-      if (oemFilter.value      && i.oem      !== oemFilter.value) return false;
-      if (rarityFilter.value   && i.rarity   !== rarityFilter.value) return false;
+      if (brandFilter.value    && !brands.includes(brandFilter.value)) return false;
+      if (oemFilter.value      && !oems.includes(oemFilter.value)) return false;
+      if (rarityFilter.value   && !rar.includes(rarityFilter.value)) return false;
       if (locationFilter.value && i.location !== locationFilter.value) return false;
       if (deviceFilter.value   && i.device   !== deviceFilter.value) return false;
+
+      if (unitFilter?.value === "single"   && isMultiple(i)) return false;
+      if (unitFilter?.value === "multiple" && !isMultiple(i)) return false;
 
       return true;
     });
@@ -95,8 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
     if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
-    if (v === "az") filtered.sort((a,b)=>a.brand.localeCompare(b.brand));
-    if (v === "za") filtered.sort((a,b)=>b.brand.localeCompare(a.brand));
+    if (v === "az") filtered.sort((a,b)=>toArray(a.brand)[0].localeCompare(toArray(b.brand)[0]));
+    if (v === "za") filtered.sort((a,b)=>toArray(b.brand)[0].localeCompare(toArray(a.brand)[0]));
 
     render();
   }
@@ -116,18 +144,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const img = document.createElement("img");
       img.src = item.src;
-      img.alt = item.brand;
+      img.alt = toArray(item.brand).join(", ");
       img.loading = "lazy";
-
       img.addEventListener("click", () => openModal(index));
 
       const overlay = document.createElement("div");
       overlay.className = "overlay";
       overlay.innerHTML = `
-        <strong>${item.brand}</strong><br>
+        <strong>${toArray(item.brand).join(", ")}</strong><br>
         ${item.location}<br>
         ${item.date}
       `;
+
+      if (isMultiple(item)) {
+        const badge = document.createElement("span");
+        badge.className = "badge-multi";
+        badge.textContent = "Multiple units";
+        card.appendChild(badge);
+      }
 
       card.append(img, overlay);
       gallery.appendChild(card);
@@ -162,9 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
     modalImg.src = item.src;
     modalMeta.innerHTML = `
       <div class="info-grid">
-        <p><b>Brand:</b> ${item.brand}</p>
-        <p><b>OEM:</b> ${item.oem}</p>
-        <p><b>Rarity:</b> ${item.rarity}</p>
+        <p><b>Brand:</b> ${toArray(item.brand).join(", ")}</p>
+        <p><b>OEM:</b> ${toArray(item.oem).join(", ")}</p>
+        <p><b>Rarity:</b> ${toArray(item.rarity).join(", ")}</p>
         <p><b>Location:</b> ${item.location}</p>
         <p><b>Device:</b> ${item.device}</p>
         <p>${(item.tags || []).join(", ")}</p>
@@ -222,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
   rarityFilter.addEventListener("change", applyFilters);
   locationFilter.addEventListener("change", applyFilters);
   deviceFilter.addEventListener("change", applyFilters);
+  unitFilter?.addEventListener("change", applyFilters);
   sort.addEventListener("change", applySort);
 
 });
