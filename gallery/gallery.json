@@ -543,10 +543,10 @@
     "date": "2025-12-25",
     "location": "Yogyakarta",
     "device": "Huawei Mate X6",
-    "oem": ["TCL", "Inhouse"],
-    "rarity": ["Uncommon","Common"],
-    "brand": ["Akari","Daikin"],
-    "tags": ["Split AC", "Standard", "China", "Thailand", "0.5 HP", "Outdoor", "Super Mini Split", "STC_NV", "AC-0578PLWk", "RC15NV14"]
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "SAY", "Plasmacluster", "AU-A9SSY"]
   },
 
 
