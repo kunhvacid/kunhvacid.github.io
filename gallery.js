@@ -1,6 +1,6 @@
 /* =========================
-   GALLERY – CLEAN REWRITE (MODAL + NAV + ZOOM FIXED)
-   ========================= */
+   GALLERY – CLEAN REWRITE (ARRAY-SAFE FILTERS + MULTI-UNIT)
+========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -16,14 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandFilter    = document.getElementById("brandFilter");
   const oemFilter      = document.getElementById("oemFilter");
   const rarityFilter   = document.getElementById("rarityFilter");
-  const unitFilter = document.getElementById("unitFilter");
+  const unitFilter     = document.getElementById("unitFilter");
 
-  const modal     = document.getElementById("modal");
-  const modalImg  = document.getElementById("modal-img");
-  const modalMeta = document.getElementById("modal-meta");
+  const modal      = document.getElementById("modal");
+  const modalImg   = document.getElementById("modal-img");
+  const modalMeta  = document.getElementById("modal-meta");
   const modalClose = modal.querySelector(".close");
-  const nextBtn = modal.querySelector(".next");
-  const prevBtn = modal.querySelector(".prev");
+  const nextBtn    = modal.querySelector(".next");
+  const prevBtn    = modal.querySelector(".prev");
 
   /* ========= STATE ========= */
   let data = [];
@@ -33,6 +33,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const PER_PAGE = 8;
   let currentPage = 1;
+
+  /* ========= HELPERS ========= */
+  const unique = arr => [...new Set(arr.filter(Boolean))].sort();
+
+  const toArray = v => Array.isArray(v) ? v : (v ? [v] : []);
+
+  function fill(select, values) {
+    select.innerHTML = `<option value="">All</option>`;
+    values.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      select.appendChild(o);
+    });
+  }
+
+  function normalize(item) {
+    const brandArr  = toArray(item.brand);
+    const rarityArr = toArray(item.rarity);
+    const oemArr    = toArray(item.oem);
+
+    return {
+      ...item,
+      brandArr,
+      rarityArr,
+      oemArr,
+      units: brandArr.length > 1 || rarityArr.length > 1 ? "Multiple" : "Single"
+    };
+  }
 
   /* ========= LOAD DATA ========= */
   fetch("gallery/gallery.json")
@@ -45,78 +74,41 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => console.error("Gallery load failed:", err));
 
-  /* ========= HELPERS ========= */
-  const unique = arr => [...new Set(arr.filter(Boolean))].sort();
-
-  function fill(select, values) {
-    select.innerHTML = `<option value="">All</option>`;
-    values.forEach(v => {
-      const o = document.createElement("option");
-      o.value = v;
-      o.textContent = v;
-      select.appendChild(o);
-    });
+  /* ========= FILTER POPULATION ========= */
+  function populateFilters() {
+    fill(brandFilter,    unique(data.flatMap(i => i.brandArr)));
+    fill(oemFilter,      unique(data.flatMap(i => i.oemArr)));
+    fill(rarityFilter,   unique(data.flatMap(i => i.rarityArr)));
+    fill(locationFilter, unique(data.map(i => i.location)));
+    fill(deviceFilter,   unique(data.map(i => i.device)));
+    fill(unitFilter, ["Single", "Multiple"]);
   }
 
-function normalize(value) {
-  if (Array.isArray(value)) return value;
-  if (value) return [value];
-  return [];
-}
-
-function populateFilters() {
-  fill(
-    brandFilter,
-    unique(data.flatMap(i => normalize(i.brand)))
-  );
-
-  fill(
-    oemFilter,
-    unique(data.flatMap(i => normalize(i.oem)))
-  );
-
-  fill(
-    rarityFilter,
-    unique(data.flatMap(i => normalize(i.rarity)))
-  );
-
-  fill(
-    locationFilter,
-    unique(data.map(i => i.location))
-  );
-
-  fill(
-    deviceFilter,
-    unique(data.map(i => i.device))
-  );
-}
-
-
+  /* ========= FILTERING ========= */
   function applyFilters() {
     const q = search.value.toLowerCase().trim();
     currentPage = 1;
 
-filtered = data.filter(i => {
-  const text = [
-    ...i.brandArr,
-    ...i.rarityArr,
-    i.oem,
-    i.location,
-    i.device,
-    ...(i.tags || [])
-  ].join(" ").toLowerCase();
+    filtered = data.filter(i => {
+      const text = [
+        ...i.brandArr,
+        ...i.rarityArr,
+        ...i.oemArr,
+        i.location,
+        i.device,
+        ...(i.tags || [])
+      ].join(" ").toLowerCase();
 
-  if (q && !text.includes(q)) return false;
-  if (brandFilter.value && !i.brandArr.includes(brandFilter.value)) return false;
-  if (rarityFilter.value && !i.rarityArr.includes(rarityFilter.value)) return false;
-  if (oemFilter.value && i.oem !== oemFilter.value) return false;
-  if (locationFilter.value && i.location !== locationFilter.value) return false;
-  if (deviceFilter.value && i.device !== deviceFilter.value) return false;
-  if (unitFilter.value && i.units !== unitFilter.value) return false;
+      if (q && !text.includes(q)) return false;
+      if (brandFilter.value    && !i.brandArr.includes(brandFilter.value)) return false;
+      if (rarityFilter.value   && !i.rarityArr.includes(rarityFilter.value)) return false;
+      if (oemFilter.value      && !i.oemArr.includes(oemFilter.value)) return false;
+      if (locationFilter.value && i.location !== locationFilter.value) return false;
+      if (deviceFilter.value   && i.device !== deviceFilter.value) return false;
+      if (unitFilter.value     && i.units !== unitFilter.value) return false;
 
-  return true;
-});
-
+      return true;
+    });
 
     applySort();
   }
@@ -127,8 +119,8 @@ filtered = data.filter(i => {
 
     if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
     if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
-    if (v === "az") filtered.sort((a,b)=>a.brand.localeCompare(b.brand));
-    if (v === "za") filtered.sort((a,b)=>b.brand.localeCompare(a.brand));
+    if (v === "az") filtered.sort((a,b)=>a.brandArr[0].localeCompare(b.brandArr[0]));
+    if (v === "za") filtered.sort((a,b)=>b.brandArr[0].localeCompare(a.brandArr[0]));
 
     render();
   }
@@ -148,25 +140,24 @@ filtered = data.filter(i => {
 
       const img = document.createElement("img");
       img.src = item.src;
-      img.alt = item.brand;
+      img.alt = item.brandArr.join(", ");
       img.loading = "lazy";
-
-      img.addEventListener("click", () => openModal(index));
+      img.onclick = () => openModal(index);
 
       const overlay = document.createElement("div");
       overlay.className = "overlay";
       overlay.innerHTML = `
-        <strong>${item.brand}</strong><br>
+        <strong>${item.brandArr.join(", ")}</strong><br>
         ${item.location}<br>
         ${item.date}
       `;
 
       if (item.units === "Multiple") {
-  const badge = document.createElement("div");
-  badge.className = "unit-badge";
-  badge.textContent = "Multiple units";
-  card.appendChild(badge);
-}
+        const badge = document.createElement("div");
+        badge.className = "unit-badge";
+        badge.textContent = "Multiple units";
+        card.appendChild(badge);
+      }
 
       card.append(img, overlay);
       gallery.appendChild(card);
@@ -199,18 +190,17 @@ filtered = data.filter(i => {
     const item = data[index];
 
     modalImg.src = item.src;
-   modalMeta.innerHTML = `
-  <div class="info-grid">
-    <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
-    <p><b>OEM:</b> ${item.oem}</p>
-    <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
-    <p><b>Units:</b> ${item.units}</p>
-    <p><b>Location:</b> ${item.location}</p>
-    <p><b>Device:</b> ${item.device}</p>
-    <p>${(item.tags || []).join(", ")}</p>
-  </div>
-`;
-
+    modalMeta.innerHTML = `
+      <div class="info-grid">
+        <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
+        <p><b>OEM:</b> ${item.oemArr.join(", ")}</p>
+        <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
+        <p><b>Units:</b> ${item.units}</p>
+        <p><b>Location:</b> ${item.location}</p>
+        <p><b>Device:</b> ${item.device}</p>
+        <p>${(item.tags || []).join(", ")}</p>
+      </div>
+    `;
 
     isZoomed = false;
     modalImg.classList.remove("zoomed");
@@ -228,11 +218,11 @@ filtered = data.filter(i => {
   modal.onclick = e => { if (e.target === modal) closeModal(); };
 
   /* ========= ZOOM ========= */
-  modalImg.addEventListener("click", e => {
+  modalImg.onclick = e => {
     e.stopPropagation();
     isZoomed = !isZoomed;
     modalImg.classList.toggle("zoomed", isZoomed);
-  });
+  };
 
   /* ========= NAV ========= */
   nextBtn.onclick = e => {
@@ -263,6 +253,7 @@ filtered = data.filter(i => {
   rarityFilter.addEventListener("change", applyFilters);
   locationFilter.addEventListener("change", applyFilters);
   deviceFilter.addEventListener("change", applyFilters);
+  unitFilter.addEventListener("change", applyFilters);
   sort.addEventListener("change", applySort);
 
 });
