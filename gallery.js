@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
   let isZoomed = false;
 
-  const PER_PAGE = 8;
+  const PER_PAGE = 7;
   let currentPage = 1;
 
   /* ========= HELPERS ========= */
@@ -257,3 +257,4 @@ document.addEventListener("DOMContentLoaded", () => {
   sort.addEventListener("change", applySort);
 
 });
+
