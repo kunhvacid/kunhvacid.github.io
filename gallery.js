@@ -58,26 +58,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function normalize(item) {
-  return {
-    ...item,
-    brandArr: Array.isArray(item.brand) ? item.brand : [item.brand],
-    rarityArr: Array.isArray(item.rarity) ? item.rarity : [item.rarity],
-    units: (Array.isArray(item.brand) || Array.isArray(item.rarity))
-      ? "Multiple"
-      : "Single"
-  };
+function normalize(value) {
+  if (Array.isArray(value)) return value;
+  if (value) return [value];
+  return [];
 }
 
-  /* ========= FILTERS ========= */
-  function populateFilters() {
-    fill(brandFilter,    unique(data.map(i => i.brand)));
-    fill(oemFilter,      unique(data.map(i => i.oem)));
-    fill(rarityFilter,   unique(data.map(i => i.rarity)));
-    fill(locationFilter, unique(data.map(i => i.location)));
-    fill(deviceFilter,   unique(data.map(i => i.device)));
-    fill(unitFilter, ["Single", "Multiple"]);
-  }
+function populateFilters() {
+  fill(
+    brandFilter,
+    unique(data.flatMap(i => normalize(i.brand)))
+  );
+
+  fill(
+    oemFilter,
+    unique(data.flatMap(i => normalize(i.oem)))
+  );
+
+  fill(
+    rarityFilter,
+    unique(data.flatMap(i => normalize(i.rarity)))
+  );
+
+  fill(
+    locationFilter,
+    unique(data.map(i => i.location))
+  );
+
+  fill(
+    deviceFilter,
+    unique(data.map(i => i.device))
+  );
+}
+
 
   function applyFilters() {
     const q = search.value.toLowerCase().trim();
