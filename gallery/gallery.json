@@ -680,9 +680,57 @@
     "brand": "Sharp",
     "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "SAY", "Plasmacluster", "AU-A9SSY"]
   },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000008.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "STNE_MV", "RNE25MV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000009.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "Midea",
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs42/IMG_20260101_103040.jpg",
+    "date": "2026-01-01",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Changhong",
+    "rarity": "Extremely Rare",
+    "brand": "Xiaomi Mijia",
+    "tags": ["Split AC", "Inverter", "Pro Eco 5-Star", "1.0 HP", "Outdoor", "ASC-09WO/N1C5-ID"]
+  },
+
+
+
 
 
   {
+    "src": "https://kunhvacid.github.io/ac/acs43/IMG_20260130_153622.jpg",
+    "date": "2026-01-30",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "LG",
+    "tags": ["Split AC", "Standard", "Indonesia", "0.5 HP", "Outdoor", "New Terminator", "K05NSA"]
+  },
+
+
+
+
+
+    {
     "src": "https://kunhvacid.github.io/ac/IMG_20250108_160030.jpg",
     "date": "2025-01-08",
     "location": "Balikpapan",
@@ -774,7 +822,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_153043.jpg",
-    "date": "204-12-26",
+    "date": "2024-12-26",
     "location": "Yogyakarta",
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
@@ -784,7 +832,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/20250622_212343.jpg",
-    "date": "2025-12-26",
+    "date": "2025-06-26",
     "location": "Yogyakarta",
     "device": "Samsung Galaxy Z Fold5",
     "oem": "Inhouse",
@@ -821,5 +869,15 @@
     "rarity": ["Common", "Uncommon"],
     "brand": ["GREE"],
     "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "2.5 HP", "Outdoor", "MOO5A", "U-Match", "GU_T/A-K", "GWC-18MOO5A/O", "GUL71W/A-M"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20260126_084958.jpg",
+    "date": "2026-01-26",
+    "location": "Balikpapan",
+    "device": "Huawei Nova 5T",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "GREE",
+    "tags": ["Split AC", "Standard", "China", "Indonesia", "5.0 HP", "Indoor", "Floor Standing", "STS", "GVC-48STS(S)ECO/I"]
   }
 ]
