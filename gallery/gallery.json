@@ -1,5 +1,5 @@
 [
-  {
+ {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4489.JPG",
     "date": "2025-04-15",
     "location": "Jakarta",
@@ -7,7 +7,7 @@
     "oem": "Inhouse",
     "rarity": ["Rare", "Super Rare"],
     "brand": ["GREE", "Daikin"],
-    "tags": ["Split AC", "Single Split", "Multi Split", "China", "Thailand", "2 HP", "3 HP", "Outdoor", "MOO3 Standard", "Multi-S", "GWC-18MOO3/O", "MKC70SVM4"]
+    "tags": ["Split AC", "Standard", "Multi Split", "China", "Thailand", "2 HP", "3 HP", "Outdoor", "MOO3 Standard", "Multi-S", "GWC-18MOO3/O", "MKC70SVM4"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4509.JPG",
@@ -126,7 +126,7 @@
     "device": "Canon EOS 80D",
     "oem": "Inhouse",
     "rarity": "Common",
-    "brand": "Gree",
+    "brand": "GREE",
     "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "MOO5S Series", "GWC-09MOO5S/O"]
   },
   {
@@ -229,15 +229,15 @@
     "brand": "Daikin",
     "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "FTC50NV14"]
   },
-  {
+    {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4726.JPG",
-    "date": "2025-04-18",
-    "location": "Bandung",
+    "date": "2025-04-15",
+    "location": "Jakarta",
     "device": "Canon EOS 80D",
-    "oem": "Midea",
-    "rarity": "Insanely Rare",
-    "brand": "Ikeda",
-    "tags": ["Split AC", "Standard", "China", "Unknown", "Outdoor", "Unknown", "Unknown"]
+    "oem": "Inhouse",
+    "rarity": ["Rare", "Insanely Rare"],
+    "brand": ["Hisense", "Ikeda"],
+    "tags": ["Split AC", "Standard", "China", "2 HP", "Outdoor", "CDG", "Unknown", "AN18CDG", "Unknown"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4729.JPG",
@@ -276,7 +276,7 @@
     "device": "Samsung Galaxy A04s",
     "oem": "Inhouse",
     "rarity": "Common",
-    "brand": "Gree",
+    "brand": "GREE",
     "tags": ["Split AC", "Standard", "China", "2.0 HP", "Indoor", "Deluxe Standard", "GWC-18N1A/I"]
   },
   {
@@ -364,7 +364,7 @@
     "date": "2025-04-20",
     "location": "Bandung",
     "device": "Canon EOS 80D",
-    "oem": "Gree",
+    "oem": "GREE",
     "rarity": "Insanely Rare",
     "brand": "Sharp",
     "tags": ["Split AC", "Floor Standing", "China", "5.0 HP", "Outdoor", "Unknown", "Unknown"]
@@ -425,6 +425,7 @@
 
 
 
+  
 
 
 
