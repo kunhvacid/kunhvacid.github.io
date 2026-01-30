@@ -485,7 +485,7 @@
     "device": "Huawei Mate X6",
     "oem": ["Inhouse", "TCL"],
     "rarity": "Common",
-    "brand": ["Sharp", "Samsung", "Toshiba"],
+    "brand": ["Daikin", "Samsung"],
     "tags": ["Split AC", "Standard", "Thailand", "China", "1.0 HP", "Outdoor", "UCY", "WindFree", "AU-A9UCY", "AR10BYFANWKXSE", "AR09JRFLAWKX"]
   },
   {
@@ -495,7 +495,7 @@
     "device": "Huawei Mate X6",
     "oem": ["Inhouse", "GREE", "TCL"],
     "rarity": ["Common", "Uncommon"],
-    "brand": ["Daikin", "Samsung"],
+    "brand": ["Sharp", "Samsung", "Toshiba"],
     "tags": ["Split AC", "Standard", "Inverter", "Thailand", "China", "1.0 HP", "Outdoor", "Super Mini Split", "STC_NV", "RC35NV14", "AR09JRFLDWKX", "Unknown"]
   },
   {
