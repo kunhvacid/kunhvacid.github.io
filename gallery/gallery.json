@@ -481,7 +481,7 @@
 
   {
     "src": "https://kunhvacid.github.io/ac/acs31/frame_000000.png",
-    "date": "2025-01-08",
+    "date": "2025-12-25",
     "location": "Yogyakarta",
     "device": "Huawei Mate X6",
     "oem": ["Inhouse"],
@@ -491,7 +491,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/acs31/frame_000001.png",
-    "date": "2025-01-08",
+    "date": "2025-12-25",
     "location": "Yogyakarta",
     "device": "Huawei Mate X6",
     "oem": ["Inhouse", "TCL"],
@@ -501,7 +501,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/acs31/frame_000002.png",
-    "date": "2025-01-08",
+    "date": "2025-12-25",
     "location": "Yogyakarta",
     "device": "Huawei Mate X6",
     "oem": ["Inhouse", "GREE", "TCL"],
@@ -511,13 +511,53 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/acs31/frame_000003.png",
-    "date": "2025-01-08",
+    "date": "2025-12-25",
     "location": "Yogyakarta",
     "device": "Huawei Mate X6",
     "oem": ["Inhouse", "GREE"],
     "rarity": ["Common"],
     "brand": ["GREE", "Daikin"],
-    "tags": ["Split AC", "Standard", "Inverter", "Thailand", "China", "1.0 HP", "Outdoor", "Super Mini Split", "STC_NV", "RC35NV14", "AR09JRFLDWKX", "Unknown"]
+    "tags": ["Split AC", "Standard", "Indonesia", "China", "2.0 HP","1.5 HP", "Outdoor", "MOO5", "STNE_JEV", "GWC-18MOO5A/O", "RNE35JEV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000004.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": ["GREE", "Inhouse"],
+    "rarity": ["Uncommon","Common"],
+    "brand": ["AQUA","Panasonic"],
+    "tags": ["Split AC", "Standard", "China", "Indonesia", "0.5 HP", "2.0 HP", "Outdoor", "KC10_AG6", "YN_TKJ", "C105AG6", "CU-YN18TKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000005.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "TCL",
+    "tags": ["Split AC", "Standard", "China", "0.5 HP", "Outdoor", "X5 Elite", "TAC-09CSA/XO"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000006.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": ["TCL", "Inhouse"],
+    "rarity": ["Uncommon","Common"],
+    "brand": ["Akari","Daikin"],
+    "tags": ["Split AC", "Standard", "China", "Thailand", "0.5 HP", "Outdoor", "Super Mini Split", "STC_NV", "AC-0578PLWk", "RC15NV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000007.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": ["TCL", "Inhouse"],
+    "rarity": ["Uncommon","Common"],
+    "brand": ["Akari","Daikin"],
+    "tags": ["Split AC", "Standard", "China", "Thailand", "0.5 HP", "Outdoor", "Super Mini Split", "STC_NV", "AC-0578PLWk", "RC15NV14"]
   },
 
 
