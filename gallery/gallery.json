@@ -643,7 +643,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_153043.jpg",
-    "date": "204-12-26",
+    "date": "2024-12-26",
     "location": "Yogyakarta",
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
@@ -682,13 +682,23 @@
     "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "1.0 HP", "Outdoor", "STNE_JEV","YN_SKJ", "RNE50JEV14", "CU-YN9SKJ"]
   },
   {
-    "src": "https://kunhvacid.github.io/ac/IMG_20241222_151311.jpg",
-    "date": "2024-12-22",
+    "src": "https://kunhvacid.github.io/ac/IMG_20241225_140504.jpg",
+    "date": "2024-12-25",
     "location": "Yogyakarta",
     "device": "Redmi Note 12 Pro 5G",
-    "oem": ["Inhouse"],
-    "rarity": ["Common", "Uncommon"],
-    "brand": ["GREE"],
-    "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "2.5 HP", "Outdoor", "MOO5A", "U-Match", "GU_T/A-K", "GWC-18MOO5A/O", "GUL71W/A-M"]
+    "oem": ["GREE", "Inhouse"],
+    "rarity": ["Rare", "Common"],
+    "brand": ["Daikin", "Panasonic"],
+    "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "1.0 HP", "Outdoor", "STNE_JEV","YN_SKJ", "RNE50JEV14", "CU-YN9SKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs43/IMG_20260130_153622.jpg",
+    "date": "2026-01-30",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "LG",
+    "tags": ["Split AC", "Standard", "Indonesia", "0.5 HP", "Outdoor", "New Terminator", "K05NSA"]
   }
 ]
