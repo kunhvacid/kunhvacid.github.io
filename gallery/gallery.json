@@ -1,5 +1,15 @@
 [
    {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4489.JPG",
+    "date": "2025-04-15",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": ["Rare", "Super Rare"],
+    "brand": ["GREE", "Daikin"],
+    "tags": ["Split AC", "Split AC", "Single Split", "Multi Split", "China", "Thailand", "2 HP", "3 HP", "Outdoor", "MOO3 Standard", "Multi-S", "GWC-18MOO3/O", "MKC70SVM4"]
+  },
+  {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4509.JPG",
     "date": "2025-04-12",
     "location": "Jakarta",
@@ -17,7 +27,7 @@
     "oem": "Inhouse",
     "rarity": "Common",
     "brand": "Sharp",
-    "tags": ["Split AC", "Standard", "Indonesia", "1.0 HP", "Outdoor", "BEY", "AU-A9BEY"]
+    "tags": ["Split AC", "Standard", "Indonesia", "1.0 HP", "Outdoor", "Standard Garuda", "AU-A9BEY"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4513.JPG",
@@ -31,7 +41,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4515.JPG",
-    "date": "2025-04-15",
+    "date": "2025-04-12",
     "location": "Jakarta",
     "device": "Canon EOS 80D",
     "oem": "Inhouse",
@@ -39,7 +49,438 @@
     "brand": "Daikin",
     "tags": ["Split AC", "Inverter", "Thailand", "1.0 HP", "Outdoor", "Hi-Inverter", "RKD25DAVM"]
   },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4518.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "Hisense",
+    "tags": ["Split AC", "Cassette", "China", "2.5 HP", "Outdoor", "Standard", "AUF24CRG"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4520.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Changhong",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "NVB3 Series", "CSC-09NVB3"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4521.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Standard", "Indonesia", "1.0 HP", "Outdoor", "Standard Garuda", "AU-A9BEY"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4523.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Midea",
+    "tags": ["Split AC", "Standard", "China", "0.5 HP", "Outdoor", "Forest Series", "MSAF-04CRN2X(O)"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4524.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "MBO",
+    "rarity": "Extremely Rare",
+    "brand": "Bestlife",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "QAR3 Series", "BEST-09QAR3"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4525.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "AUX",
+    "tags": ["Split AC", "Standard", "China", "2.0 HP", "Outdoor", "Unknown", "AS-18A4/EA"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4526.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Unknown",
+    "rarity": "Extremely Rare",
+    "brand": "Bestlife",
+    "tags": ["Split AC", "Standard", "Indonesia", "2.0 HP", "Outdoor", "Unknown", "BAC 18 LX1"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4529.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Gree",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "MOO5S Series", "GWC-09MOO5S/O"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/20250412_172751.jpg",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Samsung Galaxy A04s",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.5 HP", "Indoor", "Deluxe R32", "FTM60JV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/20250412_172806.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Samsung Galaxy A04s",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter", "Thailand", "2.5 HP", "Indoor", "Flash Inverter", "FTKQ60UVM4"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4537.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Indonesia", "2.5 HP", "Indoor", "Deluxe Standard", "CS-PN24AKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4538.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Insanely Rare",
+    "brand": "LG",
+    "tags": ["Split AC", "Inverter", "Korea", "1.5 HP", "Outdoor", "Smart Inverter", "ATUQ12GULA1"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4540.JPG",
+    "date": "2025-04-12",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Malaysia", "1.0 HP", "Outdoor", "Deluxe Envio", "CU-N9RKP"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4546.JPG",
+    "date": "2025-04-15",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "FTC50XV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4547.JPG",
+    "date": "2025-04-15",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "FTNE50MV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4581.JPG",
+    "date": "2025-04-15",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "FTC50NV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4546.JPG",
+    "date": "2025-04-15",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "FTC50XV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4685.JPG",
+    "date": "2025-04-18",
+    "location": "Karawang",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Cassette", "Thailand", "6.0 HP", "Outdoor", "SkyAir R410A", "RNQ48MY14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4714.JPG",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "FTC50NV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4726.JPG",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Midea",
+    "rarity": "Insanely Rare",
+    "brand": "Ikeda",
+    "tags": ["Split AC", "Standard", "China", "Unknown", "Outdoor", "Unknown", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4729.JPG",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Super Rare",
+    "brand": "Sanyo",
+    "tags": ["Split AC", "Standard", "Unknown", "1.0 HP", "Outdoor", "Unknown", "SAP-K976BX"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4734.JPG",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter", "Thailand", "1.5 HP", "Outdoor", "Flash Inverter", "RKQ35UVM4"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4729.JPG",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Super Rare",
+    "brand": "Sanyo",
+    "tags": ["Split AC", "Standard", "Unknown", "1.0 HP", "Outdoor", "Unknown", "SAP-K976BX"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4711.JPG",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "Super Mini Split", "RC25NV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/20250418_170336.jpg",
+    "date": "2025-04-18",
+    "location": "Bandung",
+    "device": "Samsung Galaxy A04s",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Gree",
+    "tags": ["Split AC", "Standard", "China", "2.0 HP", "Indoor", "Deluxe Standard", "GWC-18N1A/I"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4879.JPG",
+    "date": "2025-04-19",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter", "Thailand", "1.5 HP", "Outdoor", "Flash Inverter", "RKQ35UVM4"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4895.JPG",
+    "date": "2025-04-19",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Samsung",
+    "tags": ["Split AC", "Inverter", "Unknown", "Unknown", "Outdoor", "Digital Inverter", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4933.JPG",
+    "date": "2025-04-19",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Insanely Rare",
+    "brand": "Haier",
+    "tags": ["Split AC", "Inverter", "Unknown", "1.0 HP", "Outdoor", "Unknown", "HSU-09INV03"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4956.JPG",
+    "date": "2025-04-19",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Daik",
+    "tags": ["Split AC", "Standard", "Thailand", "5.0 HP", "Outdoor", "SkyAir Inverter R32", "RZFC125DY14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_4963.JPG",
+    "date": "2025-04-19",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Insanely Rare",
+    "brand": "Midea",
+    "tags": ["Split AC", "Unknown", "Unknown", "Unknown", "Outdoor", "Unknown", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5000.JPG",
+    "date": "2025-04-19",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Extremely Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter", "Malaysia", "1.0 HP", "Outdoor", "Evo Inverter", "RKF25AV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/20250420_074025.jpg",
+    "date": "2025-04-20",
+    "location": "Bandung",
+    "device": "Samsung Galaxy A04s",
+    "oem": "Inhouse",
+    "rarity": "Super Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "VRF", "Thailand", "20.0 HP", "Outdoor", "VRV A", "RXQ20AY14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5010.JPG",
+    "date": "2025-04-20",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Unknown",
+    "rarity": "Insanely Rare",
+    "brand": "Fujitsu",
+    "tags": ["Split AC", "Unknown", "Unknown", "Unknown", "Outdoor", "Unknown", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5019.JPG",
+    "date": "2025-04-20",
+    "location": "Bandung",
+    "device": "Canon EOS 80D",
+    "oem": "Gree",
+    "rarity": "Insanely Rare",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Floor Standing", "China", "5.0 HP", "Outdoor", "Unknown", "Unknown"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5122.JPG",
+    "date": "2025-04-21",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Unknown",
+    "rarity": "Rare",
+    "brand": "AUX",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "Unknown", "AS-09A4/EA"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5146.JPG",
+    "date": "2025-04-21",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Unknown",
+    "rarity": "Super Rare",
+    "brand": "AUX",
+    "tags": ["Split AC", "Standard", "China", "2.0 HP", "Outdoor", "Unknown", "KF-53W/M"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5151.JPG",
+    "date": "2025-04-21",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Unknown",
+    "rarity": "Very Rare",
+    "brand": "AUX",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "Unknown", "KF-26W/H"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5187.JPG",
+    "date": "2025-04-21",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Indonesia", "1.0 HP", "Outdoor", "Standard Si-Biru", "CU-LN9AKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_5188.JPG",
+    "date": "2025-04-21",
+    "location": "Jakarta",
+    "device": "Canon EOS 80D",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Indonesia", "2.0 HP", "Outdoor", "Standard", "CU-YN18AKJ"]
+  },
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -96,7 +537,7 @@
     "oem": "Inhouse",
     "rarity": "Uncommon",
     "brand": "Hitachi",
-    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Uknown Model"]
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Unknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_183645.jpg",
@@ -106,7 +547,7 @@
     "oem": "AUX",
     "rarity": "Very Rare",
     "brand": "Fujiaire",
-    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Indoor", "Unknown Model", "Uknown Model"]
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Indoor", "Unknown Model", "Unknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_181714.jpg",
@@ -116,7 +557,7 @@
     "oem": "AUX",
     "rarity": "Very Rare",
     "brand": "Fujiaire",
-    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Indoor", "Unknown Model", "Uknown Model"]
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Indoor", "Unknown Model", "Unknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_174709.jpg",
@@ -126,7 +567,7 @@
     "oem": "Midea",
     "rarity": "Very Rare",
     "brand": "Carrier",
-    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Uknown Model"]
+    "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown Model", "Unknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_171412.jpg",
@@ -136,7 +577,7 @@
     "oem": "Inhouse",
     "rarity": "Very Rare",
     "brand": "LG",
-    "tags": ["Split AC", "VRF", "Thailand", "Unknown HP", "Outdoor", "Multi V5", "Uknown Model"]
+    "tags": ["Split AC", "VRF", "Thailand", "Unknown HP", "Outdoor", "Multi V5", "Unknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_153043.jpg",
@@ -146,7 +587,7 @@
     "oem": "Inhouse",
     "rarity": "Very Rare",
     "brand": "LG",
-    "tags": ["Split AC", "VRF", "Thailand", "Unknown HP", "Indoor", "Multi V5", "Uknown Model"]
+    "tags": ["Split AC", "VRF", "Thailand", "Unknown HP", "Indoor", "Multi V5", "Unknown Model"]
   },
   {
     "src": "https://kunhvacid.github.io/ac/20250622_212343.jpg",
