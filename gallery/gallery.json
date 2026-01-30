@@ -419,7 +419,138 @@
     "brand": "Panasonic",
     "tags": ["Split AC", "Standard", "Indonesia", "2.0 HP", "Outdoor", "Standard", "CU-YN18AKJ"]
   },
-  
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260117_150525.jpg",
+    "date": "2026-01-17",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter Cassette", "Thailand", "4.0 HP", "Outdoor", "SkyAir Inverter R32", "RZFC100DVM4"]
+  },
+ {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260119_140939.jpg",
+    "date": "2026-01-19",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Indonesia", "1 HP", "2 HP", "Outdoor", "Super Mini Split", "RC25YV14", "RC50YV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260123_131414.jpg",
+    "date": "2026-01-23",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": ["Super Rare", "Rare"],
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "Indonesia", "2.0 HP", "1.5 HP", "1.0 HP", "Outdoor", "Standard", "Super Mini Split", "RC25YV14", "RC35YV14", "RC50YV14", "R50BV1"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260123_132930.jpg",
+    "date": "2026-01-23",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Changhong",
+    "rarity": "Insanely Rare",
+    "brand": "Mijia",
+    "tags": ["Split AC", "Inverter", "China", "1.0 HP", "Outdoor", "Pro Eco", "ASC-09O/N1C5-ID"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260123_140559.jpg",
+    "date": "2026-01-23",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Super Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter Cassette", "Thailand", "4.0 HP", "Outdoor", "Super Inverter R32", "RZF100CVM4"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260124_123647.jpg",
+    "date": "2026-01-24",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Insanely Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter", "Thailand", "2.0 HP", "Indoor", "Premium Inverter", "FTKM50SVM4"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_140212.jpg",
+    "date": "2026-01-25",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Unknown",
+    "rarity": "Insanely Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Unknown", "Unknown", "Unknown HP", "Outdoor", "Unknown", "Unknown Model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_142314.jpg",
+    "date": "2026-01-25",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Indonesia", "2.0 HP", "Outdoor", "Super Mini Split", "RC50YV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_142642.jpg",
+    "date": "2026-01-25",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "1.0 HP", "Outdoor", "Super Mini Split", "RC25NV14", "RC50XV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_143232.jpg",
+    "date": "2026-01-25 ",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Indonesia", "2.0 HP", "Outdoor", "Standard", "CU-YN18AKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_144201.jpg",
+    "date": "2026-01-25",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": ["Very Rare", "Super Rare", "Extremely Rare", "Insanely Rare"],
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter Cassette", "Multi Split", "Thailand", "Malaysia", "4.0 HP", "3.5 HP", "2.0 HP", "Outdoor", "SkyAir Inverter R32", "Multi NX", "Kiriu Inverter", "MKM95PV14", "MKM80PV14", "RZFC50DVM4", "RZFC100DVM4", "RZFG0AV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_155318.jpg",
+    "date": "2026-01-25",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Insanely Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "VRF", "Thailand", "12.0 HP", "Outdoor", "VRV 6A", "RXQ12BY14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acafphotos/IMG_20260125_155756.jpg",
+    "date": "2026-01-17",
+    "location": "Jakarta",
+    "device": "Xiaomi 15T Pro",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "VRF", "Thailand", "8.0 HP", "Outdoor", "VRV A", "RXQ8AY14"]
+  },
+
+
 
 
 
@@ -643,7 +774,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/IMG_20241226_153043.jpg",
-    "date": "2024-12-26",
+    "date": "204-12-26",
     "location": "Yogyakarta",
     "device": "Redmi Note 12 Pro 5G",
     "oem": "Inhouse",
@@ -682,23 +813,13 @@
     "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "1.0 HP", "Outdoor", "STNE_JEV","YN_SKJ", "RNE50JEV14", "CU-YN9SKJ"]
   },
   {
-    "src": "https://kunhvacid.github.io/ac/IMG_20241225_140504.jpg",
-    "date": "2024-12-25",
+    "src": "https://kunhvacid.github.io/ac/IMG_20241222_151311.jpg",
+    "date": "2024-12-22",
     "location": "Yogyakarta",
     "device": "Redmi Note 12 Pro 5G",
-    "oem": ["GREE", "Inhouse"],
-    "rarity": ["Rare", "Common"],
-    "brand": ["Daikin", "Panasonic"],
-    "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "1.0 HP", "Outdoor", "STNE_JEV","YN_SKJ", "RNE50JEV14", "CU-YN9SKJ"]
-  },
-  {
-    "src": "https://kunhvacid.github.io/ac/acs43/IMG_20260130_153622.jpg",
-    "date": "2026-01-30",
-    "location": "Balikpapan",
-    "device": "Redmi Note 12 Pro 5G",
-    "oem": "Inhouse",
-    "rarity": "Extremely Rare",
-    "brand": "LG",
-    "tags": ["Split AC", "Standard", "Indonesia", "0.5 HP", "Outdoor", "New Terminator", "K05NSA"]
+    "oem": ["Inhouse"],
+    "rarity": ["Common", "Uncommon"],
+    "brand": ["GREE"],
+    "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "2.5 HP", "Outdoor", "MOO5A", "U-Match", "GU_T/A-K", "GWC-18MOO5A/O", "GUL71W/A-M"]
   }
 ]
