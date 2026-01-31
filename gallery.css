@@ -255,6 +255,22 @@ body {
 .nav-arrow.prev { left: 6px; }
 .nav-arrow.next { right: 6px; }
 
+.tag-row {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: rgba(255,255,255,0.15);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+
 /* ==================================================
    PAGINATION
 ================================================== */

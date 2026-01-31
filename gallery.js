@@ -202,10 +202,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const overlay = document.createElement("div");
       overlay.className = "overlay";
       overlay.innerHTML = `
-        <strong>${item.brandArr.join(", ")}</strong><br>
-        ${item.location}<br>
-        ${item.date}
-      `;
+  <strong>${item.brandArr.join(", ")}</strong><br>
+  ${item.location}<br>
+  ${item.date}
+  ${item.tags?.length ? `
+    <div class="tag-row">
+      ${item.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+    </div>
+  ` : ""}
+`;
 
       if (item.units === "Multiple") {
         const badge = document.createElement("div");
@@ -283,13 +288,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modalImg.src = item.src;
     modalMeta.innerHTML = `
-      <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
-      <p><b>OEM:</b> ${item.oemArr.join(", ")}</p>
-      <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
-      <p><b>Units:</b> ${item.units}</p>
-      <p><b>Location:</b> ${item.location}</p>
-      <p><b>Device:</b> ${item.device}</p>
-    `;
+   <div><b>Brand:</b> ${item.brandArr.join(", ")}</div>
+   <div><b>OEM:</b> ${item.oemArr.join(", ")}</div>
+   <div><b>Rarity:</b> ${item.rarityArr.join(", ")}</div>
+   <div><b>Units:</b> ${item.units}</div>
+   <div><b>Location:</b> ${item.location}</div>
+   <div><b>Device:</b> ${item.device}</div>
+
+  ${item.tags?.length ? `
+    <div style="grid-column:1/-1">
+      <b>Tags:</b>
+      <div class="tag-row">
+        ${item.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+      </div>
+    </div>
+  ` : ""}
+`;
+
 
     modal.classList.add("open");
     document.body.style.overflow = "hidden";
