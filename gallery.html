@@ -12,20 +12,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="gallery.css" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="gallery.css">
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
+      min-height: 100%;
       overflow-x: hidden;
     }
 
     body {
-      font-family: "Montserrat", sans-serif;
-      min-height: 100vh;
+      font-family: "Montserrat", system-ui, sans-serif;
       display: flex;
       flex-direction: column;
       background:
@@ -48,7 +48,7 @@
 <!-- NAVBAR -->
 <header class="navbar">
   <a href="index.html" class="logo">
-    <img src="https://kunhvacid.github.io/ac/kunhvac_id_logo.png" alt="Logo">
+    <img src="https://kunhvacid.github.io/ac/kunhvac_id_logo.png" alt="kunhvac_id logo">
   </a>
 
   <button class="hamburger" aria-label="Menu" aria-expanded="false">☰</button>
@@ -57,13 +57,13 @@
     <a href="about.html">About</a>
 
     <div class="dropdown">
-      <button class="dropbtn" data-dropdown="acs">
+      <button class="dropbtn" data-dropdown="library">
         Library <span class="arrow">▾</span>
       </button>
-      <div class="dropdown-menu" id="acs">
+      <div class="dropdown-menu" id="library">
         <a href="gallery.html">AC Sightings Gallery</a>
-        <a href="#project2">My AC Videos (WIP)</a>
-        <a href="#project3">WIP</a>
+        <a href="#">My AC Videos (WIP)</a>
+        <a href="#">WIP</a>
       </div>
     </div>
 
@@ -83,10 +83,10 @@
 <main>
 
 <!-- FILTER BAR -->
-<section class="gallery-controls">
+<section class="gallery-controls sticky">
   <div class="filter-group">
     <label for="search">Search</label>
-    <input type="text" id="search" placeholder="Search…">
+    <input id="search" type="text" placeholder="Search…">
   </div>
 
   <div class="filter-group">
@@ -126,14 +126,18 @@
       <option value="oldest">Oldest</option>
       <option value="az">Brand A–Z</option>
       <option value="za">Brand Z–A</option>
+      <option value="units-desc">Most Units</option>
+      <option value="units-asc">Least Units</option>
     </select>
   </div>
 </section>
 
-<!-- PAGINATION STATUS -->
+<!-- PAGINATION + STATUS -->
 <section id="pagination-wrapper">
   <div id="pageStatus"></div>
+
   <div id="pagination"></div>
+
   <div id="photoStatus"></div>
 
   <div class="page-controls">
@@ -154,8 +158,8 @@
   </div>
 </section>
 
-<!-- GALLERY GRID (CRITICAL: THIS WAS MISSING BEFORE) -->
-<section id="gallery" class="gallery-grid"></section>
+<!-- GALLERY (MASONRY TARGET) -->
+<section id="gallery" class="gallery-masonry"></section>
 
 </main>
 
@@ -193,7 +197,7 @@
   </div>
 </footer>
 
-<!-- JS (ORDER MATTERS) -->
+<!-- JS (ORDER IS CRITICAL) -->
 <script src="nav.js"></script>
 <script src="gallery.js"></script>
 
