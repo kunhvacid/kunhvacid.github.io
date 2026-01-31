@@ -14,7 +14,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  overflow-x: hidden; /* HARD FIX: no horizontal scroll */
+  overflow-x: hidden;
 }
 
 body {
@@ -48,23 +48,20 @@ body {
   opacity: 0.7;
 }
 
-/* INPUTS */
 .gallery-controls input,
 .gallery-controls select {
-  font-family: "Montserrat", sans-serif;
+  font-family: inherit;
   padding: 6px 10px;
   border-radius: 8px;
   border: none;
-  outline: none;
   background: rgba(0, 0, 0, 0.75);
   color: #fff;
   font-size: 0.9rem;
   min-width: 140px;
 }
 
-/* SEARCH FLEX */
 #search {
-  flex: 1 1 30px;
+  flex: 1 1 240px;
 }
 
 /* ==================================================
@@ -79,37 +76,57 @@ body {
   gap: 16px;
 }
 
-/* CARD */
 .gallery-card {
   position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
-/* IMAGE */
 .gallery-card img {
   width: 100%;
-  height: 100%;
   display: block;
-  object-fit: cover;
   border-radius: 14px;
+  object-fit: cover;
   cursor: zoom-in;
 }
 
-/* OVERLAY */
+/* ==================================================
+   OVERLAY
+================================================== */
+
 .overlay {
   position: absolute;
   inset: 0;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0,0,0,0.65);
   opacity: 0;
   padding: 12px;
+  border-radius: 14px;
   font-size: 0.85rem;
   transition: opacity 0.2s ease;
-  pointer-events: none; /* allow click-through */
+  pointer-events: none;
+  z-index: 2;
 }
 
 .gallery-card:hover .overlay {
   opacity: 1;
+}
+
+/* ==================================================
+   MULTI UNIT BADGE
+================================================== */
+
+.unit-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ffb000;
+  color: #000;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  z-index: 3;
+  pointer-events: none;
 }
 
 /* ==================================================
@@ -119,7 +136,7 @@ body {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0,0,0,0.92);
   display: none;
   align-items: center;
   justify-content: center;
@@ -132,7 +149,6 @@ body {
   display: flex;
 }
 
-/* IMAGE */
 .modal img {
   max-width: 95vw;
   max-height: 80vh;
@@ -146,7 +162,6 @@ body {
   cursor: zoom-out;
 }
 
-/* CLOSE */
 .modal .close {
   position: absolute;
   top: 16px;
@@ -155,13 +170,11 @@ body {
   cursor: pointer;
 }
 
-/* INFO */
 .modal-info {
   margin-top: 16px;
   max-width: 95vw;
 }
 
-/* TWO-COLUMN INFO GRID */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -169,7 +182,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* MOBILE INFO */
 @media (max-width: 600px) {
   .info-grid {
     grid-template-columns: 1fr;
@@ -177,7 +189,7 @@ body {
 }
 
 /* ==================================================
-   MODAL NAV ARROWS
+   MODAL NAV
 ================================================== */
 
 .nav-arrow {
@@ -190,52 +202,15 @@ body {
   user-select: none;
 }
 
-.nav-arrow.prev {
-  left: 8px;
-}
-
-.nav-arrow.next {
-  right: 8px;
-}
-
-/* MOBILE TAP TARGET */
-@media (max-width: 600px) {
-  .nav-arrow {
-    font-size: 3rem;
-    padding: 20px;
-  }
-}
-
-
-
-
-
-
-
-
-.unit-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: #ffb000;
-  color: #000;
-  font-size: 0.75rem;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-
+.nav-arrow.prev { left: 8px; }
+.nav-arrow.next { right: 8px; }
 
 /* ==================================================
    PAGINATION
 ================================================== */
 
-
 #pagination-wrapper {
   width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
   text-align: center;
 }
 
@@ -259,51 +234,14 @@ body {
   outline: 2px solid currentColor;
 }
 
-
 /* ==================================================
-   RESPONSIVE FILTERS
+   RESPONSIVE
 ================================================== */
 
 @media (max-width: 900px) {
-  .gallery-controls {
-    justify-content: center;
-  }
-
-  #search {
-    flex: 1 1 100%;
-  }
-
-  .gallery-controls select {
-    flex: 1 1 45%;
-  }
+  .gallery-controls { justify-content: center; }
+  #search { flex: 1 1 100%; }
 }
 
-@media (max-width: 500px) {
-  .gallery-controls {
-    padding: 10px;
-  }
-
-  .gallery-controls input,
-  .gallery-controls select {
-    padding: 10px 12px;
-    font-size: 0.95rem;
-  }
-
-  .gallery-controls select,
-  #search {
-    flex: 1 1 100%;
-  }
-}
-
-/* ==================================================
-   FOOTER SUPPORT
-================================================== */
-
-main {
-  flex: 1 0 auto;
-}
-
-.site-footer {
-  margin-top: auto;
-}
-
+main { flex: 1 0 auto; }
+.site-footer { margin-top: auto; }
