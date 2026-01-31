@@ -919,6 +919,76 @@
     "tags": ["Split AC", "Standard", "China", "Indonesia", "2.0 HP", "2.5 HP", "Outdoor", "MOO5A", "U-Match", "GU_T/A-K", "GWC-18MOO5A/O", "GUL71W/A-M"]
   },
   {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241215_133340.jpg",
+    "date": "2024-12-15",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "GREE",
+    "tags": ["Split AC", "Inverter", "Indonesia", "1.0 HP", "Outdoor", "Inverter Si-BIRU", "PU_XKJ","CU-PU9XKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241208_140502.jpg",
+    "date": "2024-12-08",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": ["Daikin"],
+    "tags": ["Split AC", "Standard", "Thailand", "4.0 HP","5.0 HP", "Outdoor", "SkyAir R410A","RNQ_MY14","RNQ36MY14", "RNQ48MY14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20241208_120043.jpg",
+    "date": "2024-12-08",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "GREE",
+    "tags": ["Split AC", "Standard", "Indonesia","1.5 HP", "Indoor", "MOO5","GWC-12MOO5A/I"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20240620_151143.jpg",
+    "date": "2024-06-20",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "GREE",
+    "tags": ["Split AC", "Standard", "China", "Indonesia", "2.5 HP", "Indoor", "MOO", "GWC-24MOO/I"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20240120_155220.jpg",
+    "date": "2024-01-20",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "National",
+    "tags": ["Split AC", "Standard", "Indonesia", "1.0 HP", "Outdoor", "Unknown model"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20240120_123301.jpg",
+    "date": "2024-01-20",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "STNE_MV", "RNE25MV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/IMG_20240119_203631.jpg",
+    "date": "2024-01-20",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "GREE",
+    "rarity": "Very Rare",
+    "brand": "AQUA",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Indoor", "KC10_AG6", "K109AG6"]
+  },
+  {
     "src": "https://kunhvacid.github.io/ac/IMG_20260126_084958.jpg",
     "date": "2026-01-26",
     "location": "Balikpapan",
