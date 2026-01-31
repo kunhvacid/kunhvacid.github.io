@@ -11,10 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-
-
-
-  
   <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="gallery.css" />
@@ -24,7 +20,7 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      overflow-x: hidden; /* FIX RIGHT SCROLL */
+      overflow-x: hidden;
     }
 
     body {
@@ -33,7 +29,7 @@
       display: flex;
       flex-direction: column;
       background:
-        linear-gradient(rgba(0,0,0,0.7), rgba(49,102,163,0.4)), 
+        linear-gradient(rgba(0,0,0,0.7), rgba(49,102,163,0.4)),
         url("https://kunhvacid.github.io/ac/IMG_20251227_112128.jpg");
       background-size: cover;
       background-position: center;
@@ -49,25 +45,22 @@
 
 <body>
 
-</head>
-<body>
+<!-- NAVBAR -->
 <header class="navbar">
   <a href="index.html" class="logo">
     <img src="https://kunhvacid.github.io/ac/kunhvac_id_logo.png" alt="Logo">
   </a>
 
-<button class="hamburger" aria-label="Menu" aria-expanded="false">
-    ☰
-  </button>
+  <button class="hamburger" aria-label="Menu" aria-expanded="false">☰</button>
 
   <nav class="nav-links">
     <a href="about.html">About</a>
 
     <div class="dropdown">
-      <button class="dropbtn" data-dropdown="ACS">
+      <button class="dropbtn" data-dropdown="acs">
         Library <span class="arrow">▾</span>
       </button>
-      <div class="dropdown-menu" id="ACS">
+      <div class="dropdown-menu" id="acs">
         <a href="gallery.html">AC Sightings Gallery</a>
         <a href="#project2">My AC Videos (WIP)</a>
         <a href="#project3">WIP</a>
@@ -78,15 +71,16 @@
       <button class="dropbtn" data-dropdown="social">
         Social <span class="arrow">▾</span>
       </button>
-      <div class="dropdown-menu" id="Social">
+      <div class="dropdown-menu" id="social">
         <a href="https://youtube.com/@kunhvac_id" target="_blank">YouTube</a>
-        <a href="https://www.instagram.com/kunhvac_id?igsh=MXE5cGNsOWl3OXd5aw==" target="_blank">Instagram</a>
-        <a href="https://www.tiktok.com/@kunhvac_id?_t=ZS-8sze2pMPyp6&_r=1" target="_blank">TikTok</a>
+        <a href="https://www.instagram.com/kunhvac_id" target="_blank">Instagram</a>
+        <a href="https://www.tiktok.com/@kunhvac_id" target="_blank">TikTok</a>
       </div>
     </div>
   </nav>
 </header>
 
+<main>
 
 <!-- FILTER BAR -->
 <section class="gallery-controls">
@@ -121,9 +115,12 @@
   </div>
 
   <div class="filter-group">
-    <label for="sort">Sort</label>
+    <label for="unitFilter">Units</label>
     <select id="unitFilter"></select>
+  </div>
 
+  <div class="filter-group">
+    <label for="sort">Sort</label>
     <select id="sort">
       <option value="newest">Newest</option>
       <option value="oldest">Oldest</option>
@@ -133,12 +130,10 @@
   </div>
 </section>
 
-<!-- GALLERY -->
-<div id="pagination-wrapper">
+<!-- PAGINATION STATUS -->
+<section id="pagination-wrapper">
   <div id="pageStatus"></div>
-
   <div id="pagination"></div>
-
   <div id="photoStatus"></div>
 
   <div class="page-controls">
@@ -154,11 +149,15 @@
 
     <label>
       Go to page
-      <input id="gotoPage" type="number" min="1" />
+      <input id="gotoPage" type="number" min="1">
     </label>
   </div>
-</div>
+</section>
 
+<!-- GALLERY GRID (CRITICAL: THIS WAS MISSING BEFORE) -->
+<section id="gallery" class="gallery-grid"></section>
+
+</main>
 
 <!-- MODAL -->
 <div id="modal" class="modal">
@@ -174,7 +173,7 @@
   </div>
 </div>
 
-<!-- FOOTER (RESTORED & STICKY) -->
+<!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-top">
     <span class="footer-logo">kunhvac_id</span>
@@ -194,53 +193,9 @@
   </div>
 </footer>
 
-<!-- JS -->
-<script src="gallery.js"></script>
+<!-- JS (ORDER MATTERS) -->
 <script src="nav.js"></script>
-
-<script>
-  const buttons = document.querySelectorAll(".dropbtn");
-  const menus = document.querySelectorAll(".dropdown-menu");
-  const hamburger = document.querySelector(".hamburger");
-  const nav = document.querySelector(".nav-links");
-
-  buttons.forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
-
-      const menu = document.getElementById(btn.dataset.dropdown);
-
-      menus.forEach(m => {
-        if (m !== menu) m.classList.remove("active");
-      });
-
-      buttons.forEach(b => b.classList.remove("active"));
-
-      const isOpen = menu.classList.toggle("active");
-      btn.classList.toggle("active", isOpen);
-    });
-
-    btn.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") btn.click();
-      if (e.key === "Escape") closeAll();
-    });
-  });
-
-  function closeAll() {
-    menus.forEach(m => m.classList.remove("active"));
-    buttons.forEach(b => b.classList.remove("active"));
-  }
-
-  document.addEventListener("click", closeAll);
-
-  hamburger.addEventListener("click", () => {
-    const expanded = nav.classList.toggle("open");
-    hamburger.setAttribute("aria-expanded", expanded);
-  });
-</script>
-
-
-
+<script src="gallery.js"></script>
 
 </body>
 </html>
