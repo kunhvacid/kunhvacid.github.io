@@ -1,15 +1,15 @@
 /* =========================
-   GALLERY – RESPONSIVE PAGINATION + STATUS + CONTROLS
+   GALLERY – RESPONSIVE PAGINATION + STATUS + CONTROLS (FIXED)
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ========= ELEMENTS ========= */
-  const gallery     = document.getElementById("gallery");
-  const pagination  = document.getElementById("pagination");
+  const gallery        = document.getElementById("gallery");
+  const pagination     = document.getElementById("pagination");
 
-  const search      = document.getElementById("search");
-  const sort        = document.getElementById("sort");
+  const search         = document.getElementById("search");
+  const sort           = document.getElementById("sort");
 
   const locationFilter = document.getElementById("locationFilter");
   const deviceFilter   = document.getElementById("deviceFilter");
@@ -18,26 +18,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const rarityFilter   = document.getElementById("rarityFilter");
   const unitFilter     = document.getElementById("unitFilter");
 
-  const perPageSelect  = document.getElementById("perPage");     // select
-  const gotoInput      = document.getElementById("gotoPage");    // input number
-  const pageStatus     = document.getElementById("pageStatus");  // text
-  const photoStatus    = document.getElementById("photoStatus"); // text
+  const perPageSelect  = document.getElementById("perPage");
+  const gotoInput      = document.getElementById("gotoPage");
+  const pageStatus     = document.getElementById("pageStatus");
+  const photoStatus    = document.getElementById("photoStatus");
 
-  const modal      = document.getElementById("modal");
-  const modalImg   = document.getElementById("modal-img");
-  const modalMeta  = document.getElementById("modal-meta");
-  const modalClose = modal.querySelector(".close");
-  const nextBtn    = modal.querySelector(".next");
-  const prevBtn    = modal.querySelector(".prev");
+  const modal          = document.getElementById("modal");
+  const modalImg       = document.getElementById("modal-img");
+  const modalMeta      = document.getElementById("modal-meta");
+  const modalClose     = modal.querySelector(".close");
+  const nextBtn        = modal.querySelector(".next");
+  const prevBtn        = modal.querySelector(".prev");
 
   /* ========= STATE ========= */
   let data = [];
   let filtered = [];
-  let currentIndex = 0;
-  let isZoomed = false;
 
-  let PER_PAGE = 8;
+  let currentIndex = 0;
   let currentPage = 1;
+  let PER_PAGE = perPageSelect ? Number(perPageSelect.value) || 8 : 8;
 
   const PAGE_WINDOW = 10;
   let pageWindowStart = 1;
@@ -47,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toArray = v => Array.isArray(v) ? v : (v ? [v] : []);
 
   function fill(select, values) {
+    if (!select) return;
     select.innerHTML = `<option value="">All</option>`;
     values.forEach(v => {
       const o = document.createElement("option");
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
       data = json.map(normalize);
       filtered = [...data];
       populateFilters();
-      applySort();
+      render();
     });
 
   /* ========= FILTER POPULATION ========= */
@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ========= FILTERING ========= */
   function applyFilters() {
     const q = search.value.toLowerCase().trim();
+
     currentPage = 1;
     pageWindowStart = 1;
 
@@ -117,32 +118,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return true;
     });
 
-    applySort();
-  }
-
-  /* ========= SORT ========= */
-  function applySort() {
-    const v = sort.value;
-
-    if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
-    if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
-    if (v === "az")     filtered.sort((a,b)=>a.brandArr[0].localeCompare(b.brandArr[0]));
-    if (v === "za")     filtered.sort((a,b)=>b.brandArr[0].localeCompare(a.brandArr[0]));
-
     render();
   }
 
   /* ========= RENDER ========= */
   function render() {
+    if (!gallery) return;
+
     gallery.innerHTML = "";
 
     const total = filtered.length;
     const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+
     currentPage = Math.min(currentPage, totalPages);
 
-    const startIndex = (currentPage - 1) * PER_PAGE;
-    const endIndex   = Math.min(startIndex + PER_PAGE, total);
-    const pageItems  = filtered.slice(startIndex, endIndex);
+    const start = (currentPage - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, total);
+    const pageItems = filtered.slice(start, end);
 
     pageItems.forEach(item => {
       const index = data.indexOf(item);
@@ -152,57 +144,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const img = document.createElement("img");
       img.src = item.src;
-      img.alt = item.brandArr.join(", ");
       img.loading = "lazy";
+      img.alt = item.brandArr.join(", ");
       img.onclick = () => openModal(index);
 
-      const overlay = document.createElement("div");
-      overlay.className = "overlay";
-      overlay.innerHTML = `
-        <strong>${item.brandArr.join(", ")}</strong><br>
-        ${item.location}<br>
-        ${item.date}
-      `;
-
-      if (item.units === "Multiple") {
-        const badge = document.createElement("div");
-        badge.className = "unit-badge";
-        badge.textContent = "Multiple units";
-        card.appendChild(badge);
-      }
-
-      card.append(img, overlay);
+      card.appendChild(img);
       gallery.appendChild(card);
     });
 
-    updateStatus(startIndex + 1, endIndex, total, totalPages);
+    updateStatus(start + 1, end, total, totalPages);
     renderPagination(totalPages);
   }
 
   /* ========= STATUS ========= */
   function updateStatus(from, to, total, totalPages) {
-    pageStatus.textContent  =
-      `Page ${pageWindowStart}-${Math.min(pageWindowStart + PAGE_WINDOW - 1, totalPages)} of ${totalPages}`;
+    if (pageStatus)
+      pageStatus.textContent =
+        `Pages ${pageWindowStart}-${Math.min(pageWindowStart + PAGE_WINDOW - 1, totalPages)} of ${totalPages}`;
 
-    photoStatus.textContent =
-      total === 0 ? "No photos" : `Photos ${from}-${to} of ${total}`;
+    if (photoStatus)
+      photoStatus.textContent =
+        total === 0 ? "No photos" : `Photos ${from}-${to} of ${total}`;
   }
 
   /* ========= PAGINATION ========= */
   function renderPagination(totalPages) {
+    if (!pagination) return;
+
     pagination.innerHTML = "";
 
     const windowEnd = Math.min(pageWindowStart + PAGE_WINDOW - 1, totalPages);
 
     if (pageWindowStart > 1) {
-      const prevSet = document.createElement("button");
-      prevSet.textContent = "«";
-      prevSet.onclick = () => {
-        pageWindowStart = Math.max(1, pageWindowStart - PAGE_WINDOW);
+      const prev = document.createElement("button");
+      prev.textContent = "«";
+      prev.onclick = () => {
+        pageWindowStart -= PAGE_WINDOW;
         currentPage = pageWindowStart;
         render();
       };
-      pagination.appendChild(prevSet);
+      pagination.appendChild(prev);
     }
 
     for (let p = pageWindowStart; p <= windowEnd; p++) {
@@ -212,20 +193,19 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.onclick = () => {
         currentPage = p;
         render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
       };
       pagination.appendChild(btn);
     }
 
     if (windowEnd < totalPages) {
-      const nextSet = document.createElement("button");
-      nextSet.textContent = "»";
-      nextSet.onclick = () => {
-        pageWindowStart = pageWindowStart + PAGE_WINDOW;
+      const next = document.createElement("button");
+      next.textContent = "»";
+      next.onclick = () => {
+        pageWindowStart += PAGE_WINDOW;
         currentPage = pageWindowStart;
         render();
       };
-      pagination.appendChild(nextSet);
+      pagination.appendChild(next);
     }
   }
 
@@ -236,19 +216,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modalImg.src = item.src;
     modalMeta.innerHTML = `
-      <div class="info-grid">
-        <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
-        <p><b>OEM:</b> ${item.oemArr.join(", ")}</p>
-        <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
-        <p><b>Units:</b> ${item.units}</p>
-        <p><b>Location:</b> ${item.location}</p>
-        <p><b>Device:</b> ${item.device}</p>
-        <p>${(item.tags || []).join(", ")}</p>
-      </div>
+      <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
+      <p><b>OEM:</b> ${item.oemArr.join(", ")}</p>
+      <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
+      <p><b>Units:</b> ${item.units}</p>
+      <p><b>Location:</b> ${item.location}</p>
+      <p><b>Device:</b> ${item.device}</p>
     `;
 
-    isZoomed = false;
-    modalImg.classList.remove("zoomed");
     modal.classList.add("open");
     document.body.style.overflow = "hidden";
   }
@@ -262,32 +237,28 @@ document.addEventListener("DOMContentLoaded", () => {
   modalClose.onclick = closeModal;
   modal.onclick = e => { if (e.target === modal) closeModal(); };
 
-  modalImg.onclick = e => {
-    e.stopPropagation();
-    isZoomed = !isZoomed;
-    modalImg.classList.toggle("zoomed", isZoomed);
-  };
-
   nextBtn.onclick = () => openModal((currentIndex + 1) % data.length);
   prevBtn.onclick = () => openModal((currentIndex - 1 + data.length) % data.length);
 
   /* ========= CONTROLS ========= */
-  perPageSelect.onchange = () => {
-    PER_PAGE = parseInt(perPageSelect.value, 10);
-    currentPage = 1;
-    pageWindowStart = 1;
-    render();
-  };
-
-  gotoInput.onchange = () => {
-    const n = parseInt(gotoInput.value, 10);
-    const totalPages = Math.ceil(filtered.length / PER_PAGE);
-    if (n >= 1 && n <= totalPages) {
-      currentPage = n;
-      pageWindowStart = Math.floor((n - 1) / PAGE_WINDOW) * PAGE_WINDOW + 1;
+  if (perPageSelect)
+    perPageSelect.onchange = () => {
+      PER_PAGE = Number(perPageSelect.value);
+      currentPage = 1;
+      pageWindowStart = 1;
       render();
-    }
-  };
+    };
+
+  if (gotoInput)
+    gotoInput.onchange = () => {
+      const p = Number(gotoInput.value);
+      const max = Math.ceil(filtered.length / PER_PAGE);
+      if (p >= 1 && p <= max) {
+        currentPage = p;
+        pageWindowStart = Math.floor((p - 1) / PAGE_WINDOW) * PAGE_WINDOW + 1;
+        render();
+      }
+    };
 
   /* ========= EVENTS ========= */
   search.addEventListener("input", applyFilters);
@@ -297,6 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
   locationFilter.addEventListener("change", applyFilters);
   deviceFilter.addEventListener("change", applyFilters);
   unitFilter.addEventListener("change", applyFilters);
-  sort.addEventListener("change", applySort);
+  sort.addEventListener("change", render);
 
 });
