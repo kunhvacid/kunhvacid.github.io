@@ -231,26 +231,34 @@ body {
    PAGINATION
 ================================================== */
 
-.pagination {
+
+#pagination-wrapper {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  text-align: center;
+}
+
+#pagination {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin: 32px 0;
+  gap: 6px;
+  margin: 12px 0;
 }
 
-.pagination button {
-  padding: 6px 12px;
-  border-radius: 8px;
+#pagination button {
+  padding: 6px 10px;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
-  background: #222;
-  color: #fff;
 }
 
-.pagination button.active {
-  background: #fff;
-  color: #000;
+#pagination button.active {
+  font-weight: bold;
+  outline: 2px solid currentColor;
 }
+
 
 /* ==================================================
    RESPONSIVE FILTERS

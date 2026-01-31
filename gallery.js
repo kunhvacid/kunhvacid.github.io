@@ -1,3 +1,7 @@
+/* =========================
+   GALLERY – RESPONSIVE PAGINATION + STATUS + CONTROLS
+========================= */
+
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ========= ELEMENTS ========= */
