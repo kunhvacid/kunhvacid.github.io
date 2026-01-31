@@ -325,13 +325,20 @@ body {
 }
 
 /* ==================================================
-   FOOTER SUPPORT
+   STICKY FOOTER (MASONRY-SAFE)
 ================================================== */
 
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 main {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
 }
 
 .site-footer {
-  margin-top: auto;
+  flex-shrink: 0;
 }
+
