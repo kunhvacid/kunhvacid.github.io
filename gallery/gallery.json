@@ -997,5 +997,15 @@
     "rarity": "Rare",
     "brand": "GREE",
     "tags": ["Split AC", "Standard", "China", "Indonesia", "5.0 HP", "Indoor", "Floor Standing", "STS", "GVC-48STS(S)ECO/I"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/oct162022.jpg",
+    "date": "2026-01-26",
+    "location": "Balikpapan",
+    "device": "Realme 6",
+    "oem": "TCL",
+    "rarity": "Common",
+    "brand": "Samsung",
+    "tags": ["Split AC", "Standard", "China", "1.0 HP", "Outdoor", "AR09JRFLAWKX"]
   }
 ]
