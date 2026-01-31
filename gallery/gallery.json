@@ -759,6 +759,23 @@
     "brand": "Midea",
     "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown"]
   },
+
+
+
+
+  {
+    "src": "https://kunhvacid.github.io/ac/acs33/frame_000038.png",
+    "date": "2025-12-28",
+    "location": "Surabaya",
+    "device": "Huawei Mate X6",
+    "oem": "GREE",
+    "rarity": "Very Rare",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Standard", "China", "0.5 HP", "Outdoor", "SCY", "AU-A05SCY"]
+  },
+
+
+
   {
     "src": "https://kunhvacid.github.io/ac/acs42/IMG_20260101_103040.jpg",
     "date": "2026-01-01",
@@ -1011,7 +1028,7 @@
   },
   {
     "src": "https://kunhvacid.github.io/ac/oct162022.jpg",
-    "date": "2026-01-26",
+    "date": "2022-10-16",
     "location": "Balikpapan",
     "device": "Realme 6",
     "oem": "TCL",
