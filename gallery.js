@@ -1,52 +1,46 @@
-/* =========================
-   GALLERY – FULL REWRITE (STABLE, DEDUPED, WINDOWED PAGINATION)
-========================= */
-
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ========= ELEMENTS ========= */
-  const $ = id => document.getElementById(id);
+  const gallery     = document.getElementById("gallery");
+  const pagination  = document.getElementById("pagination");
 
-  const gallery        = $("gallery");
-  const pagination     = $("pagination");
-  const search          = $("search");
-  const sort            = $("sort");
-  const locationFilter  = $("locationFilter");
-  const deviceFilter    = $("deviceFilter");
-  const brandFilter     = $("brandFilter");
-  const oemFilter       = $("oemFilter");
-  const rarityFilter    = $("rarityFilter");
-  const unitFilter      = $("unitFilter");
+  const search      = document.getElementById("search");
+  const sort        = document.getElementById("sort");
 
-  const modal     = $("modal");
-  const modalImg  = $("modal-img");
-  const modalMeta = $("modal-meta");
+  const locationFilter = document.getElementById("locationFilter");
+  const deviceFilter   = document.getElementById("deviceFilter");
+  const brandFilter    = document.getElementById("brandFilter");
+  const oemFilter      = document.getElementById("oemFilter");
+  const rarityFilter   = document.getElementById("rarityFilter");
+  const unitFilter     = document.getElementById("unitFilter");
 
-  const closeBtn = modal.querySelector(".close");
-  const nextBtn  = modal.querySelector(".next");
-  const prevBtn  = modal.querySelector(".prev");
+  const perPageSelect  = document.getElementById("perPage");     // select
+  const gotoInput      = document.getElementById("gotoPage");    // input number
+  const pageStatus     = document.getElementById("pageStatus");  // text
+  const photoStatus    = document.getElementById("photoStatus"); // text
+
+  const modal      = document.getElementById("modal");
+  const modalImg   = document.getElementById("modal-img");
+  const modalMeta  = document.getElementById("modal-meta");
+  const modalClose = modal.querySelector(".close");
+  const nextBtn    = modal.querySelector(".next");
+  const prevBtn    = modal.querySelector(".prev");
 
   /* ========= STATE ========= */
   let data = [];
   let filtered = [];
-
-  const PER_PAGE = 7;
-  const PAGE_WINDOW = 10;
-
-  let currentPage = 1;
-  let pageWindowStart = 1;
   let currentIndex = 0;
   let isZoomed = false;
 
-  /* ========= HELPERS ========= */
-  const toArray = v =>
-    Array.isArray(v)
-      ? v.map(x => x.trim())
-      : typeof v === "string"
-        ? v.split(",").map(x => x.trim()).filter(Boolean)
-        : [];
+  let PER_PAGE = 8;
+  let currentPage = 1;
 
+  const PAGE_WINDOW = 10;
+  let pageWindowStart = 1;
+
+  /* ========= HELPERS ========= */
   const unique = arr => [...new Set(arr.filter(Boolean))].sort();
+  const toArray = v => Array.isArray(v) ? v : (v ? [v] : []);
 
   function fill(select, values) {
     select.innerHTML = `<option value="">All</option>`;
@@ -72,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  /* ========= LOAD ========= */
+  /* ========= LOAD DATA ========= */
   fetch("gallery/gallery.json")
     .then(r => r.json())
     .then(json => {
@@ -80,10 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
       filtered = [...data];
       populateFilters();
       applySort();
-    })
-    .catch(err => console.error("Gallery load failed:", err));
+    });
 
-  /* ========= FILTER OPTIONS ========= */
+  /* ========= FILTER POPULATION ========= */
   function populateFilters() {
     fill(brandFilter,    unique(data.flatMap(i => i.brandArr)));
     fill(oemFilter,      unique(data.flatMap(i => i.oemArr)));
@@ -93,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fill(unitFilter, ["Single", "Multiple"]);
   }
 
-  /* ========= FILTER ========= */
+  /* ========= FILTERING ========= */
   function applyFilters() {
     const q = search.value.toLowerCase().trim();
     currentPage = 1;
@@ -102,20 +95,20 @@ document.addEventListener("DOMContentLoaded", () => {
     filtered = data.filter(i => {
       const text = [
         ...i.brandArr,
-        ...i.oemArr,
         ...i.rarityArr,
+        ...i.oemArr,
         i.location,
         i.device,
         ...(i.tags || [])
       ].join(" ").toLowerCase();
 
       if (q && !text.includes(q)) return false;
-      if (brandFilter.value && !i.brandArr.includes(brandFilter.value)) return false;
-      if (oemFilter.value && !i.oemArr.includes(oemFilter.value)) return false;
-      if (rarityFilter.value && !i.rarityArr.includes(rarityFilter.value)) return false;
+      if (brandFilter.value    && !i.brandArr.includes(brandFilter.value)) return false;
+      if (rarityFilter.value   && !i.rarityArr.includes(rarityFilter.value)) return false;
+      if (oemFilter.value      && !i.oemArr.includes(oemFilter.value)) return false;
       if (locationFilter.value && i.location !== locationFilter.value) return false;
-      if (deviceFilter.value && i.device !== deviceFilter.value) return false;
-      if (unitFilter.value && i.units !== unitFilter.value) return false;
+      if (deviceFilter.value   && i.device !== deviceFilter.value) return false;
+      if (unitFilter.value     && i.units !== unitFilter.value) return false;
 
       return true;
     });
@@ -129,8 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (v === "newest") filtered.sort((a,b)=>b.date.localeCompare(a.date));
     if (v === "oldest") filtered.sort((a,b)=>a.date.localeCompare(b.date));
-    if (v === "az") filtered.sort((a,b)=>a.brandArr[0].localeCompare(b.brandArr[0]));
-    if (v === "za") filtered.sort((a,b)=>b.brandArr[0].localeCompare(a.brandArr[0]));
+    if (v === "az")     filtered.sort((a,b)=>a.brandArr[0].localeCompare(b.brandArr[0]));
+    if (v === "za")     filtered.sort((a,b)=>b.brandArr[0].localeCompare(a.brandArr[0]));
 
     render();
   }
@@ -139,10 +132,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     gallery.innerHTML = "";
 
-    const start = (currentPage - 1) * PER_PAGE;
-    const items = filtered.slice(start, start + PER_PAGE);
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+    currentPage = Math.min(currentPage, totalPages);
 
-    items.forEach(item => {
+    const startIndex = (currentPage - 1) * PER_PAGE;
+    const endIndex   = Math.min(startIndex + PER_PAGE, total);
+    const pageItems  = filtered.slice(startIndex, endIndex);
+
+    pageItems.forEach(item => {
       const index = data.indexOf(item);
 
       const card = document.createElement("div");
@@ -150,8 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const img = document.createElement("img");
       img.src = item.src;
-      img.loading = "lazy";
       img.alt = item.brandArr.join(", ");
+      img.loading = "lazy";
       img.onclick = () => openModal(index);
 
       const overlay = document.createElement("div");
@@ -173,66 +171,76 @@ document.addEventListener("DOMContentLoaded", () => {
       gallery.appendChild(card);
     });
 
-    renderPagination();
+    updateStatus(startIndex + 1, endIndex, total, totalPages);
+    renderPagination(totalPages);
+  }
+
+  /* ========= STATUS ========= */
+  function updateStatus(from, to, total, totalPages) {
+    pageStatus.textContent  =
+      `Page ${pageWindowStart}-${Math.min(pageWindowStart + PAGE_WINDOW - 1, totalPages)} of ${totalPages}`;
+
+    photoStatus.textContent =
+      total === 0 ? "No photos" : `Photos ${from}-${to} of ${total}`;
   }
 
   /* ========= PAGINATION ========= */
-  function renderPagination() {
+  function renderPagination(totalPages) {
     pagination.innerHTML = "";
-    const total = Math.ceil(filtered.length / PER_PAGE);
-    if (total <= 1) return;
 
-    const end = Math.min(pageWindowStart + PAGE_WINDOW - 1, total);
+    const windowEnd = Math.min(pageWindowStart + PAGE_WINDOW - 1, totalPages);
 
     if (pageWindowStart > 1) {
-      const prev = document.createElement("button");
-      prev.textContent = "‹";
-      prev.onclick = () => {
-        pageWindowStart -= PAGE_WINDOW;
+      const prevSet = document.createElement("button");
+      prevSet.textContent = "«";
+      prevSet.onclick = () => {
+        pageWindowStart = Math.max(1, pageWindowStart - PAGE_WINDOW);
         currentPage = pageWindowStart;
         render();
       };
-      pagination.appendChild(prev);
+      pagination.appendChild(prevSet);
     }
 
-    for (let i = pageWindowStart; i <= end; i++) {
+    for (let p = pageWindowStart; p <= windowEnd; p++) {
       const btn = document.createElement("button");
-      btn.textContent = i;
-      btn.className = i === currentPage ? "active" : "";
+      btn.textContent = p;
+      btn.className = p === currentPage ? "active" : "";
       btn.onclick = () => {
-        currentPage = i;
+        currentPage = p;
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       };
       pagination.appendChild(btn);
     }
 
-    if (end < total) {
-      const next = document.createElement("button");
-      next.textContent = "›";
-      next.onclick = () => {
-        pageWindowStart += PAGE_WINDOW;
+    if (windowEnd < totalPages) {
+      const nextSet = document.createElement("button");
+      nextSet.textContent = "»";
+      nextSet.onclick = () => {
+        pageWindowStart = pageWindowStart + PAGE_WINDOW;
         currentPage = pageWindowStart;
         render();
       };
-      pagination.appendChild(next);
+      pagination.appendChild(nextSet);
     }
   }
 
   /* ========= MODAL ========= */
   function openModal(index) {
     currentIndex = index;
-    const i = data[index];
+    const item = data[index];
 
-    modalImg.src = i.src;
+    modalImg.src = item.src;
     modalMeta.innerHTML = `
-      <p><b>Brand:</b> ${i.brandArr.join(", ")}</p>
-      <p><b>OEM:</b> ${i.oemArr.join(", ")}</p>
-      <p><b>Rarity:</b> ${i.rarityArr.join(", ")}</p>
-      <p><b>Units:</b> ${i.units}</p>
-      <p><b>Location:</b> ${i.location}</p>
-      <p><b>Device:</b> ${i.device}</p>
-      <p>${(i.tags || []).join(", ")}</p>
+      <div class="info-grid">
+        <p><b>Brand:</b> ${item.brandArr.join(", ")}</p>
+        <p><b>OEM:</b> ${item.oemArr.join(", ")}</p>
+        <p><b>Rarity:</b> ${item.rarityArr.join(", ")}</p>
+        <p><b>Units:</b> ${item.units}</p>
+        <p><b>Location:</b> ${item.location}</p>
+        <p><b>Device:</b> ${item.device}</p>
+        <p>${(item.tags || []).join(", ")}</p>
+      </div>
     `;
 
     isZoomed = false;
@@ -247,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "";
   }
 
-  closeBtn.onclick = closeModal;
+  modalClose.onclick = closeModal;
   modal.onclick = e => { if (e.target === modal) closeModal(); };
 
   modalImg.onclick = e => {
@@ -256,24 +264,35 @@ document.addEventListener("DOMContentLoaded", () => {
     modalImg.classList.toggle("zoomed", isZoomed);
   };
 
-  nextBtn.onclick = e => {
-    e.stopPropagation();
-    openModal((currentIndex + 1) % data.length);
+  nextBtn.onclick = () => openModal((currentIndex + 1) % data.length);
+  prevBtn.onclick = () => openModal((currentIndex - 1 + data.length) % data.length);
+
+  /* ========= CONTROLS ========= */
+  perPageSelect.onchange = () => {
+    PER_PAGE = parseInt(perPageSelect.value, 10);
+    currentPage = 1;
+    pageWindowStart = 1;
+    render();
   };
 
-  prevBtn.onclick = e => {
-    e.stopPropagation();
-    openModal((currentIndex - 1 + data.length) % data.length);
+  gotoInput.onchange = () => {
+    const n = parseInt(gotoInput.value, 10);
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+    if (n >= 1 && n <= totalPages) {
+      currentPage = n;
+      pageWindowStart = Math.floor((n - 1) / PAGE_WINDOW) * PAGE_WINDOW + 1;
+      render();
+    }
   };
 
   /* ========= EVENTS ========= */
-  search.oninput = applyFilters;
-  brandFilter.onchange = applyFilters;
-  oemFilter.onchange = applyFilters;
-  rarityFilter.onchange = applyFilters;
-  locationFilter.onchange = applyFilters;
-  deviceFilter.onchange = applyFilters;
-  unitFilter.onchange = applyFilters;
-  sort.onchange = applySort;
+  search.addEventListener("input", applyFilters);
+  brandFilter.addEventListener("change", applyFilters);
+  oemFilter.addEventListener("change", applyFilters);
+  rarityFilter.addEventListener("change", applyFilters);
+  locationFilter.addEventListener("change", applyFilters);
+  deviceFilter.addEventListener("change", applyFilters);
+  unitFilter.addEventListener("change", applyFilters);
+  sort.addEventListener("change", applySort);
 
 });
