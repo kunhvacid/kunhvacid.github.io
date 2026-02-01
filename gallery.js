@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let filtered = [];
   let currentIndex = 0;
 
-  let PER_PAGE = 8;
+  let PER_PAGE = 4;
   let currentPage = 1;
 
   const PAGE_WINDOW = 10;
@@ -278,46 +278,64 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* =========================
-     MODAL
-  ========================= */
+/* =========================
+   MODAL (FIXED & CLEAN)
+========================= */
 
-  function openModal(i) {
-    currentIndex = i;
-    const item = filtered[i];
+/* one-time zoom handler */
+modalImg.addEventListener("click", () => {
+  modalImg.classList.toggle("zoomed");
+});
 
-    modalImg.src = item.src;
-    modalMeta.innerHTML = `
-   <div><b>Brand:</b> ${item.brandArr.join(", ")}</div>
-   <div><b>OEM:</b> ${item.oemArr.join(", ")}</div>
-   <div><b>Rarity:</b> ${item.rarityArr.join(", ")}</div>
-   <div><b>Units:</b> ${item.units}</div>
-   <div><b>Location:</b> ${item.location}</div>
-   <div><b>Device:</b> ${item.device}</div>
+function openModal(i) {
+  currentIndex = i;
+  const item = filtered[i];
 
-  ${item.tags?.length ? `
-    <div style="grid-column:1/-1">
-      <b>Tags:</b>
-      <div class="tag-row">
-        ${item.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+  /* reset zoom every open */
+  modalImg.classList.remove("zoomed");
+  modalImg.src = item.src;
+
+  modalMeta.innerHTML = `
+    <div><b>Brand:</b> ${item.brandArr.join(", ")}</div>
+    <div><b>OEM:</b> ${item.oemArr.join(", ")}</div>
+    <div><b>Rarity:</b> ${item.rarityArr.join(", ")}</div>
+    <div><b>Units:</b> ${item.units}</div>
+    <div><b>Location:</b> ${item.location}</div>
+    <div><b>Device:</b> ${item.device}</div>
+
+    ${item.tags?.length ? `
+      <div style="grid-column:1/-1">
+        <b>Tags:</b>
+        <div class="tag-row">
+          ${item.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+        </div>
       </div>
-    </div>
-  ` : ""}
-`;
+    ` : ""}
+  `;
 
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
 
-    modal.classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
+/* close */
+closeBtn.onclick = () => {
+  modal.classList.remove("open");
+  modalImg.classList.remove("zoomed");
+  document.body.style.overflow = "";
+};
 
-  closeBtn.onclick = () => {
-    modal.classList.remove("open");
-    document.body.style.overflow = "";
-  };
+/* click outside image closes modal */
+modal.onclick = e => {
+  if (e.target === modal) closeBtn.onclick();
+};
 
-  modal.onclick = e => e.target === modal && closeBtn.onclick();
-  nextBtn.onclick = () => openModal((currentIndex + 1) % filtered.length);
-  prevBtn.onclick = () => openModal((currentIndex - 1 + filtered.length) % filtered.length);
+/* navigation */
+nextBtn.onclick = () =>
+  openModal((currentIndex + 1) % filtered.length);
+
+prevBtn.onclick = () =>
+  openModal((currentIndex - 1 + filtered.length) % filtered.length);
+
 
   /* =========================
      EVENTS
