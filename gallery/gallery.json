@@ -660,6 +660,91 @@
     "tags": ["Split AC", "Standard", "Thailand", "2.0 HP", "Indoor", "Super Mini Split", "STC_NV", "FTC50NV14"]
   },
   {
+    "src": "https://kunhvacid.github.io/ac/acs2/frame_000060.png",
+    "date": "2024-12-15",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": ["Inhouse", "Midea"],
+    "rarity": "Common",
+    "brand": ["Panasonic", "Daikin"],
+    "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "Standard Garuda", "ZN_WKP","YN_TKJ", "BEY", "AU-A9BEY", "CU-YN9TKJ", "CU-ZN9WKP"]
+  },
+
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000017.png",
+    "date": "2024-05-25",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "MHI",
+    "tags": ["Split AC", "Standard", "Thailand", "2.5 HP", "Outdoor", "SRC_CS-S3", "SRC24CS-S3"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000018.png",
+    "date": "2024-05-25",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Thailand", "2.5 HP", "Indoor", "Deluxe Standard", "PN_WKJ", "CS-PN24WKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000023.png",
+    "date": "2024-06-17",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Inverter", "Thailand", "1.0 HP", "Indoor", "Inverter IoT", "XP_VXY", "AH-XP10VXY"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000023.png",
+    "date": "2024-06-17",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Inverter", "Thailand", "1.0 HP", "Indoor", "Inverter IoT", "XP_VXY", "AH-XP10VXY"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000059.png",
+    "date": "2024-12-18",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Standard", "Thailand", "1.0 HP", "Outdoor", "STNE_MV", "RNE25MV14"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000060.png",
+    "date": "2024-12-18",
+    "location": "Balikpapan",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "LG",
+    "tags": ["Split AC", "Standard", "Thailand", "1.5 HP", "Outdoor", "SN_LFG", "SN12LFG"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs3/frame_000069.png",
+    "date": "2024-12-20",
+    "location": "Yogyakarta",
+    "device": "Redmi Note 12 Pro 5G",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Daikin",
+    "tags": ["Split AC", "Inverter", "Thailand", "Unknown HP", "Indoor", "SkyAir Inverter R32", "VRV", "FCFC_DVM4"]
+  },
+
+
+  
+
+  {
     "src": "https://kunhvacid.github.io/ac/acs31/frame_000000.png",
     "date": "2025-12-25",
     "location": "Yogyakarta",
@@ -759,6 +844,47 @@
     "brand": "Midea",
     "tags": ["Split AC", "Standard", "Unknown", "Unknown HP", "Outdoor", "Unknown"]
   },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000010.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": ["LG", "Panasonic"],
+    "tags": ["Split AC", "Standard", "Inverter", "Indonesia","1.0 HP", "Outdoor", "CU-PC9GKJ", "CU-YN9AKJ", "T10EV4"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000011.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Standard", "Indonesia","1.0 HP", "Outdoor", "Standard Garuda", "BEY", "AU-A9BEY"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000012.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Uncommon",
+    "brand": "LG",
+    "tags": ["Split AC", "Standard", "Thailand" ,"1.0 HP", "Outdoor", "T09NL"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs31/frame_000013.png",
+    "date": "2025-12-25",
+    "location": "Yogyakarta",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Common",
+    "brand": "GREE",
+    "tags": ["Split AC", "Standard", "China" ,"2.0 HP", "Outdoor", "18MOO3"]
+  },
+  
 
 
 
@@ -772,6 +898,40 @@
     "rarity": "Very Rare",
     "brand": "Sharp",
     "tags": ["Split AC", "Standard", "China", "0.5 HP", "Outdoor", "SCY", "AU-A05SCY"]
+  },
+
+
+
+
+{
+    "src": "https://kunhvacid.github.io/ac/acs40/frame_000057.png",
+    "date": "2025-12-29",
+    "location": "Surakarta (Solo)",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Sharp",
+    "tags": ["Split AC", "Standard", "Thailand", "0.75 HP", "Outdoor", "SAY", "AU-A7SAY"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs40/frame_000058.png",
+    "date": "2025-12-29",
+    "location": "Surakarta (Solo)",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Indonesia", "1.0 HP", "Indoor", "C_DKJ", "CS-C9DKJ"]
+  },
+  {
+    "src": "https://kunhvacid.github.io/ac/acs40/frame_000059.png",
+    "date": "2025-12-29",
+    "location": "Surakarta (Solo)",
+    "device": "Huawei Mate X6",
+    "oem": "Inhouse",
+    "rarity": "Very Rare",
+    "brand": "Panasonic",
+    "tags": ["Split AC", "Standard", "Malaysia", "1.0 HP", "Outdoor", "PC_CKH", "CU-PC9CKH"]
   },
 
 
