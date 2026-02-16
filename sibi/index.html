@@ -1,0 +1,80 @@
+<div>Teachable Machine Image Model</div>
+
+<button type="button" onclick="init()">Start</button>
+<button type="button" onclick="confirmLetter()">Confirm</button>
+<button type="button" onclick="clearOutput()">Clear</button>
+
+<div id="webcam-container"></div>
+
+<div>
+    Current Letter: <span id="current-letter">-</span>
+</div>
+<div>
+    Confidence: <span id="current-confidence">0%</span>
+</div>
+
+<div>
+    Output: <span id="output-text"></span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+<script type="text/javascript">
+    const URL = "https://teachablemachine.withgoogle.com/models/2T4Iilj2V/";
+
+    let model, webcam, maxPredictions;
+    let currentPrediction = "";
+    let currentConfidence = 0;
+    const CONFIDENCE_THRESHOLD = 0.80; // 80%
+
+    async function init() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        const flip = true;
+        webcam = new tmImage.Webcam(200, 200, flip);
+        await webcam.setup();
+        await webcam.play();
+        window.requestAnimationFrame(loop);
+
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+    }
+
+    async function loop() {
+        webcam.update();
+        await predict();
+        window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+        const prediction = await model.predict(webcam.canvas);
+
+        let highest = prediction[0];
+        for (let i = 1; i < prediction.length; i++) {
+            if (prediction[i].probability > highest.probability) {
+                highest = prediction[i];
+            }
+        }
+
+        currentPrediction = highest.className;
+        currentConfidence = highest.probability;
+
+        document.getElementById("current-letter").innerText = currentPrediction;
+        document.getElementById("current-confidence").innerText =
+            (currentConfidence * 100).toFixed(2) + "%";
+    }
+
+    function confirmLetter() {
+        if (currentConfidence >= CONFIDENCE_THRESHOLD) {
+            document.getElementById("output-text").innerText += currentPrediction;
+        }
+    }
+
+    function clearOutput() {
+        document.getElementById("output-text").innerText = "";
+    }
+</script>
