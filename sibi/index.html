@@ -76,54 +76,47 @@
 
 
 
-
-
-
-    
-
-
-
 <div class="container-card">
 
     <div class="header-title">SignSmart: SIBI Translators</div>
 
     <div class="main-layout">
-
+        <!-- Controls -->
         <div class="controls">
-    <button id="startBtn" onclick="init()">Start</button>
-    <button id="stopBtn" onclick="stopWebcam()" disabled>Stop</button>
-
-  </div>
-
-
-<div class="main-layout">
-    <div class="left-panel">
-        <h3>Predictions</h3>
-        <div id="prediction-container"></div>
-    </div>
-
-    <div class="right-panel">
-        <!-- Webcam -->
-        <div class="camera-section">
-            <div id="webcam-container"></div>
-            <div id="most-confident" style="margin-top:10px; font-size:18px; font-weight:600;">
-  Most Confident: -
-</div>
-
+            <button id="startBtn" onclick="init()">Start</button>
+            <button id="stopBtn" onclick="stopWebcam()" disabled>Stop</button>
         </div>
 
-        <!-- Output -->
-        <div class="output-section">
-            <h3>Output</h3>
-            <input type="text" id="text-box" readonly />
-            <div class="output-buttons">
-                <button onclick="confirmLetter()">Confirm (Enter)</button>
-                <button onclick="addSpace()">Space</button>
-                <button onclick="backspace()">Backspace</button>
-                <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <h3>Predictions</h3>
+            <div id="prediction-container"></div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <!-- Webcam -->
+            <div class="camera-section">
+                <div id="webcam-container"></div>
+                <div id="most-confident" style="margin-top:10px; font-size:18px; font-weight:600;">
+                    Most Confident: -
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="output-section">
+                <h3>Output</h3>
+                <input type="text" id="text-box" readonly />
+                <div class="output-buttons">
+                    <button onclick="confirmLetter()">Confirm (Enter)</button>
+                    <button onclick="addSpace()">Space</button>
+                    <button onclick="backspace()">Backspace</button>
+                    <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 
@@ -237,6 +230,9 @@ function stop() {
 
     cancelAnimationFrame(animationId);
     webcam.stop();
+    const webcamContainer = document.getElementById("webcam-container");
+    webcamContainer.innerHTML = "";
+
     isRunning = false;
 
     document.getElementById("startBtn").disabled = false;
@@ -287,6 +283,11 @@ document.getElementById("stopBtn").disabled = true;
         mostConfidentEl.innerText = "Most Confident: -";
     }
 }
+
+
+
+
+
 
 
     function confirmLetter() {
@@ -368,4 +369,50 @@ document.addEventListener("keydown", function(event) {
 
 
 </script>
+
+</main>
+<script>
+  const buttons = document.querySelectorAll(".dropbtn");
+  const menus = document.querySelectorAll(".dropdown-menu");
+  const hamburger = document.querySelector(".hamburger");
+  const nav = document.querySelector(".nav-links");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+
+      const menu = document.getElementById(btn.dataset.dropdown);
+
+      menus.forEach(m => {
+        if (m !== menu) m.classList.remove("active");
+      });
+
+      buttons.forEach(b => b.classList.remove("active"));
+
+      const isOpen = menu.classList.toggle("active");
+      btn.classList.toggle("active", isOpen);
+    });
+
+    btn.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") btn.click();
+      if (e.key === "Escape") closeAll();
+    });
+  });
+
+  function closeAll() {
+    menus.forEach(m => m.classList.remove("active"));
+    buttons.forEach(b => b.classList.remove("active"));
+  }
+
+  document.addEventListener("click", closeAll);
+
+  hamburger.addEventListener("click", () => {
+    const expanded = nav.classList.toggle("open");
+    hamburger.setAttribute("aria-expanded", expanded);
+  });
+</script>
+
+</body>
+</html>
+
 

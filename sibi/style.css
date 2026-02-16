@@ -1,5 +1,239 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
+/* BASE STYLES (desktop-first) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+html,
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.7), rgba(49,102,163,0.4)),
+        url("https://kunhvacid.github.io/ac/IMG_20251227_112128.jpg");
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+body {
+  line-height: 1.6;
+  color: #333;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    background: rgba(34,34,34,0.95);
+    z-index: 1000;
+}
+
+
+/* CLICKABLE LOGO WITH BACKGROUND */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.logo img {
+  width: 240px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.logo:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* NAV LINKS */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.nav-links a,
+.dropbtn {
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 8px 10px;
+  transition: background 0.2s ease;
+}
+
+.nav-links a:hover,
+.dropbtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+/* DROPDOWN */
+.dropdown {
+  position: relative;
+}
+
+/* DROPDOWN MENU (glass + animated) */
+.dropdown-menu {
+  position: absolute;
+  top: 130%;
+  left: 0;
+  min-width: 170px;
+
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 14px;
+  padding: 6px 0;
+
+  opacity: 0;
+  transform: translateY(-12px) scale(0.98);
+  pointer-events: none;
+
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 100;
+}
+
+/* ACTIVE STATE (JS toggles .active) */
+.dropdown-menu.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* MENU ITEMS */
+.dropdown-menu a {
+  display: block;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  color: white;
+  text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ARROW ROTATION */
+.arrow {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.dropbtn.active .arrow {
+  transform: rotate(180deg);
+}
+
+/* HAMBURGER BUTTON */
+.hamburger {
+  display: none;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+/* MOBILE LAYOUT */
+@media (max-width: 800px) {
+  .hamburger {
+    display: block;
+  }
+
+  /* CENTERED MOBILE MENU */
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: min(90vw, 360px);
+
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-radius: 18px;
+    padding: 16px;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    display: none;
+    z-index: 200;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  /* DROPDOWN: AUTO-EXPANDING, NO GAP */
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    position: static;
+    transform: none;
+
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 6px;
+
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+  }
+
+  .dropdown-menu.active {
+    opacity: 1;
+    max-height: 500px;
+  }
+
+  /* FULL-WIDTH CLICK TARGETS */
+  .nav-links a,
+  .dropbtn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .dropdown-menu a {
+    text-align: center;
+  }
+}
+
+
 /* Body & App Layout */
 body {
     margin: 0;
@@ -8,6 +242,14 @@ body {
     color: white;
     display: flex;
     justify-content: center;
+}
+
+main {
+    flex: 1 0 auto;
+    margin-top: 80px; /* space for navbar */
+    display: flex;
+    justify-content: center;
+    padding: 20px;
 }
 
 .app {
@@ -53,19 +295,16 @@ button:disabled {
 /* Main layout container */
 .main-layout, .main {
     display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
     justify-content: flex-start;
-    align-items: flex-start;
-    gap: 40px;
-    width: 100%;
 }
-
 /* Predictions panel (left) */
 .left-panel, .predictions {
-    flex: 0 0 300px; /* fixed width */
+    flex: 0 0 300px;
     background-color: rgba(255, 255, 255, 0.08);
     padding: 20px;
     border-radius: 12px;
-    margin: 0;
 }
 
 /* Each prediction row */
@@ -105,14 +344,14 @@ button:disabled {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    gap: 20px; /* space between webcam and output */
 }
 
 /* Webcam canvas */
 .camera-section canvas, #webcam-container canvas {
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
 }
 
 /* Output text */
@@ -125,6 +364,15 @@ button:disabled {
     padding: 12px;
     border-radius: 8px;
     border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.output-section #text-box {
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 6px;
 }
 
 /* Output buttons */
