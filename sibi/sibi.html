@@ -81,38 +81,17 @@
     <div class="header-title">SignSmart: SIBI Translator ALPHA</div>
     <div class="header-subtitle">V0.1<br>Powered by TeachableMachine</div>
 
-    <div class="main-layout">
-        <!-- Controls -->
-        <div class="controls">
-            <button id="startBtn" onclick="init()">Start</button>
-            <button id="stopBtn" onclick="stopWebcam()" disabled>Stop</button>
-        </div>
+    <div style="text-align:center; margin-bottom:20px;">
+    <button onclick="setMode('signToText')">Sign → Text</button>
+    <button onclick="setMode('textToSign')">Text → Sign</button>
+</div>
+<div id="translator-root"></div>
 
-        <!-- Left Panel -->
-        <div class="left-panel">
-            <h3>Predictions</h3>
-            <div id="prediction-container"></div>
-        </div>
 
-        <!-- Right Panel -->
-        <div class="right-panel">
-            <!-- Webcam -->
-            <div class="camera-section">
-                <div id="webcam-container"></div>
-                <div id="most-confident" style="margin-top:10px; font-size:18px; font-weight:600;">
-                    Most Confident: -
-                </div>
-            </div>
+<div class="output-section">
+<div id="mode-container"></div>
 
-            <!-- Output -->
-            <div class="output-section">
-                <h3>Output</h3>
-                <input type="text" id="text-box" readonly />
-                <div class="output-buttons">
-                    <button onclick="confirmLetter()">Confirm (Enter)</button>
-                    <button onclick="addSpace()">Space</button>
-                    <button onclick="backspace()">Backspace</button>
-                    <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+</div>
                 </div>
             </div>
         </div>
@@ -149,6 +128,7 @@ async function init() {
     startBtn.disabled = true;
     stopBtn.disabled = false;
 
+    // Load model if not loaded
     if (!model) {
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
@@ -156,21 +136,31 @@ async function init() {
         maxPredictions = model.getTotalClasses();
     }
 
+    // Get actual class labels from model
+    const classNames = model.getClassLabels();
+
+    // Setup webcam
     webcam = new tmImage.Webcam(200, 200, true);
     await webcam.setup();
     await webcam.play();
 
+    // Show webcam in container
     const webcamContainer = document.getElementById("webcam-container");
     webcamContainer.innerHTML = "";
     webcamContainer.appendChild(webcam.canvas);
 
+    // Show output box directly under webcam
+    const outputSection = document.querySelector(".output-section");
+    outputSection.style.marginTop = "10px";
+
+    // Prepare prediction container with actual class names
     const container = document.getElementById("prediction-container");
     container.innerHTML = "";
     for (let i = 0; i < maxPredictions; i++) {
         const row = document.createElement("div");
         row.classList.add("row");
         row.innerHTML = `
-            <span class="label">${String.fromCharCode(65 + i)}</span>
+            <span class="label">${classNames[i]}</span>
             <div class="bar-container">
                 <div class="bar" style="width:0%;"></div>
             </div>
@@ -181,13 +171,14 @@ async function init() {
 
     isRunning = true;
 
+    // Prediction loop
     async function loop() {
         if (!isRunning) return;
 
         await webcam.update();
         const predictions = await model.predict(webcam.canvas);
 
-        // Find most confident
+        // Find most confident prediction
         let highest = predictions[0];
         for (let i = 1; i < predictions.length; i++) {
             if (predictions[i].probability > highest.probability) {
@@ -197,7 +188,7 @@ async function init() {
         currentPrediction = highest.className;
         currentConfidence = highest.probability;
 
-        // Update bars and highlight most confident
+        // Update bars
         for (let i = 0; i < predictions.length; i++) {
             const row = container.children[i];
             const bar = row.querySelector(".bar");
@@ -210,7 +201,7 @@ async function init() {
             row.style.fontWeight = predictions[i].className === currentPrediction ? "bold" : "normal";
         }
 
-        // Update Most Confident element
+        // Update Most Confident text
         const mostConfidentEl = document.getElementById("most-confident");
         if (currentConfidence >= CONFIDENCE_THRESHOLD) {
             mostConfidentEl.innerText = `Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`;
@@ -224,66 +215,26 @@ async function init() {
     animationId = requestAnimationFrame(loop);
 }
 
-
-// Stop function
+// Stop function: stops webcam and removes view
 function stop() {
     if (!isRunning) return;
 
     cancelAnimationFrame(animationId);
     webcam.stop();
-    const webcamContainer = document.getElementById("webcam-container");
-    webcamContainer.innerHTML = "";
-z
     isRunning = false;
 
     document.getElementById("startBtn").disabled = false;
     document.getElementById("stopBtn").disabled = true;
-}
 
-// Button event listeners
-document.getElementById("startBtn").addEventListener("click", init);
-document.getElementById("stopBtn").addEventListener("click", stop);
+    // Remove webcam view
+    const webcamContainer = document.getElementById("webcam-container");
+    webcamContainer.innerHTML = "";
 
-// Initialize Stop button as disabled
-document.getElementById("stopBtn").disabled = true;
-
-
-    async function predict() {
-    const prediction = await model.predict(webcam.canvas);
-
-    let highest = prediction[0];
-    for (let i = 1; i < prediction.length; i++) {
-        if (prediction[i].probability > highest.probability) {
-            highest = prediction[i];
-        }
-    }
-
-    currentPrediction = highest.className;
-    currentConfidence = highest.probability;
-
-    const container = document.getElementById("prediction-container");
-
-    for (let i = 0; i < maxPredictions; i++) {
-        const className = prediction[i].className;
-        const probability = prediction[i].probability;
-
-        const row = container.childNodes[i];
-        row.querySelector(".label").innerText = className;
-        row.querySelector(".percent").innerText =
-            " " + (probability * 100).toFixed(1) + "%";
-        row.querySelector(".bar").style.width =
-            `${Math.round(probability * 100)}%`;
-
-        row.style.fontWeight = className === currentPrediction ? "bold" : "normal";
-    }
-
+    // Reset most confident text
     const mostConfidentEl = document.getElementById("most-confident");
-    if (currentConfidence >= CONFIDENCE_THRESHOLD) {
-        mostConfidentEl.innerText = `Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`;
-    } else {
-        mostConfidentEl.innerText = "Most Confident: -";
-    }
+    mostConfidentEl.innerText = "Most Confident: -";
 }
+
 
 
 
@@ -411,6 +362,133 @@ document.addEventListener("keydown", function(event) {
     const expanded = nav.classList.toggle("open");
     hamburger.setAttribute("aria-expanded", expanded);
   });
+
+
+
+
+
+
+
+
+// ==============================
+// FULL MODE SWITCH SYSTEM
+// ==============================
+
+let currentMode = "signToText";
+
+function setMode(mode) {
+    currentMode = mode;
+
+    const root = document.getElementById("translator-root");
+    root.innerHTML = "";
+
+    if (mode === "signToText") {
+        root.innerHTML = `
+        <div class="main-layout">
+
+            <div class="controls">
+                <button id="startBtn" onclick="init()">Start</button>
+                <button id="stopBtn" onclick="stop()" disabled>Stop</button>
+            </div>
+
+            <div class="left-panel">
+                <h3>Predictions</h3>
+                <div id="prediction-container"></div>
+            </div>
+
+            <div class="right-panel">
+                <div class="camera-section">
+                    <div id="webcam-container"></div>
+                    <div id="most-confident"
+                        style="margin-top:10px; font-size:18px; font-weight:600;">
+                        Most Confident: -
+                    </div>
+                </div>
+
+                <div class="output-section">
+                    <h3>Output</h3>
+                    <input type="text" id="text-box" readonly />
+                    <div class="output-buttons">
+                        <button onclick="confirmLetter()">Confirm (Enter)</button>
+                        <button onclick="addSpace()">Space</button>
+                        <button onclick="backspace()">Backspace</button>
+                        <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+    if (mode === "textToSign") {
+        // Stop webcam if switching away
+        if (isRunning) stop();
+
+        root.innerHTML = `
+        <div style="max-width:700px; margin:auto; text-align:center;">
+
+            <h3>Text → Alphabet Signs</h3>
+
+            <input type="text" id="tts-input"
+                   maxlength="25"
+                   style="margin-top:15px; padding:10px; width:100%; border-radius:8px; border:none;"
+                   placeholder="Max 25 characters">
+
+            <div style="margin-top:15px;">
+                <button onclick="generateAlphabetSigns()">Generate</button>
+                <button onclick="clearAlphabetSigns()">Clear</button>
+            </div>
+
+            <div id="alphabet-sequence"
+                 style="margin-top:25px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+            </div>
+
+        </div>
+        `;
+    }
+}
+
+
+// ==============================
+// TEXT → SIGN LANGUAGE
+// ==============================
+
+function generateAlphabetSigns() {
+    const input = document.getElementById("tts-input").value.toLowerCase();
+    const container = document.getElementById("alphabet-sequence");
+
+    container.innerHTML = "";
+    if (!input) return;
+
+    for (let char of input) {
+
+        if (char === " ") {
+            const spacer = document.createElement("div");
+            spacer.style.width = "20px";
+            container.appendChild(spacer);
+            continue;
+        }
+
+        if (/[a-z]/.test(char)) {
+            const img = document.createElement("img");
+            img.src = `alphabet/${char}.png`;
+            img.style.width = "80px";
+            img.style.borderRadius = "8px";
+            container.appendChild(img);
+        }
+    }
+}
+
+function clearAlphabetSigns() {
+    const container = document.getElementById("alphabet-sequence");
+    if (container) container.innerHTML = "";
+}
+
+
+// Initialize default mode
+window.addEventListener("DOMContentLoaded", () => {
+    setMode("signToText");
+});
 </script>
 
 </body>

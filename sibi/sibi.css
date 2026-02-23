@@ -300,12 +300,13 @@ button:disabled {
 }
 
 /* Main layout container */
-.main-layout, .main {
+.main-layout {
     display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
     justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
 }
+
 /* Predictions panel (left) */
 .left-panel, .predictions {
     flex: 0 0 300px;
@@ -347,12 +348,22 @@ button:disabled {
 }
 
 /* Right panel (webcam + output) */
-.right-panel, .camera-section {
-    flex: 1;
+.right-panel {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* space between webcam and output */
+    align-items: center; /* center horizontally */
+    gap: 10px; /* small space between webcam and output */
+    width: 100%;
 }
+
+/* Webcam section */
+.camera-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 
 /* Webcam canvas */
 .camera-section canvas, #webcam-container canvas {
