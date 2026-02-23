@@ -450,17 +450,19 @@ function setMode(mode) {
 
 
 // ==============================
-// TEXT → SIGN LANGUAGE
+// TEXT → ALPHABET (LIVE RENDER)
 // ==============================
 
 function generateAlphabetSigns() {
     const input = document.getElementById("tts-input").value.toLowerCase();
+    renderAlphabet(input);
+}
+
+function renderAlphabet(text) {
     const container = document.getElementById("alphabet-sequence");
-
     container.innerHTML = "";
-    if (!input) return;
 
-    for (let char of input) {
+    for (let char of text) {
 
         if (char === " ") {
             const spacer = document.createElement("div");
@@ -471,7 +473,7 @@ function generateAlphabetSigns() {
 
         if (/[a-z]/.test(char)) {
             const img = document.createElement("img");
-            img.src = `alphabet/${char}.png`;
+            img.src = `https://kunhvacid.github.io/alphabet/${char}.png`;
             img.style.width = "80px";
             img.style.borderRadius = "8px";
             container.appendChild(img);
@@ -480,14 +482,29 @@ function generateAlphabetSigns() {
 }
 
 function clearAlphabetSigns() {
-    const container = document.getElementById("alphabet-sequence");
-    if (container) container.innerHTML = "";
+    document.getElementById("tts-input").value = "";
+    document.getElementById("alphabet-sequence").innerHTML = "";
 }
-
 
 // Initialize default mode
 window.addEventListener("DOMContentLoaded", () => {
     setMode("signToText");
+    setTimeout(() => {
+    const input = document.getElementById("tts-input");
+
+    input.addEventListener("input", () => {
+        renderAlphabet(input.value.toLowerCase());
+    });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace") {
+            setTimeout(() => {
+                renderAlphabet(input.value.toLowerCase());
+            }, 0);
+        }
+    });
+
+}, 0);
 });
 </script>
 
