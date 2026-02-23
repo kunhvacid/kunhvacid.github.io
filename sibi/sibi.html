@@ -299,19 +299,18 @@ function stop() {
 
 document.addEventListener("keydown", function(event) {
 
-    // Confirm with Enter
+    if (currentMode !== "signToText") return;
+
     if (event.key === "Enter") {
         event.preventDefault();
         confirmLetter();
     }
 
-    // Backspace shortcut
     if (event.key === "Backspace") {
         event.preventDefault();
         backspace();
     }
 
-    // Space shortcut
     if (event.key === " ") {
         event.preventDefault();
         addSpace();
@@ -445,6 +444,10 @@ function setMode(mode) {
 
         </div>
         `;
+
+ input.addEventListener("input", () => {
+    renderAlphabet(input.value.toLowerCase());
+});
     }
 }
 
@@ -473,13 +476,17 @@ function renderAlphabet(text) {
 
         if (/[a-z]/.test(char)) {
             const img = document.createElement("img");
-            img.src = `https://kunhvacid.github.io/alphabet/${char}.png`;
+            img.src = `https://kunhvacid.github.io/sibi/alphabet/${char}.png`;
             img.style.width = "80px";
             img.style.borderRadius = "8px";
             container.appendChild(img);
         }
     }
 }
+
+
+
+
 
 function clearAlphabetSigns() {
     document.getElementById("tts-input").value = "";
@@ -489,23 +496,11 @@ function clearAlphabetSigns() {
 // Initialize default mode
 window.addEventListener("DOMContentLoaded", () => {
     setMode("signToText");
-    setTimeout(() => {
-    const input = document.getElementById("tts-input");
-
-    input.addEventListener("input", () => {
-        renderAlphabet(input.value.toLowerCase());
-    });
-
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace") {
-            setTimeout(() => {
-                renderAlphabet(input.value.toLowerCase());
-            }, 0);
-        }
-    });
-
-}, 0);
+    
+    
 });
+
+
 </script>
 
 </body>
