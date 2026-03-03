@@ -72,9 +72,10 @@
 <div class="container-card">
 
 <div class="header-title">SignSmart</div>
-<div class="header-subtitle">Universal Translator ALPHA | UNFINISHED STATE: LOTS OF BUGS</div>
+<div class="header-subtitle">Universal Translator</div>
 
 <div style="text-align:center; margin:20px 0;">
+    <button onclick="setMode('signToText')">Sign → Text</button>
     <button onclick="setMode('textToSign')">Text → Sign</button>
     <button onclick="setMode('universal')">Universal</button>
 </div>
@@ -297,11 +298,7 @@ if(signBuffer){
 
 document.addEventListener("keydown", function(event) {
 
-    if (
-    currentMode !== "signToText" &&
-    !(currentMode === "universal" &&
-      document.getElementById("translate-from")?.value === "sign")
-) return;
+    if (currentMode !== "signToText") return;
 
     if (event.key === "Enter") {
         event.preventDefault();
@@ -454,17 +451,17 @@ function setMode(mode){
 if(mode === "universal"){
 
     root.innerHTML = `
-    <div style="max-width:1000px;margin:auto;">
+    <div style="max-width:800px;margin:auto;text-align:center;">
 
-        <div style="text-align:center;margin-bottom:20px;">
-            <label>Translate from: </label>
+        <div style="margin-bottom:20px;">
+            <label>Translate from:</label>
             <select id="translate-from">
                 <option value="sign">Sign Language</option>
                 <option value="text">Normal Text</option>
                 <option value="morse">Morse</option>
             </select>
 
-            <label style="margin-left:0px;"> to: </label>
+            <label style="margin-left:20px;">Translate to:</label>
             <select id="translate-to">
                 <option value="sign">Sign Language</option>
                 <option value="text">Normal Text</option>
@@ -472,51 +469,9 @@ if(mode === "universal"){
             </select>
         </div>
 
-        <!-- SIGN → TEXT FULL ENGINE -->
-        <div id="universal-sign-engine" style="display:none;">
-            <div class="main-layout">
+        <div id="dynamic-input"></div>
 
-                <div class="controls">
-                    <button id="startBtn" onclick="init()">Start</button>
-                    <button id="stopBtn" onclick="stop()" disabled>Stop</button>
-                </div>
-
-                <div class="left-panel">
-                    <h3>Predictions</h3>
-                    <div id="prediction-container"></div>
-                </div>
-
-                <div class="right-panel">
-                    <div class="camera-section">
-                        <div id="webcam-container"></div>
-                        <div id="most-confident"
-                            style="margin-top:10px;font-size:18px;font-weight:600;">
-                            Most Confident: -
-                        </div>
-                    </div>
-
-                    <div class="output-section">
-                        <h3>Detected Text</h3>
-                        <input type="text" id="text-box" readonly />
-                        <div class="output-buttons">
-                            <button onclick="confirmLetter()">Confirm</button>
-                            <button onclick="addSpace()">Space</button>
-                            <button onclick="backspace()">Backspace</button>
-                            <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- NORMAL INPUT -->
-        <div id="universal-text-input" style="display:none;text-align:center;">
-            <textarea id="universal-input"
-                style="width:100%;height:100px;padding:10px;border-radius:8px;border:none;"
-                placeholder="Input"></textarea>
-        </div>
-
-        <div style="text-align:center;margin-top:20px;">
+        <div style="margin-top:15px;">
             <button onclick="performUniversalTranslate()">Translate</button>
         </div>
 
@@ -524,12 +479,11 @@ if(mode === "universal"){
             style="margin-top:20px;padding:15px;background:rgba(255,255,255,0.1);
             border-radius:10px;min-height:60px;">
         </div>
-
-    </div>
-    `;
+    </div>`;
 
     const from = document.getElementById("translate-from");
     const to = document.getElementById("translate-to");
+    const dynamicInput = document.getElementById("dynamic-input");
 
     function interlock(){
         if(from.value === to.value){
@@ -537,30 +491,34 @@ if(mode === "universal"){
             const index = options.indexOf(to.value);
             to.value = options[(index+1)%options.length];
         }
-        updateInputMode();
+        renderInput();
     }
 
     from.addEventListener("change", interlock);
     to.addEventListener("change", interlock);
 
-    function updateInputMode(){
-
-        const signEngine = document.getElementById("universal-sign-engine");
-        const textInput = document.getElementById("universal-text-input");
+    function renderInput(){
+        dynamicInput.innerHTML = "";
 
         if(from.value === "sign"){
-            signEngine.style.display = "block";
-            textInput.style.display = "none";
+            dynamicInput.innerHTML = `
+                <p>Use Sign → Text live detection below:</p>
+                <input type="text" id="sign-buffer"
+                    readonly
+                    placeholder="Detected sign text appears here"
+                    style="width:100%;padding:10px;border-radius:8px;border:none;">
+            `;
         } else {
-            signEngine.style.display = "none";
-            textInput.style.display = "block";
-
-            if(isRunning) stop();
+            dynamicInput.innerHTML = `
+                <textarea id="universal-input"
+                    style="width:100%;height:100px;padding:10px;border-radius:8px;border:none;"
+                    placeholder="Input"></textarea>
+            `;
         }
     }
 
-    updateInputMode();
-}
+    renderInput();
+    }
 }
 
 // =================================
@@ -627,8 +585,7 @@ function performUniversalTranslate(){
 
     // INPUT SOURCE LAYER
     if(from === "sign"){
-    const box = document.getElementById("text-box");
-    input = box ? box.value.trim() : "";
+        input = document.getElementById("sign-buffer").value.trim();
     } else {
         input = document.getElementById("universal-input").value.trim();
     }
@@ -643,21 +600,15 @@ function performUniversalTranslate(){
     // =============================
     if((from==="text" || from==="sign") && to==="morse"){
 
-    const text = input.toUpperCase();
+        const text = input.toUpperCase();
 
-    const result = text.split("")
-        .map(c => c===" " ? "/" : (MORSE[c] || ""))
-        .join(" ");
+        const result = text.split("")
+            .map(c => c===" " ? "/" : (MORSE[c] || ""))
+            .join(" ");
 
-    if(from === "sign"){
-        const box = document.getElementById("text-box");
-        if(box) box.value = result;
-    } else {
         output.innerText = result;
+        return;
     }
-
-    return;
-}
 
     // =============================
     // MORSE → TEXT
@@ -721,7 +672,7 @@ function renderUniversalSign(text){
 }
 
 window.addEventListener("DOMContentLoaded",()=>{
-    setMode("universal");
+    setMode("signToText");
 });
 </script>
 
