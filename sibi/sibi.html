@@ -34,39 +34,13 @@
 
 
   <!-- NAVBAR -->
-<header class="navbar">
-  <a href="https://kunhvacid.github.io/index.html" class="logo">
-    <img src="https://kunhvacid.github.io/ac/kunhvac_id_logo.png" alt="kunhvac_id logo">
-  </a>
 
-  <button class="hamburger" aria-label="Menu" aria-expanded="false">☰</button>
 
-  <nav class="nav-links">
-    <a href="https://kunhvacid.github.io/about.html">About</a>
 
-    <div class="dropdown">
-      <button class="dropbtn" data-dropdown="library">
-        Library <span class="arrow">▾</span>
-      </button>
-      <div class="dropdown-menu" id="library">
-        <a href="https://kunhvacid.github.io/gallery.html">AC Sightings Gallery</a>
-        <a href="#">My AC Videos (WIP)</a>
-        <a href="#">WIP</a>
-      </div>
-    </div>
 
-    <div class="dropdown">
-      <button class="dropbtn" data-dropdown="social">
-        Social <span class="arrow">▾</span>
-      </button>
-      <div class="dropdown-menu" id="social">
-        <a href="https://youtube.com/@kunhvac_id" target="_blank">YouTube</a>
-        <a href="https://www.instagram.com/kunhvac_id" target="_blank">Instagram</a>
-        <a href="https://www.tiktok.com/@kunhvac_id" target="_blank">TikTok</a>
-      </div>
-    </div>
-  </nav>
-</header>
+
+
+
 <main>
 
 <div class="container-card">
@@ -75,9 +49,7 @@
 <div class="header-subtitle">Universal Translator ALPHA | UNFINISHED STATE: LOTS OF BUGS</div>
 
 <div style="text-align:center; margin:20px 0;">
-    <button onclick="setMode('textToSign')">Text → Sign</button>
-    <button onclick="setMode('universal')">Universal</button>
-</div>
+
 
 <div id="translator-root"></div>
 
@@ -100,7 +72,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
 <script type="text/javascript">
-    const URL = "https://teachablemachine.withgoogle.com/models/u9k6Nw1LA/";
+    const URL = "https://teachablemachine.withgoogle.com/models/pm-1gN_zA/";
 
     let model, webcam, maxPredictions;
     let currentPrediction = "";
@@ -236,12 +208,13 @@ function stop() {
 
 
 
-    function confirmLetter() {
-        const signBuffer = document.getElementById("sign-buffer");
-if(signBuffer){
-    signBuffer.value += letter;
-}
+// =================================
+// CONFIRM LETTER
+// =================================
+function confirmLetter() {
+
     if (currentConfidence >= CONFIDENCE_THRESHOLD) {
+
         let letter = currentPrediction;
 
         if (!capsLock) {
@@ -249,16 +222,28 @@ if(signBuffer){
         }
 
         typeLetter(letter);
+
+        if (currentMode === "universal") {
+            performUniversalTranslate();
+        }
     }
 }
+
+
 
 
     function addSpace() {
     typeLetter(" ");
 }
-    function backspace() {
+function backspace(){
     const textBox = document.getElementById("text-box");
-    textBox.value = textBox.value.slice(0, -1);
+    if(textBox){
+        textBox.value = textBox.value.slice(0, -1);
+
+        if(currentMode === "universal"){
+            performUniversalTranslate();
+        }
+    }
 }
 
 
@@ -309,9 +294,17 @@ document.addEventListener("keydown", function(event) {
     }
 
     if (event.key === "Backspace") {
-        event.preventDefault();
-        backspace();
+    event.preventDefault();
+    const box = document.getElementById("text-box");
+    if(box){
+        box.value = box.value.slice(0, -1);
+
+        // Force update immediately
+        if(typeof performUniversalTranslate === "function"){
+            performUniversalTranslate();
+        }
     }
+}
 
     if (event.key === " ") {
         event.preventDefault();
@@ -325,44 +318,8 @@ document.addEventListener("keydown", function(event) {
 
 </main>
 <script>
-  const buttons = document.querySelectorAll(".dropbtn");
-  const menus = document.querySelectorAll(".dropdown-menu");
-  const hamburger = document.querySelector(".hamburger");
-  const nav = document.querySelector(".nav-links");
 
-  buttons.forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
 
-      const menu = document.getElementById(btn.dataset.dropdown);
-
-      menus.forEach(m => {
-        if (m !== menu) m.classList.remove("active");
-      });
-
-      buttons.forEach(b => b.classList.remove("active"));
-
-      const isOpen = menu.classList.toggle("active");
-      btn.classList.toggle("active", isOpen);
-    });
-
-    btn.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") btn.click();
-      if (e.key === "Escape") closeAll();
-    });
-  });
-
-  function closeAll() {
-    menus.forEach(m => m.classList.remove("active"));
-    buttons.forEach(b => b.classList.remove("active"));
-  }
-
-  document.addEventListener("click", closeAll);
-
-  hamburger.addEventListener("click", () => {
-    const expanded = nav.classList.toggle("open");
-    hamburger.setAttribute("aria-expanded", expanded);
-  });
 
 
 
@@ -387,7 +344,14 @@ document.addEventListener("keydown", function(event) {
 // =================================
 // GLOBAL
 // =================================
-let currentMode = "signToText";
+
+let isTranslating = false;
+let currentMode = "universal";
+
+
+
+
+
 
 // =================================
 // MODE SWITCH
@@ -397,8 +361,40 @@ function setMode(mode){
     const root = document.getElementById("translator-root");
     root.innerHTML = "";
 
-    if(mode === "signToText"){
-        root.innerHTML = `
+
+if(mode === "universal"){
+
+root.innerHTML = `
+<div style="max-width:1000px;margin:auto;">
+
+    <!-- SELECTORS -->
+    <div style="text-align:center;margin-bottom:20px;">
+        <label>Translate from: </label>
+        <select id="translate-from">
+            <option value="sign">Sign Language</option>
+            <option value="text">Normal Text</option>
+            <option value="morse">Morse</option>
+        </select>
+
+        <label> to: </label>
+        <select id="translate-to">
+            <option value="sign">Sign Language</option>
+            <option value="text">Normal Text</option>
+            <option value="morse">Morse</option>
+        </select>
+    </div>
+
+    <!-- UNIVERSAL OUTPUT (this will move) -->
+    <div id="universal-output"
+        style="margin-bottom:20px;
+               padding:15px;
+               background:rgba(255,255,255,0.1);
+               border-radius:10px;
+               min-height:60px;">
+    </div>
+
+    <!-- SIGN ENGINE -->
+    <div id="universal-sign-engine" style="display:none;">
         <div class="main-layout">
 
             <div class="controls">
@@ -412,169 +408,109 @@ function setMode(mode){
             </div>
 
             <div class="right-panel">
+
                 <div class="camera-section">
                     <div id="webcam-container"></div>
                     <div id="most-confident"
-                        style="margin-top:10px; font-size:18px; font-weight:600;">
+                         style="margin-top:10px;font-size:18px;font-weight:600;">
                         Most Confident: -
                     </div>
                 </div>
 
-                <div class="output-section">
-                    <h3>Output</h3>
+                <!-- DETECTED TEXT (this swaps with universal-output) -->
+                <div class="output-section" id="detected-output">
+                    <h3>Detected Text</h3>
                     <input type="text" id="text-box" readonly />
                     <div class="output-buttons">
-                        <button onclick="confirmLetter()">Confirm (Enter)</button>
+                        <button onclick="confirmLetter()">Confirm</button>
                         <button onclick="addSpace()">Space</button>
                         <button onclick="backspace()">Backspace</button>
                         <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
                     </div>
                 </div>
+
             </div>
         </div>
-        `;
-    }
-
-    if(mode === "textToSign"){
-        root.innerHTML = `
-        <div style="max-width:700px;margin:auto;text-align:center;">
-            <input type="text" id="tts-input" maxlength="25"
-                style="width:100%;padding:10px;border-radius:8px;border:none;"
-                placeholder="Max 25 characters">
-            <div style="margin-top:15px;">
-                <button onclick="renderAlphabet()">Generate</button>
-                <button onclick="clearAlphabet()">Clear</button>
-            </div>
-            <div id="alphabet-output"
-                style="margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
-            </div>
-        </div>`;
-    }
-
-if(mode === "universal"){
-
-    root.innerHTML = `
-    <div style="max-width:1000px;margin:auto;">
-
-        <div style="text-align:center;margin-bottom:20px;">
-            <label>Translate from: </label>
-            <select id="translate-from">
-                <option value="sign">Sign Language</option>
-                <option value="text">Normal Text</option>
-                <option value="morse">Morse</option>
-            </select>
-
-            <label style="margin-left:0px;"> to: </label>
-            <select id="translate-to">
-                <option value="sign">Sign Language</option>
-                <option value="text">Normal Text</option>
-                <option value="morse">Morse</option>
-            </select>
-        </div>
-
-        <!-- SIGN → TEXT FULL ENGINE -->
-        <div id="universal-sign-engine" style="display:none;">
-            <div class="main-layout">
-
-                <div class="controls">
-                    <button id="startBtn" onclick="init()">Start</button>
-                    <button id="stopBtn" onclick="stop()" disabled>Stop</button>
-                </div>
-
-                <div class="left-panel">
-                    <h3>Predictions</h3>
-                    <div id="prediction-container"></div>
-                </div>
-
-                <div class="right-panel">
-                    <div class="camera-section">
-                        <div id="webcam-container"></div>
-                        <div id="most-confident"
-                            style="margin-top:10px;font-size:18px;font-weight:600;">
-                            Most Confident: -
-                        </div>
-                    </div>
-
-                    <div class="output-section">
-                        <h3>Detected Text</h3>
-                        <input type="text" id="text-box" readonly />
-                        <div class="output-buttons">
-                            <button onclick="confirmLetter()">Confirm</button>
-                            <button onclick="addSpace()">Space</button>
-                            <button onclick="backspace()">Backspace</button>
-                            <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- NORMAL INPUT -->
-        <div id="universal-text-input" style="display:none;text-align:center;">
-            <textarea id="universal-input"
-                style="width:100%;height:100px;padding:10px;border-radius:8px;border:none;"
-                placeholder="Input"></textarea>
-        </div>
-
-        <div style="text-align:center;margin-top:20px;">
-            <button onclick="performUniversalTranslate()">Translate</button>
-        </div>
-
-        <div id="universal-output"
-            style="margin-top:20px;padding:15px;background:rgba(255,255,255,0.1);
-            border-radius:10px;min-height:60px;">
-        </div>
-
     </div>
-    `;
 
-    const from = document.getElementById("translate-from");
-    const to = document.getElementById("translate-to");
+    <!-- TEXT / MORSE INPUT -->
+    <div id="universal-text-input"
+         style="display:none;text-align:center;margin-top:20px;">
+        <textarea id="universal-input"
+            style="width:100%;height:120px;padding:10px;border-radius:8px;border:none;"
+            placeholder="Input"></textarea>
+    </div>
 
-    function interlock(){
-        if(from.value === to.value){
-            const options = ["sign","text","morse"];
-            const index = options.indexOf(to.value);
-            to.value = options[(index+1)%options.length];
-        }
-        updateInputMode();
+</div>
+`;
+
+const from = document.getElementById("translate-from");
+const to = document.getElementById("translate-to");
+
+function interlock(){
+    if(from.value === to.value){
+        const options = ["sign","text","morse"];
+        const index = options.indexOf(to.value);
+        to.value = options[(index+1)%options.length];
     }
-
-    from.addEventListener("change", interlock);
-    to.addEventListener("change", interlock);
-
-    function updateInputMode(){
-
-        const signEngine = document.getElementById("universal-sign-engine");
-        const textInput = document.getElementById("universal-text-input");
-
-        if(from.value === "sign"){
-            signEngine.style.display = "block";
-            textInput.style.display = "none";
-        } else {
-            signEngine.style.display = "none";
-            textInput.style.display = "block";
-
-            if(isRunning) stop();
-        }
-    }
-
     updateInputMode();
+    performUniversalTranslate();
+}
+
+from.addEventListener("change", interlock);
+to.addEventListener("change", interlock);
+
+function updateInputMode(){
+    const signEngine = document.getElementById("universal-sign-engine");
+    const textInput = document.getElementById("universal-text-input");
+
+    if(from.value === "sign"){
+        signEngine.style.display = "block";
+        textInput.style.display = "none";
+    } else {
+        signEngine.style.display = "none";
+        textInput.style.display = "block";
+        if(isRunning) stop();
+    }
+}
+
+updateInputMode();
+
+setTimeout(() => {
+
+    const input = document.getElementById("universal-input");
+    const textBox = document.getElementById("text-box");
+
+    if(input) input.addEventListener("input", performUniversalTranslate);
+    if(textBox) textBox.addEventListener("input", performUniversalTranslate);
+    from.addEventListener("change", performUniversalTranslate);
+    to.addEventListener("change", performUniversalTranslate);
+
+}, 50);
+
 }
 }
 
 // =================================
 // TEXT → SIGN
 // =================================
-function renderAlphabet(){
-    const text = document.getElementById("tts-input").value.toLowerCase();
-    const container = document.getElementById("alphabet-output");
+function renderAlphabet(text){
+
+    const container = document.getElementById("universal-output");
+    if(!container) return;
+
     container.innerHTML = "";
 
+    if(!text) return;
+
+    text = text.toLowerCase();
+
     for(let char of text){
+
         if(char === " "){
             const spacer = document.createElement("div");
             spacer.style.width = "20px";
+            spacer.style.display = "inline-block";
             container.appendChild(spacer);
             continue;
         }
@@ -582,7 +518,8 @@ function renderAlphabet(){
         if(/[a-z]/.test(char)){
             const img = document.createElement("img");
             img.src = `https://kunhvacid.github.io/sibi/alphabet/${char}.jpg`;
-            img.style.width = "80px";
+            img.style.width = "70px";
+            img.style.margin = "5px";
             img.style.borderRadius = "8px";
             container.appendChild(img);
         }
@@ -619,110 +556,156 @@ for(let key in MORSE){
 // =================================
 function performUniversalTranslate(){
 
-    const from = document.getElementById("translate-from").value;
-    const to = document.getElementById("translate-to").value;
-    const output = document.getElementById("universal-output");
+if(isTranslating) return;
+isTranslating = true;
 
-    let input = "";
+const from = document.getElementById("translate-from").value;
+const to = document.getElementById("translate-to").value;
 
-    // INPUT SOURCE LAYER
-    if(from === "sign"){
+const universalOutput = document.getElementById("universal-output");
+const detectedOutput = document.getElementById("detected-output");
+
+let input = "";
+
+if(from === "sign"){
     const box = document.getElementById("text-box");
     input = box ? box.value.trim() : "";
-    } else {
-        input = document.getElementById("universal-input").value.trim();
+}else{
+    const area = document.getElementById("universal-input");
+    input = area ? area.value.trim() : "";
+}
+
+// ===== SWAP POSITION LOGIC =====
+// ===== CORRECT SWAP LOGIC =====
+const wrapper = document.getElementById("universal-sign-engine");
+const cameraSection = document.querySelector("#universal-sign-engine .camera-section");
+
+if(from==="sign" && to==="morse"){
+
+    // Place output UNDER camera section (bottom of webcam)
+    cameraSection.parentNode.insertBefore(
+        universalOutput,
+        cameraSection.nextSibling
+    );
+
+    universalOutput.style.display = "block";
+    detectedOutput.style.display = "none";
+
+}else{
+
+    // Always move output ABOVE sign engine (default position)
+    wrapper.parentNode.insertBefore(universalOutput, wrapper);
+
+    universalOutput.style.display = "block";
+
+    if(from==="sign" && to==="text"){
+        detectedOutput.style.display = "block";
+        universalOutput.style.display = "none";
+    }else{
+        detectedOutput.style.display = "none";
     }
+}
 
-    if(!input){
-        output.innerText = "";
-        return;
-    }
 
-    // =============================
-    // TEXT → MORSE
-    // =============================
-    if((from==="text" || from==="sign") && to==="morse"){
 
-    const text = input.toUpperCase();
 
-    const result = text.split("")
-        .map(c => c===" " ? "/" : (MORSE[c] || ""))
-        .join(" ");
 
-    if(from === "sign"){
-        const box = document.getElementById("text-box");
-        if(box) box.value = result;
-    } else {
-        output.innerText = result;
-    }
 
+universalOutput.innerHTML = "";
+
+if(!input){
+    isTranslating = false;
     return;
 }
 
-    // =============================
-    // MORSE → TEXT
-    // =============================
-    if(from==="morse" && (to==="text" || to==="sign")){
-
-        const text = input.split(" ")
-            .map(code => code==="/" ? " " : (REVERSE_MORSE[code] || ""))
-            .join("");
-
-        if(to==="text"){
-            output.innerText = text;
-            return;
-        }
-
-        if(to==="sign"){
-            output.innerHTML = "";
-            renderUniversalSign(text.toLowerCase());
-            return;
-        }
-    }
-
-    // =============================
-    // TEXT ↔ SIGN
-    // =============================
-    if((from==="text" && to==="sign")){
-        output.innerHTML = "";
-        renderUniversalSign(input.toLowerCase());
-        return;
-    }
-
-    if(from==="sign" && to==="text"){
-        output.innerText = input;
-        return;
-    }
-
-    output.innerText = "Use dedicated Sign → Text mode.";
+// TEXT or SIGN → MORSE
+if((from==="text" || from==="sign") && to==="morse"){
+    const text = input.toUpperCase();
+    const result = text.split("")
+        .map(c => c===" " ? "/" : (MORSE[c] || ""))
+        .join(" ");
+    universalOutput.innerText = result;
+    isTranslating = false;
+    return;
 }
 
-function renderUniversalSign(text){
-    const output = document.getElementById("universal-output");
-
-    for(let char of text){
-        if(char===" "){
-            const spacer=document.createElement("div");
-            spacer.style.width="20px";
-            spacer.style.display="inline-block";
-            output.appendChild(spacer);
-            continue;
-        }
-
-        if(/[a-z]/.test(char)){
-            const img=document.createElement("img");
-            img.src=`https://kunhvacid.github.io/sibi/alphabet/${char}.jpg`;
-            img.style.width="70px";
-            img.style.margin="5px";
-            img.style.borderRadius="8px";
-            output.appendChild(img);
-        }
-    }
+// MORSE → TEXT
+if(from==="morse" && to==="text"){
+    const text = input
+        .split("/")
+        .map(word =>
+            word.trim().split(" ")
+                .map(code => REVERSE_MORSE[code] || "")
+                .join("")
+        )
+        .join(" ");
+    universalOutput.innerText = text;
+    isTranslating = false;
+    return;
 }
+
+// MORSE → SIGN
+if(from==="morse" && to==="sign"){
+    const text = input
+        .split("/")
+        .map(word =>
+            word.trim().split(" ")
+                .map(code => REVERSE_MORSE[code] || "")
+                .join("")
+        )
+        .join(" ");
+    renderAlphabet(text);
+    isTranslating = false;
+    return;
+}
+
+// TEXT → SIGN
+if(from==="text" && to==="sign"){
+    renderAlphabet(input);
+    isTranslating = false;
+    return;
+}
+
+// SIGN → TEXT
+if(from==="sign" && to==="text"){
+    isTranslating = false;
+    return;
+}
+
+isTranslating = false;
+}
+
+
+
+
+
+
 
 window.addEventListener("DOMContentLoaded",()=>{
     setMode("universal");
 });
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 </body>
