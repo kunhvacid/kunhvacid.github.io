@@ -373,7 +373,7 @@ root.innerHTML = `
 <div style="max-width:1000px;margin:auto;">
 
     <!-- SELECTORS -->
-    <div style="text-align:center;margin-bottom:20px;">
+    <div class="bordered-panel" style="text-align:center;margin-bottom:20px;">
         <label>Translate from: </label>
         <select id="translate-from">
             <option value="sign">Sign Language</option>
@@ -402,7 +402,7 @@ root.innerHTML = `
     <div id="universal-sign-engine" style="display:none;">
         <div class="main-layout">
 
-            <div class="controls">
+            <div class="controls bordered-panel">
                 <button id="startBtn" onclick="init()">Start</button>
                 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
             </div>
@@ -414,13 +414,13 @@ root.innerHTML = `
 
             <div class="right-panel">
 
-                <div class="camera-section">
-                    <div id="webcam-container"></div>
-                    <div id="most-confident"
-                         style="margin-top:10px;font-size:18px;font-weight:600;">
-                        Most Confident: -
-                    </div>
-                </div>
+<div class="camera-section bordered-panel">
+    <div id="webcam-container"></div>
+    <div id="most-confident"
+         style="margin-top:10px;font-size:18px;font-weight:600;text-align:center;">
+        Most Confident: -
+    </div>
+</div>
 
 
 
@@ -430,22 +430,23 @@ root.innerHTML = `
 
 
                 <!-- DETECTED TEXT (this swaps with universal-output) -->
-                <div class="output-section" id="detected-output">
-                    <h3 id="detected-label">Detected Text</h3>
-                    <div id="detected-output"></div>
-                    <input type="text" id="text-box" readonly />
+<div class="output-section bordered-panel" id="detected-output">
+    <h3 id="detected-label">Detected Text</h3>
 
-                    <div class="output-section" id="morse-output" style="display:none;">
-    <h3>Morse Output</h3>
-    <input type="text" id="morse-box" readonly />
+    <input type="text" id="text-box" readonly />
+
+    <div id="morse-output" style="display:none;">
+        <h3>Morse Output</h3>
+        <input type="text" id="morse-box" readonly />
+    </div>
+
+    <div class="output-buttons">
+        <button onclick="confirmLetter()">Confirm</button>
+        <button onclick="addSpace()">Space</button>
+        <button onclick="backspace()">Backspace</button>
+        <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+    </div>
 </div>
-                    <div class="output-buttons">
-                        <button onclick="confirmLetter()">Confirm</button>
-                        <button onclick="addSpace()">Space</button>
-                        <button onclick="backspace()">Backspace</button>
-                        <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
-                    </div>
-                </div>
 
             </div>
         </div>
