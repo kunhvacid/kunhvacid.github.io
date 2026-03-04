@@ -92,6 +92,20 @@ button:disabled {
     border-radius: 12px;
 }
 
+/* Make right-side panels perfectly aligned */
+.right-panel > .bordered-panel {
+    width: 100%;
+    max-width: 600px;   /* match webcam max-width */
+    box-sizing: border-box;
+}
+
+/* Ensure camera section follows same rule */
+.camera-section.bordered-panel {
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
 /* Each prediction row */
 #prediction-container .row {
     display: flex;
@@ -150,8 +164,10 @@ button:disabled {
 }
 
 /* Output text */
-#output, #text-box {
+#text-box,
+#morse-box {
     margin-top: 20px;
+    margin-bottom: 10px;
     font-size: 20px;
     font-weight: 600;
     width: 100%;
@@ -159,18 +175,28 @@ button:disabled {
     padding: 12px;
     border-radius: 8px;
     border: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.output-section #text-box {
-    font-size: 1.2rem;
-    padding: 8px;
-    border-radius: 6px;
 }
 
 /* Output buttons */
 .output-buttons button {
     margin: 5px;
+}
+
+/* Bordered panels (same style as prediction panel) */
+.bordered-panel {
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.output-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap; /* prevents wrapping */
+}
+
+.output-buttons button {
+    margin: 0; /* remove default spacing */
 }
