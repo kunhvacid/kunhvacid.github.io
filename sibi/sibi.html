@@ -33,8 +33,6 @@
   <link rel="stylesheet" href="sibi.css" />
 
 
-  <!-- NAVBAR -->
-
 
 
 
@@ -46,7 +44,7 @@
 <div class="container-card">
 
 <div class="header-title">SignSmart</div>
-<div class="header-subtitle">Universal Translator ALPHA | UNFINISHED STATE: LOTS OF BUGS</div>
+<div class="header-subtitle">Universal Translator</div>
 
 <div style="text-align:center; margin:20px 0;">
 
@@ -256,7 +254,7 @@ function backspace(){
     capsLock = !capsLock;
 
     const btn = document.getElementById("caps-btn");
-    btn.innerText = capsLock ? "Caps: ON" : "Caps: OFF";
+    btn.innerText = capsLock ? "Caps:ON" : "Caps:OFF";
 }
 
 
@@ -412,6 +410,7 @@ root.innerHTML = `
             <div class="controls bordered-panel">
                 <button id="startBtn" onclick="init()">Start</button>
                 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
+                <button id="helpBtn" onclick="help()">Help</button>
             </div>
 
             <div class="left-panel">
@@ -451,7 +450,7 @@ root.innerHTML = `
         <button onclick="confirmLetter()">Confirm</button>
         <button onclick="addSpace()">Space</button>
         <button onclick="backspace()">Backspace</button>
-        <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+        <button onclick="toggleCaps()" id="caps-btn">Caps:OFF</button>
     </div>
 </div>
 
@@ -712,38 +711,48 @@ if(from==="sign" && to==="text"){
 isTranslating = false;
 }
 
-
-
-
-
-
-
 window.addEventListener("DOMContentLoaded",()=>{
     setMode("universal");
 });
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
+
+
+
+
+
+
+
+
+
+<div id="help-overlay">
+    <div class="help-box">
+        <button class="help-close" onclick="closeHelp()">×</button>
+        <h2>Help</h2>
+        <p>
+        This is the SignSmart translator help panel.<br><br>
+        • Use <b>Start</b> to activate the webcam.<br>
+        • Show a sign to the camera.<br>
+        • Press <b>Confirm</b> to add the detected letter.<br>
+        • Use <b>Space</b> or <b>Backspace</b> to edit text.<br><br>
+        This website is still WIP. There are lots of bugs. Things are not final and may subject to change.
+        </p>
+    </div>
+</div>
+<script>
+    function help(){
+    document.getElementById("help-overlay").style.display = "flex";
+}
+
+function closeHelp(){
+    document.getElementById("help-overlay").style.display = "none";
+}
+</script>
+
+
+
+
+
+
 
 </body>
 </html>
