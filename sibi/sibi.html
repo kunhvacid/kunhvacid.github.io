@@ -76,6 +76,8 @@ async function init() {
 
     startBtn.disabled = true;
     stopBtn.disabled = false;
+    const freezeBtn = document.getElementById("freezeBtn");
+if(freezeBtn) freezeBtn.disabled = false;
 
     // Load model if not loaded
     if (!model) {
@@ -124,8 +126,11 @@ async function init() {
     async function loop() {
         if (!isRunning) return;
 
-        await webcam.update();
-        const predictions = await model.predict(webcam.canvas);
+if(!isFrozen){
+await webcam.update();
+}
+
+const predictions = await model.predict(webcam.canvas);
 
         // Find most confident prediction
         let highest = predictions[0];
@@ -182,11 +187,35 @@ function stop() {
     // Reset most confident text
     const mostConfidentEl = document.getElementById("most-confident");
     mostConfidentEl.innerText = "Most Confident: -";
+
+    const freezeBtn = document.getElementById("freezeBtn");
+if(freezeBtn){
+freezeBtn.disabled = true;
+freezeBtn.innerText = "Freeze";
+}
+
+isFrozen = false;
 }
 
 
 
+// =================================
+// FREEZE CAMERA
+// =================================
 
+function toggleFreeze(){
+
+const btn = document.getElementById("freezeBtn");
+
+isFrozen = !isFrozen;
+
+if(isFrozen){
+btn.innerText = "Unfreeze";
+}else{
+btn.innerText = "Freeze";
+}
+
+}
 
 
 
@@ -335,6 +364,7 @@ document.addEventListener("keydown", function(event) {
 
 let isTranslating = false;
 let currentMode = "universal";
+let isFrozen = false;
 
 
 
@@ -396,9 +426,10 @@ root.innerHTML = `
         <div class="main-layout">
 
             <div class="controls bordered-panel">
-                <button id="startBtn" onclick="init()">Start</button>
-                <button id="stopBtn" onclick="stop()" disabled>Stop</button>
-                <button id="helpBtn" onclick="help()">Help</button>
+<button id="startBtn" onclick="init()">Start</button>
+<button id="stopBtn" onclick="stop()" disabled>Stop</button>
+<button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
+<button id="helpBtn" onclick="help()">Help</button>
             </div>
 
             <div class="left-panel">
