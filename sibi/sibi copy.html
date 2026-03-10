@@ -33,8 +33,6 @@
   <link rel="stylesheet" href="sibi.css" />
 
 
-  <!-- NAVBAR -->
-
 
 
 
@@ -46,7 +44,7 @@
 <div class="container-card">
 
 <div class="header-title">SignSmart</div>
-<div class="header-subtitle">Universal Translator ALPHA | UNFINISHED STATE: LOTS OF BUGS</div>
+<div class="header-subtitle">Universal Translator</div>
 
 <div style="text-align:center; margin:20px 0;">
 
@@ -202,6 +200,12 @@ function stop() {
 }
 
 
+// =================================
+// MORSE start variables
+// =================================
+let morseSound = true;
+let morseFlash = true;
+let morseAnim = true;
 
 
 
@@ -256,7 +260,7 @@ function backspace(){
     capsLock = !capsLock;
 
     const btn = document.getElementById("caps-btn");
-    btn.innerText = capsLock ? "Caps: ON" : "Caps: OFF";
+    btn.innerText = capsLock ? "Caps:ON" : "Caps:OFF";
 }
 
 
@@ -372,31 +376,41 @@ if(mode === "universal"){
 root.innerHTML = `
 <div style="max-width:1000px;margin:auto;">
 
-    <!-- SELECTORS -->
-    <div class="bordered-panel" style="text-align:center;margin-bottom:20px;">
-        <label>Translate from: </label>
+    <div class="translate-bar">
+    <div class="translate-group">
+        <span>Translate from</span>
         <select id="translate-from">
             <option value="sign">Sign Language</option>
             <option value="text">Normal Text</option>
             <option value="morse">Morse</option>
         </select>
+    </div>
 
-        <label> to: </label>
+    <div class="translate-arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+    </div>
+
+    <div class="translate-group">
+        <span>To</span>
         <select id="translate-to">
             <option value="sign">Sign Language</option>
             <option value="text">Normal Text</option>
             <option value="morse">Morse</option>
         </select>
     </div>
+</div>
 
-    <!-- UNIVERSAL OUTPUT (this will move) -->
-    <div id="universal-output"
-        style="margin-bottom:20px;
-               padding:15px;
-               background:rgba(255,255,255,0.1);
-               border-radius:10px;
-               min-height:60px;">
+
+
+    <!-- TEXT / MORSE INPUT -->
+    <div id="universal-text-input"
+         style="display:none;text-align:center;margin-top:20px;">
+        <textarea id="universal-input"
+            style="width:100%;height:120px;padding:10px;border-radius:8px;border:none;"
+            placeholder="Input"></textarea>
     </div>
+
+
 
     <!-- SIGN ENGINE -->
     <div id="universal-sign-engine" style="display:none;">
@@ -405,6 +419,7 @@ root.innerHTML = `
             <div class="controls bordered-panel">
                 <button id="startBtn" onclick="init()">Start</button>
                 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
+                <button id="helpBtn" onclick="help()">Help</button>
             </div>
 
             <div class="left-panel">
@@ -444,7 +459,7 @@ root.innerHTML = `
         <button onclick="confirmLetter()">Confirm</button>
         <button onclick="addSpace()">Space</button>
         <button onclick="backspace()">Backspace</button>
-        <button onclick="toggleCaps()" id="caps-btn">Caps: OFF</button>
+        <button onclick="toggleCaps()" id="caps-btn">Caps:OFF</button>
     </div>
 </div>
 
@@ -452,13 +467,20 @@ root.innerHTML = `
         </div>
     </div>
 
-    <!-- TEXT / MORSE INPUT -->
-    <div id="universal-text-input"
-         style="display:none;text-align:center;margin-top:20px;">
-        <textarea id="universal-input"
-            style="width:100%;height:120px;padding:10px;border-radius:8px;border:none;"
-            placeholder="Input"></textarea>
+    <!-- UNIVERSAL OUTPUT (this will move) -->
+    <div id="universal-output"
+        style="margin-bottom:20px;
+               padding:15px;
+               background:rgba(255,255,255,0.1);
+               border-radius:10px;
+               min-height:60px;">
+        
     </div>
+<div class="morse-controls">
+    <label><input type="checkbox" id="toggle-sound" checked> 🔊 Sound</label>
+    <label><input type="checkbox" id="toggle-flash" checked> 💡 Flash</label>
+    <label><input type="checkbox" id="toggle-anim" checked> ⚡ Animation</label>
+</div>
 
 </div>
 `;
@@ -502,6 +524,18 @@ function updateInputMode(){
 updateInputMode();
 
 setTimeout(() => {
+
+    setTimeout(()=>{
+
+const sound = document.getElementById("toggle-sound");
+const flash = document.getElementById("toggle-flash");
+const anim = document.getElementById("toggle-anim");
+
+if(sound) sound.addEventListener("change",()=>{morseSound = sound.checked});
+if(flash) flash.addEventListener("change",()=>{morseFlash = flash.checked});
+if(anim) anim.addEventListener("change",()=>{morseAnim = anim.checked});
+
+},100);
 
     const input = document.getElementById("universal-input");
     const textBox = document.getElementById("text-box");
@@ -576,6 +610,140 @@ for(let key in MORSE){
     REVERSE_MORSE[MORSE[key]] = key;
 }
 
+
+
+
+
+
+
+// =================================
+// MORSE PLAYER
+// =================================
+
+let audioCtx;
+
+function beep(start, duration){
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.value = 700;
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    gain.gain.setValueAtTime(0.2, start);
+
+    osc.start(start);
+    osc.stop(start + duration);
+}
+
+function playMorse(code){
+
+    if(!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    const dot = 0.1;
+    const dash = 0.3;
+    const gap = 0.1;
+
+    let time = audioCtx.currentTime;
+
+    for(let char of code){
+
+        if(char === "."){
+            if(morseSound) beep(time, dot);
+            if(morseFlash) flash(dot);
+            time += dot + gap;
+        }
+
+        else if(char === "-"){
+            if(morseSound) beep(time, dash);
+            if(morseFlash) flash(dash);
+            time += dash + gap;
+        }
+
+        else if(char === " "){
+            time += 0.2;
+        }
+
+        else if(char === "/"){
+            time += 0.5;
+        }
+    }
+}
+
+
+// =================================
+// MORSE FLASH
+// =================================
+
+function flash(duration){
+
+    const flash = document.createElement("div");
+
+    flash.style.position = "fixed";
+    flash.style.top = "0";
+    flash.style.left = "0";
+    flash.style.width = "100%";
+    flash.style.height = "100%";
+    flash.style.background = "white";
+    flash.style.opacity = "0.2";
+    flash.style.pointerEvents = "none";
+    flash.style.zIndex = "9999";
+
+    document.body.appendChild(flash);
+
+    setTimeout(()=>{
+        flash.remove();
+    }, duration * 1000);
+}
+
+
+// =================================
+// MORSE ANIMATION
+// =================================
+
+function animateMorse(code){
+
+    const output = document.getElementById("universal-output");
+
+    output.innerHTML = "";
+
+    let i = 0;
+
+    function step(){
+
+        if(i >= code.length) return;
+
+        const span = document.createElement("span");
+
+        span.innerText = code[i];
+        span.style.opacity = "0";
+        span.style.transition = "opacity 0.2s";
+
+        output.appendChild(span);
+
+        setTimeout(()=>{
+            span.style.opacity = "1";
+        },10);
+
+        i++;
+        setTimeout(step,80);
+    }
+
+    step();
+}
+
+
+
+
+
+
+
+
 // =================================
 // UNIVERSAL TRANSLATE
 // =================================
@@ -603,15 +771,20 @@ if(from === "sign"){
 }
 
 // ===== SWAP POSITION LOGIC =====
-// ===== SAFE VISIBILITY LOGIC (NO DOM MOVING) =====
+// ===== SAFE VISIBILITY LOGIC =====
 
 if(from==="sign" && to==="morse"){
     morseOutput.style.display = "block";
-    detectedOutput.style.display = "block";   // keep controls visible
+    detectedOutput.style.display = "block";
     universalOutput.style.display = "none";
+}
+else if(from==="text" && to==="morse"){
+    morseOutput.style.display = "none";
+    detectedOutput.style.display = "none";
+    universalOutput.style.display = "block";
+    
     document.getElementById("detected-label").style.display = "none";
 
-    // hide only the text input field
     const textBox = document.getElementById("text-box");
     if(textBox) textBox.style.display = "none";
 }
@@ -639,7 +812,6 @@ else{
 
 
 
-
 if(!input){
     universalOutput.innerHTML = "";
     if(morseBox) morseBox.value = "";
@@ -650,11 +822,22 @@ if(!input){
 // TEXT or SIGN → MORSE
 if((from==="text" || from==="sign") && to==="morse"){
     const text = input.toUpperCase();
+
     const result = text.split("")
         .map(c => c===" " ? "/" : (MORSE[c] || ""))
         .join(" ");
-    morseBox.value = result;
-    universalOutput.innerHTML = "";
+
+    if(from === "sign" && morseBox){
+        morseBox.value = result;
+    } else {
+        if(morseAnim){
+    animateMorse(result);
+}else{
+    universalOutput.innerText = result;
+}
+if(morseSound) playMorse(result);
+    }
+
     isTranslating = false;
     return;
 }
@@ -705,38 +888,48 @@ if(from==="sign" && to==="text"){
 isTranslating = false;
 }
 
-
-
-
-
-
-
 window.addEventListener("DOMContentLoaded",()=>{
     setMode("universal");
 });
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
+
+
+
+
+
+
+
+
+
+<div id="help-overlay">
+    <div class="help-box">
+        <button class="help-close" onclick="closeHelp()">×</button>
+        <h2>Help</h2>
+        <p>
+        This is the SignSmart translator help panel.<br><br>
+        • Use <b>Start</b> to activate the webcam.<br>
+        • Show a sign to the camera.<br>
+        • Press <b>Confirm</b> to add the detected letter.<br>
+        • Use <b>Space</b> or <b>Backspace</b> to edit text.<br><br>
+        This website is still WIP. There are lots of bugs. Things are not final and may subject to change.
+        </p>
+    </div>
+</div>
+<script>
+    function help(){
+    document.getElementById("help-overlay").style.display = "flex";
+}
+
+function closeHelp(){
+    document.getElementById("help-overlay").style.display = "none";
+}
+</script>
+
+
+
+
+
+
 
 </body>
 </html>
