@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="icon" href="favicon.ico">
 
 
        <!-- EMBED / SHARE PREVIEW -->
@@ -22,23 +23,15 @@
   <meta property="og:image:height" content="720">
   <meta name="twitter:card" content="summary_large_image">
 
-
-    <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-
   <link rel="stylesheet" href="sibi.css" />
+</head>
 
 
 
 
 
 
-
-
+<body>
 <main>
 
 <div class="container-card">
@@ -54,14 +47,6 @@
 
 <div class="output-section">
 <div id="mode-container"></div>
-
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
 
 
 
@@ -200,12 +185,6 @@ function stop() {
 }
 
 
-// =================================
-// MORSE start variables
-// =================================
-let morseSound = true;
-let morseFlash = true;
-let morseAnim = true;
 
 
 
@@ -467,6 +446,9 @@ root.innerHTML = `
         </div>
     </div>
 
+
+
+
     <!-- UNIVERSAL OUTPUT (this will move) -->
     <div id="universal-output"
         style="margin-bottom:20px;
@@ -477,9 +459,11 @@ root.innerHTML = `
         
     </div>
 <div class="morse-controls">
-    <label><input type="checkbox" id="toggle-sound" checked> 🔊 Sound</label>
-    <label><input type="checkbox" id="toggle-flash" checked> 💡 Flash</label>
-    <label><input type="checkbox" id="toggle-anim" checked> ⚡ Animation</label>
+
+<button id="play-morse-btn">
+<i class="fa-solid fa-volume-high"></i> Play
+<span id="morse-lamp"></span>
+</button>
 </div>
 
 </div>
@@ -528,12 +512,8 @@ setTimeout(() => {
     setTimeout(()=>{
 
 const sound = document.getElementById("toggle-sound");
-const flash = document.getElementById("toggle-flash");
-const anim = document.getElementById("toggle-anim");
 
 if(sound) sound.addEventListener("change",()=>{morseSound = sound.checked});
-if(flash) flash.addEventListener("change",()=>{morseFlash = flash.checked});
-if(anim) anim.addEventListener("change",()=>{morseAnim = anim.checked});
 
 },100);
 
@@ -617,10 +597,51 @@ for(let key in MORSE){
 
 
 // =================================
+// TEXT TO SPEECH
+// =================================
+
+let speaking = false;
+let speechUtterance;
+
+function speakText(text){
+
+if(!text) return;
+
+speechUtterance = new SpeechSynthesisUtterance(text);
+speechUtterance.lang = "en-US";
+
+speaking = true;
+
+const btn = document.getElementById("play-morse-btn");
+if(btn){
+btn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop`;
+}
+
+speechUtterance.onend = ()=>{
+speaking = false;
+updateAudioButton();
+};
+
+speechSynthesis.speak(speechUtterance);
+
+}
+
+function stopSpeech(){
+
+speechSynthesis.cancel();
+speaking = false;
+
+updateAudioButton();
+
+}
+
+// =================================
 // MORSE PLAYER
 // =================================
 
 let audioCtx;
+let morsePlaying = false;
+let activeOscillators = [];
 
 function beep(start, duration){
 
@@ -637,42 +658,76 @@ function beep(start, duration){
 
     osc.start(start);
     osc.stop(start + duration);
+
+    activeOscillators.push(osc);
+}
+
+function stopMorse(){
+
+    morsePlaying = false;
+
+    activeOscillators.forEach(o=>{
+        try{o.stop()}catch(e){}
+    });
+
+    activeOscillators = [];
+
+    const btn = document.getElementById("play-morse-btn");
+    if(btn){
+        btn.innerHTML = `<i class="fa-solid fa-volume-high"></i> Play <span id="morse-lamp"></span>`;
+    }
 }
 
 function playMorse(code){
 
-    if(!audioCtx){
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+if(!audioCtx){
+audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
 
-    const dot = 0.1;
-    const dash = 0.3;
-    const gap = 0.1;
+morsePlaying = true;
 
-    let time = audioCtx.currentTime;
+const btn = document.getElementById("play-morse-btn");
+if(btn){
+btn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop <span id="morse-lamp"></span>`;
+}
 
-    for(let char of code){
+const dot = 0.1;
+const dash = 0.3;
+const gap = 0.1;
 
-        if(char === "."){
-            if(morseSound) beep(time, dot);
-            if(morseFlash) flash(dot);
-            time += dot + gap;
-        }
+let time = audioCtx.currentTime;
 
-        else if(char === "-"){
-            if(morseSound) beep(time, dash);
-            if(morseFlash) flash(dash);
-            time += dash + gap;
-        }
+for(let char of code){
 
-        else if(char === " "){
-            time += 0.2;
-        }
+if(char === "."){
+beep(time, dot);
+flash(time, dot);
+time += dot + gap;
+}
 
-        else if(char === "/"){
-            time += 0.5;
-        }
-    }
+else if(char === "-"){
+beep(time, dash);
+flash(time, dash);
+time += dash + gap;
+}
+
+else if(char === " "){
+time += 0.2;
+}
+
+else if(char === "/"){
+time += 0.5;
+}
+
+}
+
+/* auto reset when finished */
+const duration = (time - audioCtx.currentTime) * 1000;
+
+setTimeout(()=>{
+    stopMorse();
+}, duration);
+
 }
 
 
@@ -680,66 +735,115 @@ function playMorse(code){
 // MORSE FLASH
 // =================================
 
-function flash(duration){
+function flash(start, duration){
 
-    const flash = document.createElement("div");
+const lamp = document.getElementById("morse-lamp");
 
-    flash.style.position = "fixed";
-    flash.style.top = "0";
-    flash.style.left = "0";
-    flash.style.width = "100%";
-    flash.style.height = "100%";
-    flash.style.background = "white";
-    flash.style.opacity = "0.2";
-    flash.style.pointerEvents = "none";
-    flash.style.zIndex = "9999";
+const now = audioCtx.currentTime;
 
-    document.body.appendChild(flash);
+const startDelay = (start - now) * 1000;
+const endDelay = (start - now + duration) * 1000;
 
-    setTimeout(()=>{
-        flash.remove();
-    }, duration * 1000);
-}
+setTimeout(()=>{
+lamp.classList.add("on");
+}, startDelay);
 
+setTimeout(()=>{
+lamp.classList.remove("on");
+}, endDelay);
 
-// =================================
-// MORSE ANIMATION
-// =================================
-
-function animateMorse(code){
-
-    const output = document.getElementById("universal-output");
-
-    output.innerHTML = "";
-
-    let i = 0;
-
-    function step(){
-
-        if(i >= code.length) return;
-
-        const span = document.createElement("span");
-
-        span.innerText = code[i];
-        span.style.opacity = "0";
-        span.style.transition = "opacity 0.2s";
-
-        output.appendChild(span);
-
-        setTimeout(()=>{
-            span.style.opacity = "1";
-        },10);
-
-        i++;
-        setTimeout(step,80);
-    }
-
-    step();
 }
 
 
 
 
+
+
+// =================================
+// PLAY MORSE ON CLICK
+// =================================
+document.addEventListener("click",function(e){
+
+if(!e.target.closest("#play-morse-btn")) return;
+
+const from = document.getElementById("translate-from").value;
+const to = document.getElementById("translate-to").value;
+
+/* STOP logic */
+if(morsePlaying){
+stopMorse();
+return;
+}
+
+if(speaking){
+stopSpeech();
+return;
+}
+
+/* TEXT MODES → use TTS */
+if((from==="sign" && to==="text") || (from==="text" && to==="sign")){
+
+let text="";
+
+if(from==="sign"){
+const box=document.getElementById("text-box");
+if(box) text=box.value;
+}
+
+if(from==="text"){
+const area=document.getElementById("universal-input");
+if(area) text=area.value;
+}
+
+if(text){
+speakText(text);
+}
+
+return;
+}
+
+/* MORSE MODES */
+let morseText="";
+
+const morseBox=document.getElementById("morse-box");
+const universal=document.getElementById("universal-output");
+
+if(morseBox && morseBox.value){
+morseText=morseBox.value;
+}else if(universal){
+morseText=universal.innerText.trim();
+}
+
+if(morseText){
+playMorse(morseText);
+}
+
+});
+
+
+// =================================
+// AUDIO BUTTON MODE
+// =================================
+
+function updateAudioButton(){
+
+const btn=document.getElementById("play-morse-btn");
+if(!btn) return;
+
+const from=document.getElementById("translate-from")?.value;
+const to=document.getElementById("translate-to")?.value;
+
+if((from==="sign" && to==="text") || (from==="text" && to==="sign")){
+
+btn.innerHTML=`<i class="fa-solid fa-volume-high"></i> Speak`;
+
+}else{
+
+btn.innerHTML=`<i class="fa-solid fa-volume-high"></i> Play <span id="morse-lamp"></span>`;
+
+}
+
+}
 
 
 
@@ -749,6 +853,7 @@ function animateMorse(code){
 // =================================
 function performUniversalTranslate(){
 
+updateAudioButton();
 if(isTranslating) return;
 isTranslating = true;
 
@@ -827,16 +932,11 @@ if((from==="text" || from==="sign") && to==="morse"){
         .map(c => c===" " ? "/" : (MORSE[c] || ""))
         .join(" ");
 
-    if(from === "sign" && morseBox){
-        morseBox.value = result;
-    } else {
-        if(morseAnim){
-    animateMorse(result);
-}else{
+if(from === "sign" && morseBox){
+    morseBox.value = result;
+} else {
     universalOutput.innerText = result;
 }
-if(morseSound) playMorse(result);
-    }
 
     isTranslating = false;
     return;

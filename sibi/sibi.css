@@ -317,6 +317,52 @@ button:disabled {
 margin-right:5px;
 }
 
+
+
+
+#play-morse-btn{
+position:relative;
+display:flex;
+align-items:center;
+gap:8px;
+padding-right:26px;
+
+color:white;
+
+background:rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.25);
+backdrop-filter:blur(4px);
+
+transition:all 0.2s ease;
+}
+
+#play-morse-btn:hover{
+background:rgba(255,255,255,0.15);
+}
+
+#morse-lamp{
+position:absolute;
+right:8px;
+top:50%;
+transform:translateY(-50%);
+
+width:10px;
+height:10px;
+border-radius:50%;
+
+background:#ffd84d;
+opacity:0.25;
+box-shadow:0 0 10px rgba(255,216,77,1);
+}
+
+#morse-lamp.on{
+opacity:1;
+}
+
+
+
+
+
 /* Output buttons */
 .output-buttons button {
     margin: 5px;
