@@ -100,23 +100,28 @@ labels = text.trim().split("\n");
 
     }
 
-    // Setup webcam
+// Setup webcam
 const video = document.getElementById("webcam");
 video.style.transform = "scaleX(-1)";
 
-const stream = await navigator.mediaDevices.getUserMedia({ video:true });
-video.srcObject = stream;   
+const stream = await navigator.mediaDevices.getUserMedia({
+  video: { width: 640, height: 480 }
+});
 
-video.onloadedmetadata = () => {
+video.srcObject = stream;
+
+await new Promise(resolve => {
+  video.onloadedmetadata = () => {
+    video.play();
+    resolve();
+  };
+});
 
 canvas = document.getElementById("handCanvas");
-if(!canvas) return;
-
 ctx = canvas.getContext("2d");
-canvas.width = 200;
-canvas.height = 200;
-};
 
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
 
 
 
@@ -137,33 +142,33 @@ hands.onResults((results) => {
 
 if(!ctx || !canvas) return;
 
-ctx.save();
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-/* mirror canvas */
-ctx.translate(canvas.width, 0);
-ctx.scale(-1, 1);
-
-if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0){
-ctx.restore();
-return;
-}
+if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) return;
 
 for(const landmarks of results.multiHandLandmarks){
 
-drawConnectors(ctx, landmarks, HAND_CONNECTIONS,{
-color:"#00FF00",
-lineWidth:3
-});
 
-drawLandmarks(ctx, landmarks,{
-color:"#FF0000",
-lineWidth:2
-});
+drawConnectors(
+ctx,
+landmarks,
+HAND_CONNECTIONS,
+{color:"#ff0000", lineWidth:4}
+);
 
+drawLandmarks(
+ctx,
+landmarks,
+{color:"#00ff00", lineWidth:2, radius:4}
+);
+ctx.restore();
 }
 
-ctx.restore();
+ctx.save();
+ctx.translate(canvas.width,0);
+ctx.scale(-1,1);
+
+
 
 const landmarks = results.multiHandLandmarks[0];
 
@@ -228,17 +233,16 @@ mostConfidentEl.innerText="Most Confident: -";
 
 });
 
-camera = new Camera(video,{
-onFrame: async ()=>{
-
-if(isFrozen) return;
-
-await hands.send({image:video});
-
-},
-width:200,
-height:200
+camera = new Camera(video, {
+  onFrame: async () => {
+    if (isFrozen) return;
+    await hands.send({ image: video });
+  },
+  width: video.videoWidth,
+  height: video.videoHeight
 });
+
+await camera.start();
 
 camera.start();
     // Show output box directly under webcam
