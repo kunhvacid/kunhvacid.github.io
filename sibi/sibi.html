@@ -70,6 +70,7 @@ let isRunning = false;
 let isTyping = false;
 let canvas;
 let ctx;
+let autoConfirmInProgress = false;
 
 const CONFIDENCE_THRESHOLD = 0.50;
 
@@ -180,15 +181,12 @@ input.push(p.y);
 input.push(p.z);
 });
 
-console.log(input.length); // should print 63
-
 const probs = tf.tidy(() => {
 
 const tensor = tf.tensor([input]);
 const prediction = model.predict(tensor);
 const output = prediction.dataSync();
 
-console.log(output);
 
 return output;
 
@@ -202,6 +200,38 @@ if(probs[i]>probs[maxIndex]) maxIndex=i;
 
 currentPrediction = labels[maxIndex];
 currentConfidence = probs[maxIndex];
+
+// AUTO CONFIRM LOGIC
+if (currentConfidence >= 0.8 && !autoConfirmInProgress) { // ADJUST MINIMUM ACCURACY
+    autoConfirmInProgress = true;
+
+    // small delay to ensure stable recognition
+    setTimeout(() => {
+        confirmLetter(); // automatically types the letter
+
+        // clear predictions
+        const container = document.getElementById("prediction-container");
+        for (let row of container.children) {
+            const bar = row.querySelector(".bar");
+            const percent = row.querySelector(".percent");
+            bar.style.width = "0%";
+            percent.innerText = "0%";
+            row.style.fontWeight = "normal";
+        }
+
+        // reset most confident
+        const mostConfidentEl = document.getElementById("most-confident");
+        mostConfidentEl.innerText = "Most Confident: -";
+
+        // wait before allowing next auto-confirm
+        setTimeout(() => {
+            autoConfirmInProgress = false;
+        }, 750); // adjust pause delay after confirms
+
+    }, 500); // adjust delay to ensure recognition stability
+}
+
+
 
 const container = document.getElementById("prediction-container");
 
@@ -232,6 +262,10 @@ mostConfidentEl.innerText="Most Confident: -";
 }
 
 });
+
+
+
+
 
 camera = new Camera(video, {
   onFrame: async () => {
@@ -275,27 +309,49 @@ function stop() {
     if (!isRunning) return;
 
     cancelAnimationFrame(animationId);
-    if(camera) camera.stop();
+
+    // Stop MediaPipe Camera
+    if (camera) {
+        camera.stop();
+        camera = null;
+    }
+
+    // Dispose hands instance
+    if (hands) {
+        hands.close();   // proper cleanup
+        hands = null;
+    }
+
     isRunning = false;
+    isFrozen = false;
 
-    document.getElementById("startBtn").disabled = false;
-    document.getElementById("stopBtn").disabled = true;
-
-    // Remove webcam view
-    const webcamContainer = document.getElementById("webcam-container");
-    webcamContainer.innerHTML = "";
-
-    // Reset most confident text
-    const mostConfidentEl = document.getElementById("most-confident");
-    mostConfidentEl.innerText = "Most Confident: -";
-
+    // Reset buttons
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
     const freezeBtn = document.getElementById("freezeBtn");
-if(freezeBtn){
-freezeBtn.disabled = true;
-freezeBtn.innerText = "Freeze";
-}
 
-isFrozen = false;
+    if (startBtn) startBtn.disabled = false;
+    if (stopBtn) stopBtn.disabled = true;
+    if (freezeBtn) {
+        freezeBtn.disabled = true;
+        freezeBtn.innerText = "Freeze";
+    }
+
+    // Clear canvas
+    if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Remove video stream
+    const videoEl = document.getElementById("webcam");
+    if (videoEl && videoEl.srcObject) {
+        videoEl.srcObject.getTracks().forEach(track => track.stop());
+        videoEl.srcObject = null;
+    }
+
+    // Reset most confident
+    const mostConfidentEl = document.getElementById("most-confident");
+    if (mostConfidentEl) mostConfidentEl.innerText = "Most Confident: -";
 }
 
 

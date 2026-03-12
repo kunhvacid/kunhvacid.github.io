@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,25 +10,25 @@
 
 <style>
 body{
-font-family: Arial;
-background:#111;
-color:white;
-text-align:center;
+  font-family: Arial;
+  background:#111;
+  color:white;
+  text-align:center;
 }
 
-video{
-border:2px solid white;
-border-radius:10px;
+canvas{
+  border:2px solid white;
+  border-radius:10px;
 }
 
 button{
-padding:10px 20px;
-margin:5px;
-font-size:16px;
+  padding:10px 20px;
+  margin:5px;
+  font-size:16px;
 }
 
 #counter{
-margin-top:10px;
+  margin-top:10px;
 }
 </style>
 </head>
@@ -38,106 +37,142 @@ margin-top:10px;
 
 <h2>Sign Language Dataset Trainer</h2>
 
-<video id="video" width="640" height="480" autoplay></video>
 <canvas id="canvas" width="640" height="480"></canvas>
 
 <div>
 <input id="labelInput" placeholder="Enter label (example: A)">
 <button onclick="capture()">Capture Sample</button>
+<button onclick="deleteLast()">Delete Last Sample</button>
 <button onclick="download()">Download Dataset</button>
+<button onclick="saveDataset()">Save Dataset</button>
+<input type="file" id="loadFile" style="display:none" onchange="loadDataset(event)">
+<button onclick="document.getElementById('loadFile').click()">Load Dataset</button>
+<button onclick="startCamera()">Start Camera</button>
+<button onclick="stopCamera()">Stop Camera</button>
 </div>
 
 <div id="counter">Samples: 0</div>
 
 <script>
-
-const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const video = document.createElement("video"); // hidden video element
 
 let currentLandmarks = null;
 let dataset = [];
+let cameraInstance = null;
+let handsInstance = null;
 
-const hands = new Hands({
-locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
+function setupHands(){
+  handsInstance = new Hands({
+    locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+  });
 
-hands.setOptions({
-maxNumHands:1,
-modelComplexity:1,
-minDetectionConfidence:0.7,
-minTrackingConfidence:0.7
-});
+  handsInstance.setOptions({
+    maxNumHands:1,
+    modelComplexity:1,
+    minDetectionConfidence:0.7,
+    minTrackingConfidence:0.7
+  });
 
-hands.onResults(results => {
+  handsInstance.onResults(results => {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(results.image,0,0,canvas.width,canvas.height);
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.drawImage(results.image,0,0,canvas.width,canvas.height);
-
-if(results.multiHandLandmarks){
-
-for(const landmarks of results.multiHandLandmarks){
-
-currentLandmarks = landmarks;
-
-drawConnectors(ctx, landmarks, HAND_CONNECTIONS);
-drawLandmarks(ctx, landmarks);
-
+    if(results.multiHandLandmarks){
+      for(const landmarks of results.multiHandLandmarks){
+        currentLandmarks = landmarks;
+        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color:'#00FF00', lineWidth:3});
+        drawLandmarks(ctx, landmarks, {color:'#FF0000', lineWidth:2, radius:4});
+      }
+    } else {
+      currentLandmarks = null;
+    }
+  });
 }
+
+async function startCamera(){
+  if(cameraInstance) return; // already running
+  setupHands();
+
+  cameraInstance = new Camera(video,{
+    onFrame: async () => { await handsInstance.send({image: video}); },
+    width:640,
+    height:480
+  });
+
+  await cameraInstance.start();
 }
 
-});
-
-const camera = new Camera(video,{
-onFrame: async () => {
-await hands.send({image: video});
-},
-width:640,
-height:480
-});
-
-camera.start();
+function stopCamera(){
+  if(cameraInstance){
+    cameraInstance.stop();
+    cameraInstance = null;
+    handsInstance = null;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+}
 
 function capture(){
+  const label = document.getElementById("labelInput").value.trim();
+  if(!label || !currentLandmarks) return;
 
-const label = document.getElementById("labelInput").value.trim();
+  const row = [];
+  currentLandmarks.forEach(p=>{ row.push(p.x,p.y,p.z); });
+  row.push(label);
 
-if(!label) return;
-if(!currentLandmarks) return;
+  dataset.push(row);
+  updateCounter();
+}
 
-const row = [];
+function deleteLast(){
+  if(dataset.length>0){
+    dataset.pop();
+    updateCounter();
+  }
+}
 
-currentLandmarks.forEach(p=>{
-row.push(p.x);
-row.push(p.y);
-row.push(p.z);
-});
-
-row.push(label);
-
-dataset.push(row);
-
-document.getElementById("counter").innerText = "Samples: " + dataset.length;
-
+function updateCounter(){
+  document.getElementById("counter").innerText = "Samples: " + dataset.length;
 }
 
 function download(){
-
-let csv = dataset.map(r=>r.join(",")).join("\n");
-
-const blob = new Blob([csv],{type:"text/csv"});
-
-const a = document.createElement("a");
-
-a.href = URL.createObjectURL(blob);
-a.download = "sign_dataset.csv";
-
-a.click();
-
+  if(dataset.length===0) return;
+  const csv = dataset.map(r=>r.join(",")).join("\n");
+  const blob = new Blob([csv],{type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "sign_dataset.csv";
+  a.click();
 }
 
+function saveDataset(){
+  localStorage.setItem("savedDataset", JSON.stringify(dataset));
+  alert("Dataset saved locally.");
+}
+
+function loadDataset(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const text = e.target.result;
+    dataset = text.split("\n").map(row=>row.split(",").map(v=>isNaN(v)?v:v*1));
+    updateCounter();
+  };
+  reader.readAsText(file);
+}
+
+// Auto-load dataset if previously saved
+if(localStorage.getItem("savedDataset")){
+  dataset = JSON.parse(localStorage.getItem("savedDataset"));
+  updateCounter();
+}
+
+// Start camera automatically
+startCamera();
 </script>
 
 </body>
 </html>
-```
