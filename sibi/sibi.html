@@ -127,6 +127,8 @@ canvas.height = video.videoHeight;
 
 
 
+
+
 hands = new Hands({
 locateFile: file =>
 `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
@@ -139,128 +141,104 @@ minDetectionConfidence:0.5,
 minTrackingConfidence:0.5
 });
 
+// ----------------------------
+// AUTO-CONFIRM SETTINGS
+// ----------------------------
+let lastStablePrediction = "";
+let stableStartTime = null;
+const AUTO_CONFIRM_THRESHOLD = 0.8; // confidence needed to start stable tracking
+const STABLE_DELAY = 750;           // ms needed to confirm adjust here
+let autoConfirmInProgress = false;
+
+// ----------------------------
+// HANDS ON RESULTS
+// ----------------------------
 hands.onResults((results) => {
+    if(!ctx || !canvas) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-if(!ctx || !canvas) return;
+    // reset if no hands detected
+    if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0){
+        lastStablePrediction = "";
+        stableStartTime = null;
+        return;
+    }
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.save();
+    ctx.translate(canvas.width,0);
+    ctx.scale(-1,1);
 
-if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) return;
+    // Draw landmarks as usual
+    for(const landmarks of results.multiHandLandmarks){
+        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color:"#ff0000", lineWidth:4});
+        drawLandmarks(ctx, landmarks, {color:"#00ff00", lineWidth:2, radius:4});
+    }
+    ctx.restore();
 
-for(const landmarks of results.multiHandLandmarks){
+    // ----------------------------
+    // PREDICTION
+    // ----------------------------
+    const landmarks = results.multiHandLandmarks[0];
+    const input = [];
+    landmarks.forEach(p => { input.push(p.x, p.y, p.z); });
 
+    const probs = tf.tidy(() => {
+        const tensor = tf.tensor([input]);
+        const prediction = model.predict(tensor);
+        return prediction.dataSync();
+    });
 
-drawConnectors(
-ctx,
-landmarks,
-HAND_CONNECTIONS,
-{color:"#ff0000", lineWidth:4}
-);
+    let maxIndex = 0;
+    for(let i = 1; i < probs.length; i++){
+        if(probs[i] > probs[maxIndex]) maxIndex = i;
+    }
 
-drawLandmarks(
-ctx,
-landmarks,
-{color:"#00ff00", lineWidth:2, radius:4}
-);
-ctx.restore();
-}
+    currentPrediction = labels[maxIndex];
+    currentConfidence = probs[maxIndex];
 
-ctx.save();
-ctx.translate(canvas.width,0);
-ctx.scale(-1,1);
-
-
-
-const landmarks = results.multiHandLandmarks[0];
-
-const input=[];
-
-landmarks.forEach(p=>{
-input.push(p.x);
-input.push(p.y);
-input.push(p.z);
-});
-
-const probs = tf.tidy(() => {
-
-const tensor = tf.tensor([input]);
-const prediction = model.predict(tensor);
-const output = prediction.dataSync();
-
-
-return output;
-
-});
-
-let maxIndex=0;
-
-for(let i=1;i<probs.length;i++){
-if(probs[i]>probs[maxIndex]) maxIndex=i;
-}
-
-currentPrediction = labels[maxIndex];
-currentConfidence = probs[maxIndex];
-
-// AUTO CONFIRM LOGIC
-if (currentConfidence >= 0.8 && !autoConfirmInProgress) { // ADJUST MINIMUM ACCURACY
-    autoConfirmInProgress = true;
-
-    // small delay to ensure stable recognition
-    setTimeout(() => {
-        confirmLetter(); // automatically types the letter
-
-        // clear predictions
-        const container = document.getElementById("prediction-container");
-        for (let row of container.children) {
-            const bar = row.querySelector(".bar");
-            const percent = row.querySelector(".percent");
-            bar.style.width = "0%";
-            percent.innerText = "0%";
-            row.style.fontWeight = "normal";
+    // ----------------------------
+    // STABLE AUTO-CONFIRM LOGIC
+    // ----------------------------
+    if(currentConfidence >= AUTO_CONFIRM_THRESHOLD){
+        if(currentPrediction === lastStablePrediction){
+            // already tracking, check if stable long enough
+            if(!autoConfirmInProgress && Date.now() - stableStartTime >= STABLE_DELAY){
+                autoConfirmInProgress = true;
+                confirmLetter();
+                // reset timer for next auto-confirm
+                setTimeout(()=>{ autoConfirmInProgress = false; }, 100);
+                stableStartTime = Date.now(); 
+            }
+        } else {
+            // new prediction, start tracking
+            lastStablePrediction = currentPrediction;
+            stableStartTime = Date.now();
         }
+    } else {
+        // confidence too low, reset
+        lastStablePrediction = "";
+        stableStartTime = null;
+    }
 
-        // reset most confident
-        const mostConfidentEl = document.getElementById("most-confident");
-        mostConfidentEl.innerText = "Most Confident: -";
+    // ----------------------------
+    // UPDATE PREDICTION UI
+    // ----------------------------
+    const container = document.getElementById("prediction-container");
+    for(let i = 0; i < probs.length; i++){
+        const row = container.children[i];
+        if(!row) continue;
+        const bar = row.querySelector(".bar");
+        const percent = row.querySelector(".percent");
+        const width = Math.round(probs[i]*100)+"%";
+        bar.style.width = width;
+        percent.innerText = width;
+        row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
+    }
 
-        // wait before allowing next auto-confirm
-        setTimeout(() => {
-            autoConfirmInProgress = false;
-        }, 750); // adjust pause delay after confirms
-
-    }, 500); // adjust delay to ensure recognition stability
-}
-
-
-
-const container = document.getElementById("prediction-container");
-
-for(let i=0;i<probs.length;i++){
-
-const row = container.children[i];
-if(!row) continue;
-
-const bar = row.querySelector(".bar");
-const percent = row.querySelector(".percent");
-
-const width = Math.round(probs[i]*100)+"%";
-
-bar.style.width = width;
-percent.innerText = width;
-
-row.style.fontWeight = (i===maxIndex) ? "bold" : "normal";
-
-}
-
-const mostConfidentEl = document.getElementById("most-confident");
-
-if(currentConfidence >= CONFIDENCE_THRESHOLD){
-mostConfidentEl.innerText =
-`Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`;
-}else{
-mostConfidentEl.innerText="Most Confident: -";
-}
-
+    const mostConfidentEl = document.getElementById("most-confident");
+    mostConfidentEl.innerText = (currentConfidence >= 0.5)
+        ? `Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`
+        : "Most Confident: -";
 });
 
 
@@ -352,6 +330,8 @@ function stop() {
     // Reset most confident
     const mostConfidentEl = document.getElementById("most-confident");
     if (mostConfidentEl) mostConfidentEl.innerText = "Most Confident: -";
+
+autoConfirmInProgress = false;
 }
 
 
@@ -381,23 +361,38 @@ btn.innerText = "Freeze";
 // CONFIRM LETTER
 // =================================
 function confirmLetter() {
-
     if (currentConfidence >= CONFIDENCE_THRESHOLD) {
-
         let letter = currentPrediction;
-
-        if (!capsLock) {
-            letter = letter.toLowerCase();
-        }
-
+        if (!capsLock) letter = letter.toLowerCase();
         typeLetter(letter);
 
         if (currentMode === "universal") {
             performUniversalTranslate();
         }
+
+        // RESET PREDICTIONS AFTER SHORT DELAY
+        const container = document.getElementById("prediction-container");
+        setTimeout(() => {
+            currentPrediction = "";
+            currentConfidence = 0;
+            if(container){
+                Array.from(container.children).forEach(row => {
+                    const bar = row.querySelector(".bar");
+                    const percent = row.querySelector(".percent");
+                    if(bar) bar.style.width = "0%";
+                    if(percent) percent.innerText = "0%";
+                    row.style.fontWeight = "normal";
+                });
+            }
+        }, 200); // adjust here
+
+        // AUTO-CONFIRM COOLDOWN
+        autoConfirmInProgress = true;
+        setTimeout(() => { 
+            autoConfirmInProgress = false; 
+        }, 500); // adjust here
     }
 }
-
 
 
 
