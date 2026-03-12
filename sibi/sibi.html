@@ -24,6 +24,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="stylesheet" href="sibi.css" />
+  
 </head>
 
 
@@ -37,7 +38,7 @@
 <div class="container-card">
 
 <div class="header-title">SignSmart</div>
-<div class="header-subtitle">Universal Translator</div>
+<div class="header-subtitle">Translator Universal </div>
 
 <div style="text-align:center; margin:20px 0;">
 
@@ -50,123 +51,219 @@
 
 
 
-
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 
-<script type="text/javascript">
-    const URL = "https://teachablemachine.withgoogle.com/models/pm-1gN_zA/";
 
-    let model, webcam, maxPredictions;
-    let currentPrediction = "";
-    let capsLock = false;
-    let isTyping = false;
+<script>
+let model;
+let labels=[];
+let hands;
+let camera;
+let currentPrediction="";
+let currentConfidence=0;
+let capsLock = false;
+let animationId;
+let isRunning = false;
+let isTyping = false;
+let canvas;
+let ctx;
 
-    let currentConfidence = 0;
-    const CONFIDENCE_THRESHOLD = 0.50;
-    
-    let animationId;
-    let isRunning = false;
+const CONFIDENCE_THRESHOLD = 0.50;
+
 
 async function init() {
-    if (isRunning) return;
+if (isRunning) return;
 
-    const startBtn = document.getElementById("startBtn");
-    const stopBtn = document.getElementById("stopBtn");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
 
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-    const freezeBtn = document.getElementById("freezeBtn");
+if(startBtn) startBtn.disabled = true;
+if(stopBtn) stopBtn.disabled = false;
+
+const freezeBtn = document.getElementById("freezeBtn");
 if(freezeBtn) freezeBtn.disabled = false;
 
-    // Load model if not loaded
-    if (!model) {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
+// LOAD TENSORFLOW MODEL
+if(!model){
+
+await tf.setBackend("webgl");
+await tf.ready();
+
+model = await tf.loadLayersModel("model/sign_model.json");
+
+const res = await fetch("model/labels.txt");
+const text = await res.text();
+labels = text.trim().split("\n");
+
     }
 
-    // Get actual class labels from model
-    const classNames = model.getClassLabels();
-
     // Setup webcam
-    webcam = new tmImage.Webcam(200, 200, true);
-    await webcam.setup();
-    await webcam.play();
+const video = document.getElementById("webcam");
+video.style.transform = "scaleX(-1)";
 
-    // Show webcam in container
-    const webcamContainer = document.getElementById("webcam-container");
-    webcamContainer.innerHTML = "";
-    webcamContainer.appendChild(webcam.canvas);
+const stream = await navigator.mediaDevices.getUserMedia({ video:true });
+video.srcObject = stream;   
 
+video.onloadedmetadata = () => {
+
+canvas = document.getElementById("handCanvas");
+if(!canvas) return;
+
+ctx = canvas.getContext("2d");
+canvas.width = 200;
+canvas.height = 200;
+};
+
+
+
+
+
+hands = new Hands({
+locateFile: file =>
+`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+
+hands.setOptions({
+maxNumHands:1,
+modelComplexity:1,
+minDetectionConfidence:0.5,
+minTrackingConfidence:0.5
+});
+
+hands.onResults((results) => {
+
+if(!ctx || !canvas) return;
+
+ctx.save();
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+/* mirror canvas */
+ctx.translate(canvas.width, 0);
+ctx.scale(-1, 1);
+
+if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0){
+ctx.restore();
+return;
+}
+
+for(const landmarks of results.multiHandLandmarks){
+
+drawConnectors(ctx, landmarks, HAND_CONNECTIONS,{
+color:"#00FF00",
+lineWidth:3
+});
+
+drawLandmarks(ctx, landmarks,{
+color:"#FF0000",
+lineWidth:2
+});
+
+}
+
+ctx.restore();
+
+const landmarks = results.multiHandLandmarks[0];
+
+const input=[];
+
+landmarks.forEach(p=>{
+input.push(p.x);
+input.push(p.y);
+input.push(p.z);
+});
+
+console.log(input.length); // should print 63
+
+const probs = tf.tidy(() => {
+
+const tensor = tf.tensor([input]);
+const prediction = model.predict(tensor);
+const output = prediction.dataSync();
+
+console.log(output);
+
+return output;
+
+});
+
+let maxIndex=0;
+
+for(let i=1;i<probs.length;i++){
+if(probs[i]>probs[maxIndex]) maxIndex=i;
+}
+
+currentPrediction = labels[maxIndex];
+currentConfidence = probs[maxIndex];
+
+const container = document.getElementById("prediction-container");
+
+for(let i=0;i<probs.length;i++){
+
+const row = container.children[i];
+if(!row) continue;
+
+const bar = row.querySelector(".bar");
+const percent = row.querySelector(".percent");
+
+const width = Math.round(probs[i]*100)+"%";
+
+bar.style.width = width;
+percent.innerText = width;
+
+row.style.fontWeight = (i===maxIndex) ? "bold" : "normal";
+
+}
+
+const mostConfidentEl = document.getElementById("most-confident");
+
+if(currentConfidence >= CONFIDENCE_THRESHOLD){
+mostConfidentEl.innerText =
+`Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`;
+}else{
+mostConfidentEl.innerText="Most Confident: -";
+}
+
+});
+
+camera = new Camera(video,{
+onFrame: async ()=>{
+
+if(isFrozen) return;
+
+await hands.send({image:video});
+
+},
+width:200,
+height:200
+});
+
+camera.start();
     // Show output box directly under webcam
     const outputSection = document.querySelector(".output-section");
     outputSection.style.marginTop = "10px";
-
-    // Prepare prediction container with actual class names
     const container = document.getElementById("prediction-container");
-    container.innerHTML = "";
-    for (let i = 0; i < maxPredictions; i++) {
-        const row = document.createElement("div");
-        row.classList.add("row");
-        row.innerHTML = `
-            <span class="label">${classNames[i]}</span>
-            <div class="bar-container">
-                <div class="bar" style="width:0%;"></div>
-            </div>
-            <span class="percent">0%</span>
-        `;
-        container.appendChild(row);
-    }
+container.innerHTML = "";
+
+labels.forEach(label => {
+    const row = document.createElement("div");
+    row.classList.add("row");
+
+    row.innerHTML = `
+        <span class="label">${label}</span>
+        <div class="bar-container">
+            <div class="bar" style="width:0%"></div>
+        </div>
+        <span class="percent">0%</span>
+    `;
+
+    container.appendChild(row);
+});
 
     isRunning = true;
 
-    // Prediction loop
-    async function loop() {
-        if (!isRunning) return;
-
-if(!isFrozen){
-await webcam.update();
-}
-
-const predictions = await model.predict(webcam.canvas);
-
-        // Find most confident prediction
-        let highest = predictions[0];
-        for (let i = 1; i < predictions.length; i++) {
-            if (predictions[i].probability > highest.probability) {
-                highest = predictions[i];
-            }
-        }
-        currentPrediction = highest.className;
-        currentConfidence = highest.probability;
-
-        // Update bars
-        for (let i = 0; i < predictions.length; i++) {
-            const row = container.children[i];
-            const bar = row.querySelector(".bar");
-            const percent = row.querySelector(".percent");
-
-            const width = Math.round(predictions[i].probability * 100) + "%";
-            bar.style.width = width;
-            percent.textContent = width;
-
-            row.style.fontWeight = predictions[i].className === currentPrediction ? "bold" : "normal";
-        }
-
-        // Update Most Confident text
-        const mostConfidentEl = document.getElementById("most-confident");
-        if (currentConfidence >= CONFIDENCE_THRESHOLD) {
-            mostConfidentEl.innerText = `Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`;
-        } else {
-            mostConfidentEl.innerText = "Most Confident: -";
-        }
-
-        animationId = requestAnimationFrame(loop);
-    }
-
-    animationId = requestAnimationFrame(loop);
 }
 
 // Stop function: stops webcam and removes view
@@ -174,7 +271,7 @@ function stop() {
     if (!isRunning) return;
 
     cancelAnimationFrame(animationId);
-    webcam.stop();
+    if(camera) camera.stop();
     isRunning = false;
 
     document.getElementById("startBtn").disabled = false;
@@ -440,11 +537,17 @@ root.innerHTML = `
             <div class="right-panel">
 
 <div class="camera-section bordered-panel">
-    <div id="webcam-container"></div>
+
+<div id="webcam-container">
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="handCanvas"></canvas>
+</div>
+
     <div id="most-confident"
          style="margin-top:10px;font-size:18px;font-weight:600;text-align:center;">
         Most Confident: -
     </div>
+
 </div>
 
 

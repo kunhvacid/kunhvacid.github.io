@@ -1,0 +1,143 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Language Dataset Trainer</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+<style>
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+video{
+border:2px solid white;
+border-radius:10px;
+}
+
+button{
+padding:10px 20px;
+margin:5px;
+font-size:16px;
+}
+
+#counter{
+margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Sign Language Dataset Trainer</h2>
+
+<video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480"></canvas>
+
+<div>
+<input id="labelInput" placeholder="Enter label (example: A)">
+<button onclick="capture()">Capture Sample</button>
+<button onclick="download()">Download Dataset</button>
+</div>
+
+<div id="counter">Samples: 0</div>
+
+<script>
+
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let currentLandmarks = null;
+let dataset = [];
+
+const hands = new Hands({
+locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+
+hands.setOptions({
+maxNumHands:1,
+modelComplexity:1,
+minDetectionConfidence:0.7,
+minTrackingConfidence:0.7
+});
+
+hands.onResults(results => {
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.drawImage(results.image,0,0,canvas.width,canvas.height);
+
+if(results.multiHandLandmarks){
+
+for(const landmarks of results.multiHandLandmarks){
+
+currentLandmarks = landmarks;
+
+drawConnectors(ctx, landmarks, HAND_CONNECTIONS);
+drawLandmarks(ctx, landmarks);
+
+}
+}
+
+});
+
+const camera = new Camera(video,{
+onFrame: async () => {
+await hands.send({image: video});
+},
+width:640,
+height:480
+});
+
+camera.start();
+
+function capture(){
+
+const label = document.getElementById("labelInput").value.trim();
+
+if(!label) return;
+if(!currentLandmarks) return;
+
+const row = [];
+
+currentLandmarks.forEach(p=>{
+row.push(p.x);
+row.push(p.y);
+row.push(p.z);
+});
+
+row.push(label);
+
+dataset.push(row);
+
+document.getElementById("counter").innerText = "Samples: " + dataset.length;
+
+}
+
+function download(){
+
+let csv = dataset.map(r=>r.join(",")).join("\n");
+
+const blob = new Blob([csv],{type:"text/csv"});
+
+const a = document.createElement("a");
+
+a.href = URL.createObjectURL(blob);
+a.download = "sign_dataset.csv";
+
+a.click();
+
+}
+
+</script>
+
+</body>
+</html>
+```

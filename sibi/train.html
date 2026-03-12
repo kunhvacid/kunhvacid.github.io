@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sign Model Trainer</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0"></script>
+
+<style>
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+button{
+padding:10px 20px;
+margin:10px;
+font-size:16px;
+}
+
+input{
+margin:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Train Sign Language Model</h2>
+
+<input type="file" id="csvFile" accept=".csv">
+
+<br>
+
+<button onclick="trainModel()">Train Model</button>
+<button onclick="downloadModel()">Download Model</button>
+
+<p id="status"></p>
+
+<progress id="progress" value="0" max="100" style="width:300px"></progress>
+
+<script>
+
+let model;
+let labelMap = [];
+
+async function trainModel(){
+
+await tf.setBackend("webgl");
+await tf.ready();
+
+document.getElementById("status").innerText="Loading dataset...";
+
+const file = document.getElementById("csvFile").files[0];
+const text = await file.text();
+
+const rows = text.trim().split("\n").map(r=>r.split(","));
+
+const X=[];
+const Y=[];
+
+rows.forEach(r=>{
+const features=r.slice(0,63).map(Number);
+const label=r[63];
+
+if(!labelMap.includes(label)) labelMap.push(label);
+
+X.push(features);
+Y.push(labelMap.indexOf(label));
+});
+
+const xs=tf.tensor2d(X);
+const ys=tf.tensor1d(Y,"float32");
+
+model=tf.sequential();
+
+model.add(tf.layers.dense({
+inputShape:[63],
+units:128,
+activation:"relu"
+}));
+
+model.add(tf.layers.dense({
+units:64,
+activation:"relu"
+}));
+
+model.add(tf.layers.dense({
+units:labelMap.length,
+activation:"softmax"
+}));
+
+model.compile({
+optimizer:"adam",
+loss:"sparseCategoricalCrossentropy",
+metrics:["accuracy"]
+});
+
+const epochs = 40;
+const progress = document.getElementById("progress");
+
+await model.fit(xs, ys, {
+epochs: epochs,
+shuffle: true,
+callbacks: {
+
+onEpochBegin: (epoch)=>{
+document.getElementById("status").innerText =
+"Epoch " + (epoch+1) + " / " + epochs + " running...";
+},
+
+onEpochEnd: (epoch,logs)=>{
+
+progress.value = ((epoch+1)/epochs)*100;
+
+document.getElementById("status").innerText =
+"Epoch " + (epoch+1) + " / " + epochs +
+" | loss: " + logs.loss.toFixed(4) +
+" | accuracy: " + (logs.acc || logs.accuracy).toFixed(4);
+},
+
+onTrainEnd: ()=>{
+document.getElementById("status").innerText="Training complete";
+}
+
+}
+});
+
+}
+
+async function downloadModel(){
+
+if(!model) return;
+
+await model.save("downloads://sign_model");
+
+const blob=new Blob([labelMap.join("\n")]);
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+a.download="labels.txt";
+a.click();
+
+}
+
+</script>
+
+</body>
+</html>
