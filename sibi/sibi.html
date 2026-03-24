@@ -2,60 +2,40 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SignSmart</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    <link rel="icon" href="favicon.ico">
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>SignSmart</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+ <link rel="icon" href="favicon.ico">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="wonyoung from iz*one">
+ <meta property="og:description" content="kamu bapak TESSSSSSSSSSSS">
+ <meta property="og:url" content="https://kunhvacid.github.io/gallery.html">
+ <meta property="og:image" content="https://bunny-wp-pullzone-fwyeoqiqu8.b-cdn.net/wp-content/uploads/2024/05/ive-50.jpg">
+ <meta property="og:image:width" content="1280">
+ <meta property="og:image:height" content="720">
+ <meta name="twitter:card" content="summary_large_image">
+ <link rel="stylesheet" href="sibi.css" />
 
-
-       <!-- EMBED / SHARE PREVIEW -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="wonyoung from iz*one">
-  <meta property="og:description" content="kamu bapak TESSSSSSSSSSSS">
-  <meta property="og:url" content="https://kunhvacid.github.io/gallery.html">
-
-  <meta property="og:image" content="https://bunny-wp-pullzone-fwyeoqiqu8.b-cdn.net/wp-content/uploads/2024/05/ive-50.jpg">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="720">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <link rel="stylesheet" href="sibi.css" />
-  
 </head>
-
-
-
-
-
-
 <body>
 <main>
 
 <div class="container-card">
-
 <div class="header-title">SignSmart</div>
 <div class="header-subtitle">Translator Universal </div>
-
 <div style="text-align:center; margin:20px 0;">
-
-
 <div id="translator-root"></div>
-
-
 <div class="output-section">
 <div id="mode-container"></div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-
 
 <script>
 let model;
@@ -72,39 +52,33 @@ let canvas;
 let ctx;
 let autoConfirmInProgress = false;
 let autoConfirmEnabled = true;
-
 const CONFIDENCE_THRESHOLD = 0.50;
 
-async function init() {
-    if (isRunning) return;
 
+
+async function init() {
+    
+    if (isRunning) return;
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const freezeBtn = document.getElementById("freezeBtn");
-
     if (startBtn) startBtn.disabled = true;
     if (stopBtn) stopBtn.disabled = false;
     if (freezeBtn) freezeBtn.disabled = false;
-
     currentPrediction = "";
     currentConfidence = 0;
     autoConfirmInProgress = false;
     resetAutoConfirmProgress();
     isFrozen = false;
-
-    // LOAD TENSORFLOW MODEL ONCE
     if (!model) {
         await tf.setBackend("webgl");
         await tf.ready();
-
         model = await tf.loadLayersModel("model/sign_model.json");
-
         const res = await fetch("model/labels.txt");
         const text = await res.text();
         labels = text.trim().split("\n");
     }
 
-    // GET VIDEO + CANVAS
     const video = document.getElementById("webcam");
     canvas = document.getElementById("handCanvas");
 
@@ -121,13 +95,11 @@ async function init() {
     video.setAttribute("autoplay", true);
     video.setAttribute("playsinline", true);
 
-    // RESET OLD STREAM IF ANY
     if (video.srcObject) {
         video.srcObject.getTracks().forEach(track => track.stop());
         video.srcObject = null;
     }
 
-    // START NEW STREAM
     const stream = await navigator.mediaDevices.getUserMedia({
         video: { width: 640, height: 480 }
     });
@@ -143,7 +115,6 @@ async function init() {
     canvas.width = video.videoWidth || 640;
     canvas.height = video.videoHeight || 480;
 
-    // CREATE HANDS ONLY ONCE
     if (!hands) {
         hands = new Hands({
             locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
@@ -294,8 +265,6 @@ if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
     if (outputSection) outputSection.style.marginTop = "10px";
 }
 
-
-// Stop function: stops webcam and removes view
 function stop() {
     if (!isRunning) return;
 
@@ -353,12 +322,6 @@ function stop() {
     }
 }
 
-
-
-// =================================
-// FREEZE CAMERA
-// =================================
-
 function toggleFreeze(){
 
 const btn = document.getElementById("freezeBtn");
@@ -373,12 +336,6 @@ btn.innerText = "Freeze";
 
 }
 
-
-
-
-// =================================
-// CONFIRM LETTER
-// =================================
 function confirmLetter(isAuto = false) {
     resetAutoConfirmProgress();
 
@@ -417,9 +374,7 @@ function confirmLetter(isAuto = false) {
     }
 }
 
-
-
-    function addSpace() {
+function addSpace() {
     typeLetter(" ");
 
     if(currentMode === "universal"){
@@ -438,18 +393,12 @@ function backspace(){
     }
 }
 
-
-    function toggleCaps() {
+function toggleCaps() {
     capsLock = !capsLock;
 
     const btn = document.getElementById("caps-btn");
     btn.innerText = capsLock ? "Caps:ON" : "Caps:OFF";
 }
-
-
-
-
-
 
     function typeLetter(letter) {
     if (isTyping) return;
@@ -511,32 +460,7 @@ document.addEventListener("keydown", function(event) {
 </main>
 <script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================================
 // GLOBAL
-// =================================
-
 let isTranslating = false;
 let currentMode = "universal";
 let isFrozen = false;
@@ -582,9 +506,6 @@ function toggleAutoConfirm() {
     resetAutoConfirmProgress();
 }
 
-// =================================
-// MODE SWITCH
-// =================================
 function setMode(mode){
     currentMode = mode;
     const root = document.getElementById("translator-root");
@@ -620,8 +541,6 @@ root.innerHTML = `
     </div>
 </div>
 
-
-
     <!-- TEXT / MORSE INPUT -->
     <div id="universal-text-input"
          style="display:none;text-align:center;margin-top:20px;">
@@ -629,8 +548,6 @@ root.innerHTML = `
             style="width:100%;height:120px;padding:10px;border-radius:8px;border:none;"
             placeholder="Input"></textarea>
     </div>
-
-
 
     <!-- SIGN ENGINE -->
     <div id="universal-sign-engine" style="display:none;">
@@ -671,13 +588,6 @@ root.innerHTML = `
 </div>
 </div>
 
-
-
-                
-
-
-
-
                 <!-- DETECTED TEXT (this swaps with universal-output) -->
 <div class="output-section bordered-panel" id="detected-output">
     <h3 id="detected-label">Detected Text</h3>
@@ -693,15 +603,11 @@ root.innerHTML = `
         <button onclick="confirmLetter()">Confirm</button>
         <button onclick="backspace()">Backspace</button>
         
-    </div>
-</div>
-
+                     </div>
+                </div>
             </div>
         </div>
     </div>
-
-
-
 
     <!-- UNIVERSAL OUTPUT (this will move) -->
     <div id="universal-output"
@@ -784,9 +690,6 @@ if(sound) sound.addEventListener("change",()=>{morseSound = sound.checked});
 }
 }
 
-// =================================
-// TEXT → SIGN
-// =================================
 function renderAlphabet(text){
 
     const container = document.getElementById("universal-output");
@@ -824,9 +727,6 @@ function clearAlphabet(){
     document.getElementById("alphabet-output").innerHTML = "";
 }
 
-// =================================
-// MORSE MAP
-// =================================
 const MORSE = {
 A:".-",B:"-...",C:"-.-.",D:"-..",E:".",
 F:"..-.",G:"--.",H:"....",I:"..",J:".---",
@@ -843,16 +743,6 @@ const REVERSE_MORSE = {};
 for(let key in MORSE){
     REVERSE_MORSE[MORSE[key]] = key;
 }
-
-
-
-
-
-
-
-// =================================
-// TEXT TO SPEECH
-// =================================
 
 let speaking = false;
 let speechUtterance;
@@ -888,10 +778,6 @@ speaking = false;
 updateAudioButton();
 
 }
-
-// =================================
-// MORSE PLAYER
-// =================================
 
 let audioCtx;
 let morsePlaying = false;
@@ -975,7 +861,6 @@ time += 0.5;
 
 }
 
-/* auto reset when finished */
 const duration = (time - audioCtx.currentTime) * 1000;
 
 setTimeout(()=>{
@@ -983,11 +868,6 @@ setTimeout(()=>{
 }, duration);
 
 }
-
-
-// =================================
-// MORSE FLASH
-// =================================
 
 function flash(start, duration){
 
@@ -1008,14 +888,6 @@ lamp.classList.remove("on");
 
 }
 
-
-
-
-
-
-// =================================
-// PLAY MORSE ON CLICK
-// =================================
 document.addEventListener("click",function(e){
 
 if(!e.target.closest("#play-morse-btn")) return;
@@ -1023,7 +895,6 @@ if(!e.target.closest("#play-morse-btn")) return;
 const from = document.getElementById("translate-from").value;
 const to = document.getElementById("translate-to").value;
 
-/* STOP logic */
 if(morsePlaying){
 stopMorse();
 return;
@@ -1034,7 +905,6 @@ stopSpeech();
 return;
 }
 
-/* TEXT MODES → use TTS */
 if((from==="sign" && to==="text") || (from==="text" && to==="sign")){
 
 let text="";
@@ -1056,7 +926,6 @@ speakText(text);
 return;
 }
 
-/* MORSE MODES */
 let morseText="";
 
 const morseBox=document.getElementById("morse-box");
@@ -1073,11 +942,6 @@ playMorse(morseText);
 }
 
 });
-
-
-// =================================
-// AUDIO BUTTON MODE
-// =================================
 
 function updateAudioButton(){
 
@@ -1099,12 +963,6 @@ btn.innerHTML=`<i class="fa-solid fa-volume-high"></i> Play <span id="morse-lamp
 
 }
 
-
-
-
-// =================================
-// UNIVERSAL TRANSLATE
-// =================================
 function performUniversalTranslate(){
 
 updateAudioButton();
@@ -1128,9 +986,6 @@ if(from === "sign"){
     const area = document.getElementById("universal-input");
     input = area ? area.value.trim() : "";
 }
-
-// ===== SWAP POSITION LOGIC =====
-// ===== SAFE VISIBILITY LOGIC =====
 
 if(from==="sign" && to==="morse"){
     morseOutput.style.display = "block";
@@ -1166,11 +1021,6 @@ else{
     if(textBox) textBox.style.display = "block";
 }
 
-
-
-
-
-
 if(!input){
     universalOutput.innerHTML = "";
     if(morseBox) morseBox.value = "";
@@ -1178,7 +1028,6 @@ if(!input){
     return;
 }
 
-// TEXT or SIGN → MORSE
 if((from==="text" || from==="sign") && to==="morse"){
     const text = input.toUpperCase();
 
@@ -1196,7 +1045,6 @@ if(from === "sign" && morseBox){
     return;
 }
 
-// MORSE → TEXT
 if(from==="morse" && to==="text"){
     const text = input
         .split("/")
@@ -1211,7 +1059,6 @@ if(from==="morse" && to==="text"){
     return;
 }
 
-// MORSE → SIGN
 if(from==="morse" && to==="sign"){
     const text = input
         .split("/")
@@ -1226,14 +1073,12 @@ if(from==="morse" && to==="sign"){
     return;
 }
 
-// TEXT → SIGN
 if(from==="text" && to==="sign"){
     renderAlphabet(input);
     isTranslating = false;
     return;
 }
 
-// SIGN → TEXT
 if(from==="sign" && to==="text"){
     isTranslating = false;
     return;
@@ -1253,14 +1098,6 @@ window.addEventListener("DOMContentLoaded",()=>{
 }, 0);
 });
 </script>
-
-
-
-
-
-
-
-
 
 <div id="help-overlay">
     <div class="help-box">
@@ -1284,13 +1121,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 function closeHelp(){
     document.getElementById("help-overlay").style.display = "none";
 }
+
 </script>
-
-
-
-
-
-
-
 </body>
 </html>
