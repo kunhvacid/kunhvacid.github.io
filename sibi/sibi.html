@@ -71,239 +71,243 @@ let isTyping = false;
 let canvas;
 let ctx;
 let autoConfirmInProgress = false;
+let autoConfirmEnabled = true;
 
 const CONFIDENCE_THRESHOLD = 0.50;
 
-
 async function init() {
-if (isRunning) return;
+    if (isRunning) return;
 
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const freezeBtn = document.getElementById("freezeBtn");
 
-if(startBtn) startBtn.disabled = true;
-if(stopBtn) stopBtn.disabled = false;
+    if (startBtn) startBtn.disabled = true;
+    if (stopBtn) stopBtn.disabled = false;
+    if (freezeBtn) freezeBtn.disabled = false;
 
-const freezeBtn = document.getElementById("freezeBtn");
-if(freezeBtn) freezeBtn.disabled = false;
+    currentPrediction = "";
+    currentConfidence = 0;
+    autoConfirmInProgress = false;
+    resetAutoConfirmProgress();
+    isFrozen = false;
 
-// LOAD TENSORFLOW MODEL
-if(!model){
+    // LOAD TENSORFLOW MODEL ONCE
+    if (!model) {
+        await tf.setBackend("webgl");
+        await tf.ready();
 
-await tf.setBackend("webgl");
-await tf.ready();
+        model = await tf.loadLayersModel("model/sign_model.json");
 
-model = await tf.loadLayersModel("model/sign_model.json");
-
-const res = await fetch("model/labels.txt");
-const text = await res.text();
-labels = text.trim().split("\n");
-
+        const res = await fetch("model/labels.txt");
+        const text = await res.text();
+        labels = text.trim().split("\n");
     }
 
-// Setup webcam
-const video = document.getElementById("webcam");
-video.style.transform = "scaleX(-1)";
+    // GET VIDEO + CANVAS
+    const video = document.getElementById("webcam");
+    canvas = document.getElementById("handCanvas");
 
-const stream = await navigator.mediaDevices.getUserMedia({
-  video: { width: 640, height: 480 }
-});
-
-video.srcObject = stream;
-
-await new Promise(resolve => {
-  video.onloadedmetadata = () => {
-    video.play();
-    resolve();
-  };
-});
-
-canvas = document.getElementById("handCanvas");
-ctx = canvas.getContext("2d");
-
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
-
-
-
-
-
-
-hands = new Hands({
-locateFile: file =>
-`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
-
-hands.setOptions({
-maxNumHands:1,
-modelComplexity:1,
-minDetectionConfidence:0.2,
-minTrackingConfidence:0.5
-});
-
-// ----------------------------
-// AUTO-CONFIRM SETTINGS
-// ----------------------------
-let lastStablePrediction = "";
-let stableStartTime = null;
-const AUTO_CONFIRM_THRESHOLD = 0.8; // confidence needed to start stable tracking
-const STABLE_DELAY = 750;           // ms needed to confirm adjust here
-let autoConfirmInProgress = false;
-
-// ----------------------------
-// HANDS ON RESULTS
-// ----------------------------
-hands.onResults((results) => {
-    if(!ctx || !canvas) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // reset if no hands detected
-    if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0){
-        lastStablePrediction = "";
-        stableStartTime = null;
+    if (!video || !canvas) {
+        if (startBtn) startBtn.disabled = false;
+        if (stopBtn) stopBtn.disabled = true;
+        if (freezeBtn) freezeBtn.disabled = true;
         return;
     }
 
-        ctx.save();
-    ctx.translate(canvas.width,0);
-    ctx.scale(-1,1);
+    ctx = canvas.getContext("2d");
+    video.style.transform = "scaleX(-1)";
+    video.muted = true;
+    video.setAttribute("autoplay", true);
+    video.setAttribute("playsinline", true);
 
-    // Draw landmarks as usual
-    for(const landmarks of results.multiHandLandmarks){
-        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color:"#ff0000", lineWidth:4});
-        drawLandmarks(ctx, landmarks, {color:"#00ff00", lineWidth:2, radius:4});
+    // RESET OLD STREAM IF ANY
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
     }
-    ctx.restore();
 
-    // ----------------------------
-    // PREDICTION
-    // ----------------------------
-    const landmarks = results.multiHandLandmarks[0];
-    const input = [];
-    landmarks.forEach(p => { input.push(p.x, p.y, p.z); });
-
-    const probs = tf.tidy(() => {
-        const tensor = tf.tensor([input]);
-        const prediction = model.predict(tensor);
-        return prediction.dataSync();
+    // START NEW STREAM
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 }
     });
 
-    let maxIndex = 0;
-    for(let i = 1; i < probs.length; i++){
-        if(probs[i] > probs[maxIndex]) maxIndex = i;
-    }
+    video.srcObject = stream;
 
-    currentPrediction = labels[maxIndex];
-    currentConfidence = probs[maxIndex];
+    await new Promise(resolve => {
+        video.onloadedmetadata = () => resolve();
+    });
 
-    // ----------------------------
-    // STABLE AUTO-CONFIRM LOGIC
-    // ----------------------------
-    if(currentConfidence >= AUTO_CONFIRM_THRESHOLD){
-        if(currentPrediction === lastStablePrediction){
-            // already tracking, check if stable long enough
-            if(!autoConfirmInProgress && Date.now() - stableStartTime >= STABLE_DELAY){
-                autoConfirmInProgress = true;
-                confirmLetter();
-                // reset timer for next auto-confirm
-                setTimeout(()=>{ autoConfirmInProgress = false; }, 100);
-                stableStartTime = Date.now(); 
+    await video.play();
+
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+
+    // CREATE HANDS ONLY ONCE
+    if (!hands) {
+        hands = new Hands({
+            locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.2,
+            minTrackingConfidence: 0.5
+        });
+
+        let lastStablePrediction = "";
+        let stableStartTime = null;
+        const AUTO_CONFIRM_THRESHOLD = 0.8;
+        const STABLE_DELAY = 750;
+
+        hands.onResults((results) => {
+            if (!isRunning || !ctx || !canvas) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                lastStablePrediction = "";
+                stableStartTime = null;
+                resetAutoConfirmProgress();
+                return;
             }
-        } else {
-            // new prediction, start tracking
-            lastStablePrediction = currentPrediction;
-            stableStartTime = Date.now();
+
+            ctx.save();
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+
+            for (const landmarks of results.multiHandLandmarks) {
+                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: "#ff0000", lineWidth: 4 });
+                drawLandmarks(ctx, landmarks, { color: "#00ff00", lineWidth: 2, radius: 4 });
+            }
+
+            ctx.restore();
+
+            const landmarks = results.multiHandLandmarks[0];
+            const input = [];
+            landmarks.forEach(p => input.push(p.x, p.y, p.z));
+
+            const probs = tf.tidy(() => {
+                const tensor = tf.tensor([input]);
+                const prediction = model.predict(tensor);
+                return prediction.dataSync();
+            });
+
+            let maxIndex = 0;
+            for (let i = 1; i < probs.length; i++) {
+                if (probs[i] > probs[maxIndex]) maxIndex = i;
+            }
+
+            currentPrediction = labels[maxIndex];
+            currentConfidence = probs[maxIndex];
+
+if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
+    if (currentPrediction === lastStablePrediction) {
+        if (stableStartTime !== null) {
+            const elapsed = Date.now() - stableStartTime;
+            const progress = (elapsed / STABLE_DELAY) * 100;
+            setAutoConfirmProgress(progress);
+
+            if (!autoConfirmInProgress && elapsed >= STABLE_DELAY) {
+                autoConfirmInProgress = true;
+                setAutoConfirmProgress(100);
+                confirmLetter(true);
+
+                lastStablePrediction = "";
+                stableStartTime = null;
+                resetAutoConfirmProgress();
+            }
         }
     } else {
-        // confidence too low, reset
-        lastStablePrediction = "";
-        stableStartTime = null;
+        lastStablePrediction = currentPrediction;
+        stableStartTime = Date.now();
+        resetAutoConfirmProgress();
+    }
+} else {
+    lastStablePrediction = "";
+    stableStartTime = null;
+    resetAutoConfirmProgress();
+}
+
+            const container = document.getElementById("prediction-container");
+            if (container) {
+                for (let i = 0; i < probs.length; i++) {
+                    const row = container.children[i];
+                    if (!row) continue;
+
+                    const bar = row.querySelector(".bar");
+                    const percent = row.querySelector(".percent");
+                    const width = Math.round(probs[i] * 100) + "%";
+
+                    if (bar) bar.style.width = width;
+                    if (percent) percent.innerText = width;
+                    row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
+                }
+            }
+
+            const mostConfidentEl = document.getElementById("most-confident");
+            if (mostConfidentEl) {
+                mostConfidentEl.innerText = (currentConfidence >= 0.5)
+                    ? `Most Confident: ${currentPrediction} (${(currentConfidence * 100).toFixed(1)}%)`
+                    : "Most Confident: -";
+            }
+        });
+
+        handsReady = true;
     }
 
-    // ----------------------------
-    // UPDATE PREDICTION UI
-    // ----------------------------
     const container = document.getElementById("prediction-container");
-    for(let i = 0; i < probs.length; i++){
-        const row = container.children[i];
-        if(!row) continue;
-        const bar = row.querySelector(".bar");
-        const percent = row.querySelector(".percent");
-        const width = Math.round(probs[i]*100)+"%";
-        bar.style.width = width;
-        percent.innerText = width;
-        row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
+    if (container) {
+        container.innerHTML = "";
+
+        labels.forEach(label => {
+            const row = document.createElement("div");
+            row.classList.add("row");
+
+            row.innerHTML = `
+                <span class="label">${label}</span>
+                <div class="bar-container">
+                    <div class="bar" style="width:0%"></div>
+                </div>
+                <span class="percent">0%</span>
+            `;
+
+            container.appendChild(row);
+        });
     }
-
-    const mostConfidentEl = document.getElementById("most-confident");
-    mostConfidentEl.innerText = (currentConfidence >= 0.5)
-        ? `Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`
-        : "Most Confident: -";
-});
-
-
-
-
-
-camera = new Camera(video, {
-  onFrame: async () => {
-    if (isFrozen) return;
-    await hands.send({ image: video });
-  },
-  width: video.videoWidth,
-  height: video.videoHeight
-});
-
-await camera.start();
-
-camera.start();
-    // Show output box directly under webcam
-    const outputSection = document.querySelector(".output-section");
-    outputSection.style.marginTop = "10px";
-    const container = document.getElementById("prediction-container");
-container.innerHTML = "";
-
-labels.forEach(label => {
-    const row = document.createElement("div");
-    row.classList.add("row");
-
-    row.innerHTML = `
-        <span class="label">${label}</span>
-        <div class="bar-container">
-            <div class="bar" style="width:0%"></div>
-        </div>
-        <span class="percent">0%</span>
-    `;
-
-    container.appendChild(row);
-});
 
     isRunning = true;
 
+    camera = new Camera(video, {
+        onFrame: async () => {
+            if (!isRunning || isFrozen || !handsReady || !hands) return;
+            await hands.send({ image: video });
+        },
+        width: video.videoWidth || 640,
+        height: video.videoHeight || 480
+    });
+
+    await camera.start();
+
+    const outputSection = document.querySelector(".output-section");
+    if (outputSection) outputSection.style.marginTop = "10px";
 }
+
 
 // Stop function: stops webcam and removes view
 function stop() {
     if (!isRunning) return;
 
-    cancelAnimationFrame(animationId);
-
-    // Stop MediaPipe Camera
-    if (camera) {
-        camera.stop();
-        camera = null;
-    }
-
-    // Dispose hands instance
-    if (hands) {
-        hands.close();   // proper cleanup
-        hands = null;
-    }
-
     isRunning = false;
     isFrozen = false;
+    autoConfirmInProgress = false;
+    currentPrediction = "";
+    currentConfidence = 0;
 
-    // Reset buttons
+    cancelAnimationFrame(animationId);
+    resetAutoConfirmProgress();
+
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const freezeBtn = document.getElementById("freezeBtn");
@@ -315,23 +319,38 @@ function stop() {
         freezeBtn.innerText = "Freeze";
     }
 
-    // Clear canvas
-    if (ctx && canvas) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const predictionContainer = document.getElementById("prediction-container");
+    if (predictionContainer) {
+        Array.from(predictionContainer.children).forEach(row => {
+            const bar = row.querySelector(".bar");
+            const percent = row.querySelector(".percent");
+            if (bar) bar.style.width = "0%";
+            if (percent) percent.innerText = "0%";
+            row.style.fontWeight = "normal";
+        });
     }
 
-    // Remove video stream
+    if (camera) {
+        try {
+            camera.stop();
+        } catch (e) {}
+        camera = null;
+    }
+
     const videoEl = document.getElementById("webcam");
     if (videoEl && videoEl.srcObject) {
         videoEl.srcObject.getTracks().forEach(track => track.stop());
         videoEl.srcObject = null;
     }
 
-    // Reset most confident
-    const mostConfidentEl = document.getElementById("most-confident");
-    if (mostConfidentEl) mostConfidentEl.innerText = "Most Confident: -";
+    if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-autoConfirmInProgress = false;
+    const mostConfidentEl = document.getElementById("most-confident");
+    if (mostConfidentEl) {
+        mostConfidentEl.innerText = "Most Confident: -";
+    }
 }
 
 
@@ -360,8 +379,14 @@ btn.innerText = "Freeze";
 // =================================
 // CONFIRM LETTER
 // =================================
-function confirmLetter() {
+function confirmLetter(isAuto = false) {
+    resetAutoConfirmProgress();
+
     if (currentConfidence >= CONFIDENCE_THRESHOLD) {
+        if (isAuto) {
+            flashAutoConfirmBar();
+        }
+
         let letter = currentPrediction;
         if (!capsLock) letter = letter.toLowerCase();
         typeLetter(letter);
@@ -370,27 +395,25 @@ function confirmLetter() {
             performUniversalTranslate();
         }
 
-        // RESET PREDICTIONS AFTER SHORT DELAY
         const container = document.getElementById("prediction-container");
         setTimeout(() => {
             currentPrediction = "";
             currentConfidence = 0;
-            if(container){
+            if (container) {
                 Array.from(container.children).forEach(row => {
                     const bar = row.querySelector(".bar");
                     const percent = row.querySelector(".percent");
-                    if(bar) bar.style.width = "0%";
-                    if(percent) percent.innerText = "0%";
+                    if (bar) bar.style.width = "0%";
+                    if (percent) percent.innerText = "0%";
                     row.style.fontWeight = "normal";
                 });
             }
-        }, 200); // adjust here
+        }, 200);
 
-        // AUTO-CONFIRM COOLDOWN
         autoConfirmInProgress = true;
-        setTimeout(() => { 
-            autoConfirmInProgress = false; 
-        }, 500); // adjust here
+        setTimeout(() => {
+            autoConfirmInProgress = false;
+        }, 500);
     }
 }
 
@@ -517,11 +540,47 @@ document.addEventListener("keydown", function(event) {
 let isTranslating = false;
 let currentMode = "universal";
 let isFrozen = false;
+let handsReady = false;
 
+function setAutoConfirmProgress(percent){
+    const bar = document.getElementById("auto-confirm-bar");
+    if(bar){
+        bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+    }
+}
 
+function resetAutoConfirmProgress(){
+    setAutoConfirmProgress(0);
 
+    const bar = document.getElementById("auto-confirm-bar");
+    if (bar) {
+        bar.style.opacity = autoConfirmEnabled ? "1" : "0.35";
+    }
+}
 
+function flashAutoConfirmBar() {
+    const bar = document.getElementById("auto-confirm-bar");
+    if (!bar) return;
 
+    bar.classList.remove("auto-confirm-flash");
+    void bar.offsetWidth;
+    bar.classList.add("auto-confirm-flash");
+
+    setTimeout(() => {
+        bar.classList.remove("auto-confirm-flash");
+    }, 350);
+}
+
+function toggleAutoConfirm() {
+    autoConfirmEnabled = !autoConfirmEnabled;
+
+    const btn = document.getElementById("autoConfirmBtn");
+    if (btn) {
+        btn.innerText = autoConfirmEnabled ? "Auto Confirm: ON" : "Auto Confirm: OFF";
+    }
+
+    resetAutoConfirmProgress();
+}
 
 // =================================
 // MODE SWITCH
@@ -581,8 +640,9 @@ root.innerHTML = `
 <button id="startBtn" onclick="init()">Start</button>
 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
+<button id="autoConfirmBtn" onclick="toggleAutoConfirm()">Auto Confirm: ON</button>
 <button id="helpBtn" onclick="help()">Help</button>
-            </div>
+</div>
 
             <div class="left-panel">
                 <h3>Predictions</h3>
@@ -598,11 +658,17 @@ root.innerHTML = `
     <canvas id="handCanvas"></canvas>
 </div>
 
-    <div id="most-confident"
-         style="margin-top:10px;font-size:18px;font-weight:600;text-align:center;">
-        Most Confident: -
-    </div>
+<div id="most-confident"
+     style="margin-top:10px;font-size:18px;font-weight:600;text-align:center;">
+    Most Confident: -
+</div>
 
+<div id="auto-confirm-wrap">
+    <div id="auto-confirm-label">Auto confirm</div>
+    <div id="auto-confirm-bar-bg">
+        <div id="auto-confirm-bar"></div>
+    </div>
+</div>
 </div>
 
 
@@ -1178,6 +1244,13 @@ isTranslating = false;
 
 window.addEventListener("DOMContentLoaded",()=>{
     setMode("universal");
+    setTimeout(() => {
+    const btn = document.getElementById("autoConfirmBtn");
+    if (btn) {
+        btn.innerText = autoConfirmEnabled ? "Auto Confirm: ON" : "Auto Confirm: OFF";
+    }
+    resetAutoConfirmProgress();
+}, 0);
 });
 </script>
 
