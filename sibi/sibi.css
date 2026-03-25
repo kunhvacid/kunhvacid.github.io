@@ -62,6 +62,7 @@ main {
     justify-content: center;
     align-items: center;
     gap: 25px;
+    flex-wrap: wrap; /* ADD */
 
     background: rgba(255,255,255,0.08);
     padding: 18px 30px;
@@ -141,8 +142,10 @@ main {
 #webcam-container{
 position:relative;
 width:200px;
+max-width: 320px; /* CHANGE from fixed 200px */
 height:200px;
 margin:auto;
+aspect-ratio: 1 / 1; /* ADD */
 }
 
 #webcam-container video{
@@ -224,7 +227,7 @@ pointer-events:none;
 }
 
 .controls button, button {
-    width: 125px;
+    width: auto; /* CHANGE */
     padding: 10px 22px;
     margin: 5px 10px 5px 0;
     border-radius: 10px;
@@ -235,6 +238,7 @@ pointer-events:none;
     background-color: #e5e5e5;
     color: #1e2f5c;
     transition: 0.2s ease;
+    min-width: 174px; /* ADD */
 }
 
 button:hover, .controls button:hover {
@@ -252,11 +256,12 @@ button:disabled {
     justify-content: flex-start;
     align-items: flex-start;
     gap: 20px;
+    flex-wrap: wrap; /* ADD */
 }
 
 /* Predictions panel (left) */
 .left-panel, .predictions {
-    flex: 0 0 300px;
+    flex: 1 1 280px; /* CHANGE */
     background-color: rgba(255, 255, 255, 0.08);
     padding: 20px;
     border-radius: 12px;
@@ -284,7 +289,8 @@ button:disabled {
 }
 
 #prediction-container .label {
-    width: 30px;
+    width: 25px;
+    flex-shrink: 0;
 }
 
 #prediction-container .bar-container {
@@ -306,6 +312,7 @@ button:disabled {
 #prediction-container .percent {
     width: 40px;
     text-align: right;
+    flex-shrink: 0;
 }
 
 /* Right panel (webcam + output) */
@@ -314,6 +321,7 @@ button:disabled {
     flex-direction: column;
     align-items: center; /* center horizontally */
     gap: 15px; /* small space between webcam and output */
+    flex: 2 1 500px; /* ADD */
     width: 100%;
 }
 
@@ -516,5 +524,82 @@ opacity:1;
     to{
         opacity:1;
         transform:scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+
+    main {
+        margin-top: 20px;
+        padding: 10px;
+    }
+
+    .header-title {
+        font-size: 22px;
+    }
+
+    .header-subtitle {
+        font-size: 16px;
+    }
+
+    .main-layout {
+        flex-direction: column; /* STACK */
+        align-items: stretch;
+    }
+
+    .left-panel {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .right-panel {
+        width: 100%;
+    }
+
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .controls button {
+        flex: 1 1 40%;
+        margin: 5px;
+    }
+
+    .output-buttons {
+        flex-wrap: wrap; /* ALLOW WRAP */
+    }
+
+    .output-buttons button {
+        flex: 1 1 40%;
+    }
+
+    .translate-group select {
+        width: 100%;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    #text-box, #morse-box {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .controls button,
+    .output-buttons button {
+        flex: 1 1 100%;
+    }
+
+    .translate-bar {
+        flex-direction: column;
+    }
+
+    .translate-arrow {
+        transform: rotate(90deg);
     }
 }

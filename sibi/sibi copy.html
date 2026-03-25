@@ -2,60 +2,40 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SignSmart</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    <link rel="icon" href="favicon.ico">
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>SignSmart</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+ <link rel="icon" href="favicon.ico">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="wonyoung from iz*one">
+ <meta property="og:description" content="kamu bapak TESSSSSSSSSSSS">
+ <meta property="og:url" content="https://kunhvacid.github.io/gallery.html">
+ <meta property="og:image" content="https://bunny-wp-pullzone-fwyeoqiqu8.b-cdn.net/wp-content/uploads/2024/05/ive-50.jpg">
+ <meta property="og:image:width" content="1280">
+ <meta property="og:image:height" content="720">
+ <meta name="twitter:card" content="summary_large_image">
+ <link rel="stylesheet" href="sibi.css" />
 
-
-       <!-- EMBED / SHARE PREVIEW -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="wonyoung from iz*one">
-  <meta property="og:description" content="kamu bapak TESSSSSSSSSSSS">
-  <meta property="og:url" content="https://kunhvacid.github.io/gallery.html">
-
-  <meta property="og:image" content="https://bunny-wp-pullzone-fwyeoqiqu8.b-cdn.net/wp-content/uploads/2024/05/ive-50.jpg">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="720">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <link rel="stylesheet" href="sibi.css" />
-  
 </head>
-
-
-
-
-
-
 <body>
 <main>
 
 <div class="container-card">
-
 <div class="header-title">SignSmart</div>
 <div class="header-subtitle">Translator Universal </div>
-
 <div style="text-align:center; margin:20px 0;">
-
-
 <div id="translator-root"></div>
-
-
 <div class="output-section">
 <div id="mode-container"></div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-
 
 <script>
 let model;
@@ -71,149 +51,139 @@ let isTyping = false;
 let canvas;
 let ctx;
 let autoConfirmInProgress = false;
-
+let autoConfirmEnabled = true;
 const CONFIDENCE_THRESHOLD = 0.50;
 
+
+
 async function init() {
-if (isRunning) return;
-
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-
-if(startBtn) startBtn.disabled = true;
-if(stopBtn) stopBtn.disabled = false;
-
-const freezeBtn = document.getElementById("freezeBtn");
-if(freezeBtn) freezeBtn.disabled = false;
-
-// LOAD TENSORFLOW MODEL
-if(!model){
-
-await tf.setBackend("webgl");
-await tf.ready();
-
-model = await tf.loadLayersModel("model/sign_model.json");
-
-const res = await fetch("model/labels.txt");
-const text = await res.text();
-labels = text.trim().split("\n");
-
+    
+    if (isRunning) return;
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const freezeBtn = document.getElementById("freezeBtn");
+    if (startBtn) startBtn.disabled = true;
+    if (stopBtn) stopBtn.disabled = false;
+    if (freezeBtn) freezeBtn.disabled = false;
+    currentPrediction = "";
+    currentConfidence = 0;
+    autoConfirmInProgress = false;
+    resetAutoConfirmProgress();
+    isFrozen = false;
+    if (!model) {
+        await tf.setBackend("webgl");
+        await tf.ready();
+        model = await tf.loadLayersModel("model/sign_model.json");
+        const res = await fetch("model/labels.txt");
+        const text = await res.text();
+        labels = text.trim().split("\n");
     }
 
-// Setup webcam
-const video = document.getElementById("webcam");
-video.style.transform = "scaleX(-1)";
+    const video = document.getElementById("webcam");
+    canvas = document.getElementById("handCanvas");
 
-const stream = await navigator.mediaDevices.getUserMedia({
-  video: { width: 640, height: 480 }
-});
-
-video.srcObject = stream;
-
-await new Promise(resolve => {
-  video.onloadedmetadata = () => {
-    video.play();
-    resolve();
-  };
-});
-
-canvas = document.getElementById("handCanvas");
-ctx = canvas.getContext("2d");
-
-currentPrediction = "";
-currentConfidence = 0;
-autoConfirmInProgress = false;
-resetAutoConfirmProgress();
-
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
-
-
-
-
-
-
-hands = new Hands({
-locateFile: file =>
-`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
-
-hands.setOptions({
-maxNumHands:1,
-modelComplexity:1,
-minDetectionConfidence:0.2,
-minTrackingConfidence:0.5
-});
-
-// ----------------------------
-// AUTO-CONFIRM SETTINGS
-// ----------------------------
-let lastStablePrediction = "";
-let stableStartTime = null;
-const AUTO_CONFIRM_THRESHOLD = 0.8; // confidence needed to start stable tracking
-const STABLE_DELAY = 750;           // ms needed to confirm adjust here
-
-// ----------------------------
-// HANDS ON RESULTS
-// ----------------------------
-hands.onResults((results) => {
-    if(!ctx || !canvas) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // reset if no hands detected
-    if(!results.multiHandLandmarks || results.multiHandLandmarks.length === 0){
-        lastStablePrediction = "";
-        stableStartTime = null;
-        resetAutoConfirmProgress();
+    if (!video || !canvas) {
+        if (startBtn) startBtn.disabled = false;
+        if (stopBtn) stopBtn.disabled = true;
+        if (freezeBtn) freezeBtn.disabled = true;
         return;
     }
 
-        ctx.save();
-    ctx.translate(canvas.width,0);
-    ctx.scale(-1,1);
+    ctx = canvas.getContext("2d");
+    video.style.transform = "scaleX(-1)";
+    video.muted = true;
+    video.setAttribute("autoplay", true);
+    video.setAttribute("playsinline", true);
 
-    // Draw landmarks as usual
-    for(const landmarks of results.multiHandLandmarks){
-        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color:"#ff0000", lineWidth:4});
-        drawLandmarks(ctx, landmarks, {color:"#00ff00", lineWidth:2, radius:4});
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
     }
-    ctx.restore();
 
-    // ----------------------------
-    // PREDICTION
-    // ----------------------------
-    const landmarks = results.multiHandLandmarks[0];
-    const input = [];
-    landmarks.forEach(p => { input.push(p.x, p.y, p.z); });
-
-    const probs = tf.tidy(() => {
-        const tensor = tf.tensor([input]);
-        const prediction = model.predict(tensor);
-        return prediction.dataSync();
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 }
     });
 
-    let maxIndex = 0;
-    for(let i = 1; i < probs.length; i++){
-        if(probs[i] > probs[maxIndex]) maxIndex = i;
-    }
+    video.srcObject = stream;
 
-    currentPrediction = labels[maxIndex];
-    currentConfidence = probs[maxIndex];
+    await new Promise(resolve => {
+        video.onloadedmetadata = () => resolve();
+    });
 
-    // ----------------------------
-    // STABLE AUTO-CONFIRM LOGIC
-    // ----------------------------
-if(currentConfidence >= AUTO_CONFIRM_THRESHOLD){
-    if(currentPrediction === lastStablePrediction){
-        if(stableStartTime !== null){
+    await video.play();
+
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+
+    if (!hands) {
+        hands = new Hands({
+            locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.2,
+            minTrackingConfidence: 0.5
+        });
+
+        let lastStablePrediction = "";
+        let stableStartTime = null;
+        const AUTO_CONFIRM_THRESHOLD = 0.8;
+        const STABLE_DELAY = 750;
+
+        hands.onResults((results) => {
+            if (!isRunning || !ctx || !canvas) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                lastStablePrediction = "";
+                stableStartTime = null;
+                resetAutoConfirmProgress();
+                return;
+            }
+
+            ctx.save();
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+
+            for (const landmarks of results.multiHandLandmarks) {
+                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: "#ff0000", lineWidth: 4 });
+                drawLandmarks(ctx, landmarks, { color: "#00ff00", lineWidth: 2, radius: 4 });
+            }
+
+            ctx.restore();
+
+            const landmarks = results.multiHandLandmarks[0];
+            const input = [];
+            landmarks.forEach(p => input.push(p.x, p.y, p.z));
+
+            const probs = tf.tidy(() => {
+                const tensor = tf.tensor([input]);
+                const prediction = model.predict(tensor);
+                return prediction.dataSync();
+            });
+
+            let maxIndex = 0;
+            for (let i = 1; i < probs.length; i++) {
+                if (probs[i] > probs[maxIndex]) maxIndex = i;
+            }
+
+            currentPrediction = labels[maxIndex];
+            currentConfidence = probs[maxIndex];
+
+if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
+    if (currentPrediction === lastStablePrediction) {
+        if (stableStartTime !== null) {
             const elapsed = Date.now() - stableStartTime;
             const progress = (elapsed / STABLE_DELAY) * 100;
             setAutoConfirmProgress(progress);
 
-            if(!autoConfirmInProgress && elapsed >= STABLE_DELAY){
+            if (!autoConfirmInProgress && elapsed >= STABLE_DELAY) {
                 autoConfirmInProgress = true;
                 setAutoConfirmProgress(100);
-                confirmLetter();
+                confirmLetter(true);
 
                 lastStablePrediction = "";
                 stableStartTime = null;
@@ -230,104 +200,82 @@ if(currentConfidence >= AUTO_CONFIRM_THRESHOLD){
     stableStartTime = null;
     resetAutoConfirmProgress();
 }
-    // ----------------------------
-    // UPDATE PREDICTION UI
-    // ----------------------------
-    const container = document.getElementById("prediction-container");
-    for(let i = 0; i < probs.length; i++){
-        const row = container.children[i];
-        if(!row) continue;
-        const bar = row.querySelector(".bar");
-        const percent = row.querySelector(".percent");
-        const width = Math.round(probs[i]*100)+"%";
-        bar.style.width = width;
-        percent.innerText = width;
-        row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
+
+            const container = document.getElementById("prediction-container");
+            if (container) {
+                for (let i = 0; i < probs.length; i++) {
+                    const row = container.children[i];
+                    if (!row) continue;
+
+                    const bar = row.querySelector(".bar");
+                    const percent = row.querySelector(".percent");
+                    const width = Math.round(probs[i] * 100) + "%";
+
+                    if (bar) bar.style.width = width;
+                    if (percent) percent.innerText = width;
+                    row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
+                }
+            }
+
+            const mostConfidentEl = document.getElementById("most-confident");
+            if (mostConfidentEl) {
+                mostConfidentEl.innerText = (currentConfidence >= 0.5)
+                    ? `Most Confident: ${currentPrediction} (${(currentConfidence * 100).toFixed(1)}%)`
+                    : "Most Confident: -";
+            }
+        });
+
+        handsReady = true;
     }
 
-    const mostConfidentEl = document.getElementById("most-confident");
-    mostConfidentEl.innerText = (currentConfidence >= 0.5)
-        ? `Most Confident: ${currentPrediction} (${(currentConfidence*100).toFixed(1)}%)`
-        : "Most Confident: -";
-});
-
-
-
-
-
-camera = new Camera(video, {
-  onFrame: async () => {
-    if (isFrozen) return;
-    await hands.send({ image: video });
-  },
-  width: video.videoWidth,
-  height: video.videoHeight
-});
-
-await camera.start();
-    // Show output box directly under webcam
-    const outputSection = document.querySelector(".output-section");
-    outputSection.style.marginTop = "10px";
     const container = document.getElementById("prediction-container");
-container.innerHTML = "";
+    if (container) {
+        container.innerHTML = "";
 
-labels.forEach(label => {
-    const row = document.createElement("div");
-    row.classList.add("row");
+        labels.forEach(label => {
+            const row = document.createElement("div");
+            row.classList.add("row");
 
-    row.innerHTML = `
-        <span class="label">${label}</span>
-        <div class="bar-container">
-            <div class="bar" style="width:0%"></div>
-        </div>
-        <span class="percent">0%</span>
-    `;
+            row.innerHTML = `
+                <span class="label">${label}</span>
+                <div class="bar-container">
+                    <div class="bar" style="width:0%"></div>
+                </div>
+                <span class="percent">0%</span>
+            `;
 
-    container.appendChild(row);
-});
+            container.appendChild(row);
+        });
+    }
 
     isRunning = true;
 
+    camera = new Camera(video, {
+        onFrame: async () => {
+            if (!isRunning || isFrozen || !handsReady || !hands) return;
+            await hands.send({ image: video });
+        },
+        width: video.videoWidth || 640,
+        height: video.videoHeight || 480
+    });
+
+    await camera.start();
+
+    const outputSection = document.querySelector(".output-section");
+    if (outputSection) outputSection.style.marginTop = "10px";
 }
 
-// Stop function: stops webcam and removes view
 function stop() {
     if (!isRunning) return;
 
-    cancelAnimationFrame(animationId);
-    resetAutoConfirmProgress();
-
+    isRunning = false;
+    isFrozen = false;
     autoConfirmInProgress = false;
     currentPrediction = "";
     currentConfidence = 0;
 
-    const predictionContainer = document.getElementById("prediction-container");
-    if (predictionContainer) {
-        Array.from(predictionContainer.children).forEach(row => {
-            const bar = row.querySelector(".bar");
-            const percent = row.querySelector(".percent");
-            if (bar) bar.style.width = "0%";
-            if (percent) percent.innerText = "0%";
-            row.style.fontWeight = "normal";
-        });
-    }
-
-    // Stop camera first
-    if (camera) {
-        camera.stop();
-        camera = null;
-    }
-
-    // Close hands after camera stops
-    if (hands) {
-        try {
-            hands.close();
-        } catch (e) {}
-        hands = null;
-    }
-
-    isRunning = false;
-    isFrozen = false;
+    cancelAnimationFrame(animationId);
+    resetAutoConfirmProgress();
 
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
@@ -340,30 +288,39 @@ function stop() {
         freezeBtn.innerText = "Freeze";
     }
 
+    const predictionContainer = document.getElementById("prediction-container");
+    if (predictionContainer) {
+        Array.from(predictionContainer.children).forEach(row => {
+            const bar = row.querySelector(".bar");
+            const percent = row.querySelector(".percent");
+            if (bar) bar.style.width = "0%";
+            if (percent) percent.innerText = "0%";
+            row.style.fontWeight = "normal";
+        });
+    }
+
+    if (camera) {
+        try {
+            camera.stop();
+        } catch (e) {}
+        camera = null;
+    }
+
+    const videoEl = document.getElementById("webcam");
+    if (videoEl && videoEl.srcObject) {
+        videoEl.srcObject.getTracks().forEach(track => track.stop());
+        videoEl.srcObject = null;
+    }
+
     if (ctx && canvas) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    const videoEl = document.getElementById("webcam");
-    if (videoEl) {
-        if (videoEl.srcObject) {
-            videoEl.srcObject.getTracks().forEach(track => track.stop());
-            videoEl.srcObject = null;
-        }
-        videoEl.pause();
-        videoEl.removeAttribute("src");
-        videoEl.load();
-    }
-
     const mostConfidentEl = document.getElementById("most-confident");
-    if (mostConfidentEl) mostConfidentEl.innerText = "Most Confident: -";
+    if (mostConfidentEl) {
+        mostConfidentEl.innerText = "Most Confident: -";
+    }
 }
-
-
-
-// =================================
-// FREEZE CAMERA
-// =================================
 
 function toggleFreeze(){
 
@@ -379,15 +336,14 @@ btn.innerText = "Freeze";
 
 }
 
-
-
-
-// =================================
-// CONFIRM LETTER
-// =================================
-function confirmLetter() {
+function confirmLetter(isAuto = false) {
     resetAutoConfirmProgress();
+
     if (currentConfidence >= CONFIDENCE_THRESHOLD) {
+        if (isAuto) {
+            flashAutoConfirmBar();
+        }
+
         let letter = currentPrediction;
         if (!capsLock) letter = letter.toLowerCase();
         typeLetter(letter);
@@ -396,33 +352,29 @@ function confirmLetter() {
             performUniversalTranslate();
         }
 
-        // RESET PREDICTIONS AFTER SHORT DELAY
         const container = document.getElementById("prediction-container");
         setTimeout(() => {
             currentPrediction = "";
             currentConfidence = 0;
-            if(container){
+            if (container) {
                 Array.from(container.children).forEach(row => {
                     const bar = row.querySelector(".bar");
                     const percent = row.querySelector(".percent");
-                    if(bar) bar.style.width = "0%";
-                    if(percent) percent.innerText = "0%";
+                    if (bar) bar.style.width = "0%";
+                    if (percent) percent.innerText = "0%";
                     row.style.fontWeight = "normal";
                 });
             }
-        }, 200); // adjust here
+        }, 200);
 
-        // AUTO-CONFIRM COOLDOWN
         autoConfirmInProgress = true;
-        setTimeout(() => { 
-            autoConfirmInProgress = false; 
-        }, 500); // adjust here
+        setTimeout(() => {
+            autoConfirmInProgress = false;
+        }, 500);
     }
 }
 
-
-
-    function addSpace() {
+function addSpace() {
     typeLetter(" ");
 
     if(currentMode === "universal"){
@@ -441,18 +393,12 @@ function backspace(){
     }
 }
 
-
-    function toggleCaps() {
+function toggleCaps() {
     capsLock = !capsLock;
 
     const btn = document.getElementById("caps-btn");
     btn.innerText = capsLock ? "Caps:ON" : "Caps:OFF";
 }
-
-
-
-
-
 
     function typeLetter(letter) {
     if (isTyping) return;
@@ -514,32 +460,7 @@ document.addEventListener("keydown", function(event) {
 </main>
 <script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================================
 // GLOBAL
-// =================================
-
 let isTranslating = false;
 let currentMode = "universal";
 let isFrozen = false;
@@ -554,14 +475,37 @@ function setAutoConfirmProgress(percent){
 
 function resetAutoConfirmProgress(){
     setAutoConfirmProgress(0);
+
+    const bar = document.getElementById("auto-confirm-bar");
+    if (bar) {
+        bar.style.opacity = autoConfirmEnabled ? "1" : "0.35";
+    }
 }
 
+function flashAutoConfirmBar() {
+    const bar = document.getElementById("auto-confirm-bar");
+    if (!bar) return;
 
+    bar.classList.remove("auto-confirm-flash");
+    void bar.offsetWidth;
+    bar.classList.add("auto-confirm-flash");
 
+    setTimeout(() => {
+        bar.classList.remove("auto-confirm-flash");
+    }, 350);
+}
 
-// =================================
-// MODE SWITCH
-// =================================
+function toggleAutoConfirm() {
+    autoConfirmEnabled = !autoConfirmEnabled;
+
+    const btn = document.getElementById("autoConfirmBtn");
+    if (btn) {
+        btn.innerText = autoConfirmEnabled ? "Auto Confirm: ON" : "Auto Confirm: OFF";
+    }
+
+    resetAutoConfirmProgress();
+}
+
 function setMode(mode){
     currentMode = mode;
     const root = document.getElementById("translator-root");
@@ -597,8 +541,6 @@ root.innerHTML = `
     </div>
 </div>
 
-
-
     <!-- TEXT / MORSE INPUT -->
     <div id="universal-text-input"
          style="display:none;text-align:center;margin-top:20px;">
@@ -606,8 +548,6 @@ root.innerHTML = `
             style="width:100%;height:120px;padding:10px;border-radius:8px;border:none;"
             placeholder="Input"></textarea>
     </div>
-
-
 
     <!-- SIGN ENGINE -->
     <div id="universal-sign-engine" style="display:none;">
@@ -617,8 +557,9 @@ root.innerHTML = `
 <button id="startBtn" onclick="init()">Start</button>
 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
+<button id="autoConfirmBtn" onclick="toggleAutoConfirm()">Auto Confirm: ON</button>
 <button id="helpBtn" onclick="help()">Help</button>
-            </div>
+</div>
 
             <div class="left-panel">
                 <h3>Predictions</h3>
@@ -647,13 +588,6 @@ root.innerHTML = `
 </div>
 </div>
 
-
-
-                
-
-
-
-
                 <!-- DETECTED TEXT (this swaps with universal-output) -->
 <div class="output-section bordered-panel" id="detected-output">
     <h3 id="detected-label">Detected Text</h3>
@@ -669,15 +603,11 @@ root.innerHTML = `
         <button onclick="confirmLetter()">Confirm</button>
         <button onclick="backspace()">Backspace</button>
         
-    </div>
-</div>
-
+                     </div>
+                </div>
             </div>
         </div>
     </div>
-
-
-
 
     <!-- UNIVERSAL OUTPUT (this will move) -->
     <div id="universal-output"
@@ -760,9 +690,6 @@ if(sound) sound.addEventListener("change",()=>{morseSound = sound.checked});
 }
 }
 
-// =================================
-// TEXT → SIGN
-// =================================
 function renderAlphabet(text){
 
     const container = document.getElementById("universal-output");
@@ -800,9 +727,6 @@ function clearAlphabet(){
     document.getElementById("alphabet-output").innerHTML = "";
 }
 
-// =================================
-// MORSE MAP
-// =================================
 const MORSE = {
 A:".-",B:"-...",C:"-.-.",D:"-..",E:".",
 F:"..-.",G:"--.",H:"....",I:"..",J:".---",
@@ -819,16 +743,6 @@ const REVERSE_MORSE = {};
 for(let key in MORSE){
     REVERSE_MORSE[MORSE[key]] = key;
 }
-
-
-
-
-
-
-
-// =================================
-// TEXT TO SPEECH
-// =================================
 
 let speaking = false;
 let speechUtterance;
@@ -864,10 +778,6 @@ speaking = false;
 updateAudioButton();
 
 }
-
-// =================================
-// MORSE PLAYER
-// =================================
 
 let audioCtx;
 let morsePlaying = false;
@@ -951,7 +861,6 @@ time += 0.5;
 
 }
 
-/* auto reset when finished */
 const duration = (time - audioCtx.currentTime) * 1000;
 
 setTimeout(()=>{
@@ -959,11 +868,6 @@ setTimeout(()=>{
 }, duration);
 
 }
-
-
-// =================================
-// MORSE FLASH
-// =================================
 
 function flash(start, duration){
 
@@ -984,14 +888,6 @@ lamp.classList.remove("on");
 
 }
 
-
-
-
-
-
-// =================================
-// PLAY MORSE ON CLICK
-// =================================
 document.addEventListener("click",function(e){
 
 if(!e.target.closest("#play-morse-btn")) return;
@@ -999,7 +895,6 @@ if(!e.target.closest("#play-morse-btn")) return;
 const from = document.getElementById("translate-from").value;
 const to = document.getElementById("translate-to").value;
 
-/* STOP logic */
 if(morsePlaying){
 stopMorse();
 return;
@@ -1010,7 +905,6 @@ stopSpeech();
 return;
 }
 
-/* TEXT MODES → use TTS */
 if((from==="sign" && to==="text") || (from==="text" && to==="sign")){
 
 let text="";
@@ -1032,7 +926,6 @@ speakText(text);
 return;
 }
 
-/* MORSE MODES */
 let morseText="";
 
 const morseBox=document.getElementById("morse-box");
@@ -1049,11 +942,6 @@ playMorse(morseText);
 }
 
 });
-
-
-// =================================
-// AUDIO BUTTON MODE
-// =================================
 
 function updateAudioButton(){
 
@@ -1075,12 +963,6 @@ btn.innerHTML=`<i class="fa-solid fa-volume-high"></i> Play <span id="morse-lamp
 
 }
 
-
-
-
-// =================================
-// UNIVERSAL TRANSLATE
-// =================================
 function performUniversalTranslate(){
 
 updateAudioButton();
@@ -1104,9 +986,6 @@ if(from === "sign"){
     const area = document.getElementById("universal-input");
     input = area ? area.value.trim() : "";
 }
-
-// ===== SWAP POSITION LOGIC =====
-// ===== SAFE VISIBILITY LOGIC =====
 
 if(from==="sign" && to==="morse"){
     morseOutput.style.display = "block";
@@ -1142,11 +1021,6 @@ else{
     if(textBox) textBox.style.display = "block";
 }
 
-
-
-
-
-
 if(!input){
     universalOutput.innerHTML = "";
     if(morseBox) morseBox.value = "";
@@ -1154,7 +1028,6 @@ if(!input){
     return;
 }
 
-// TEXT or SIGN → MORSE
 if((from==="text" || from==="sign") && to==="morse"){
     const text = input.toUpperCase();
 
@@ -1172,7 +1045,6 @@ if(from === "sign" && morseBox){
     return;
 }
 
-// MORSE → TEXT
 if(from==="morse" && to==="text"){
     const text = input
         .split("/")
@@ -1187,7 +1059,6 @@ if(from==="morse" && to==="text"){
     return;
 }
 
-// MORSE → SIGN
 if(from==="morse" && to==="sign"){
     const text = input
         .split("/")
@@ -1202,14 +1073,12 @@ if(from==="morse" && to==="sign"){
     return;
 }
 
-// TEXT → SIGN
 if(from==="text" && to==="sign"){
     renderAlphabet(input);
     isTranslating = false;
     return;
 }
 
-// SIGN → TEXT
 if(from==="sign" && to==="text"){
     isTranslating = false;
     return;
@@ -1220,16 +1089,15 @@ isTranslating = false;
 
 window.addEventListener("DOMContentLoaded",()=>{
     setMode("universal");
+    setTimeout(() => {
+    const btn = document.getElementById("autoConfirmBtn");
+    if (btn) {
+        btn.innerText = autoConfirmEnabled ? "Auto Confirm: ON" : "Auto Confirm: OFF";
+    }
+    resetAutoConfirmProgress();
+}, 0);
 });
 </script>
-
-
-
-
-
-
-
-
 
 <div id="help-overlay">
     <div class="help-box">
@@ -1253,13 +1121,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 function closeHelp(){
     document.getElementById("help-overlay").style.display = "none";
 }
+
 </script>
-
-
-
-
-
-
-
 </body>
 </html>
