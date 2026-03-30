@@ -498,10 +498,7 @@ function flashAutoConfirmBar() {
 function toggleAutoConfirm() {
     autoConfirmEnabled = !autoConfirmEnabled;
 
-    const btn = document.getElementById("autoConfirmBtn");
-    if (btn) {
-        btn.innerText = autoConfirmEnabled ? "Auto Confirm: ON" : "Auto Confirm: OFF";
-    }
+
 
     resetAutoConfirmProgress();
 }
@@ -558,7 +555,6 @@ root.innerHTML = `
 <button id="startBtn" onclick="init()">Start</button>
 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
-<button id="autoConfirmBtn" onclick="toggleAutoConfirm()">Auto Confirm: ON</button>
 <button id="helpBtn" onclick="help()">Tutorial</button>
 <button id="settings-btn" class="settings-btn">⚙</button>
 
@@ -586,8 +582,16 @@ root.innerHTML = `
 <label>
   Theme
   <select id="theme-select">
-    <option value="light">Light</option>
-    <option value="dark">Dark</option>
+
+<option value="light">Light</option>
+<option value="red">Red</option>
+<option value="orange">Orange</option>
+<option value="yellow">Yellow</option>
+<option value="green">Green</option>
+<option value="blue">Blue</option>
+<option value="purple">Purple</option>
+<option value="dark">Dark</option>
+
   </select>
 </label>
     </div>
