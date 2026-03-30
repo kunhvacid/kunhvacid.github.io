@@ -129,7 +129,7 @@ async function init() {
 
         let lastStablePrediction = "";
         let stableStartTime = null;
-        const AUTO_CONFIRM_THRESHOLD = 0.8;
+        const AUTO_CONFIRM_THRESHOLD = 0.75; //adjust
         const STABLE_DELAY = 750;
 
         hands.onResults((results) => {
@@ -558,7 +558,7 @@ root.innerHTML = `
 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
 <button id="autoConfirmBtn" onclick="toggleAutoConfirm()">Auto Confirm: ON</button>
-<button id="helpBtn" onclick="help()">Help</button>
+<button id="helpBtn" onclick="help()">Tutorial</button>
 </div>
 
             <div class="left-panel">
@@ -601,6 +601,7 @@ root.innerHTML = `
 
     <div class="output-buttons">
         <button onclick="confirmLetter()">Confirm</button>
+        <button onclick="addSpace()">Space</button>
         <button onclick="backspace()">Backspace</button>
         
                      </div>
@@ -1102,14 +1103,21 @@ window.addEventListener("DOMContentLoaded",()=>{
 <div id="help-overlay">
     <div class="help-box">
         <button class="help-close" onclick="closeHelp()">×</button>
-        <h2>Help</h2>
+        <h2>How to use</h2>
         <p>
-        This is the SignSmart translator help panel.<br><br>
-        • Use <b>Start</b> to activate the webcam.<br>
-        • Show a sign to the camera.<br>
-        • Press <b>Confirm</b> to add the detected letter.<br>
-        • Use <b>Space</b> or <b>Backspace</b> to edit text.<br><br>
-        This website is still WIP. There are lots of bugs. Things are not final and may subject to change.
+        1. Press the "<b>START</b>" button.<br>
+        2. If there is a use camer permission pop up, press "<b>Allow</b>".<br>
+        3. Show a sign to the camera (must be Sistem Isyarat Bahasa Indonesia)<br>
+        4. The letter will automatically be translated!<br><br>
+        This website must use your webcam.<br><br>
+        - Use <b>Space</b> or <b>Backspace</b> buttons (or your keyboard) to edit text.<br>
+        - You can disable the auto confirm by clicking its button if you don't like it.<br>
+        - To translate manually, press the "<b>Confirm</b>" button (or enter on your keyboard).<br>
+
+        - To change translation mode, simply click the options above the tutorial button.<br><br>
+        Note:<br>J uses the letter I, tilted 135 degrees to the right (facing bottom-left/the battery icon on your taskbar)<br>
+        For Z, point your finger upwards and tilt 45 degrees to the left.<br><br><br><br>
+        Powered by Google's <b>MediaPipe Hands</b> engine, check them out <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank" style="color: #FFFFFF;">here</a>
         </p>
     </div>
 </div>

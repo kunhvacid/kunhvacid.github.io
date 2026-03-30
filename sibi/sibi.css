@@ -505,15 +505,31 @@ opacity:1;
     animation:helpFade 0.25s ease;
 }
 
-.help-close{
-    position:absolute;
-    top:10px;
-    right:15px;
-    font-size:20px;
-    background:none;
-    border:none;
-    color:white;
-    cursor:pointer;
+.help-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+
+    width: 32px;
+    height: 32px;
+    min-width: unset;      /* override global */
+    padding: 0;            /* remove large padding */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+    line-height: 1;
+
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.help-close:hover {
+    transform: scale(1.1);
 }
 
 @keyframes helpFade{
