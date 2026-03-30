@@ -515,6 +515,7 @@ function setMode(mode){
 if(mode === "universal"){
 
 root.innerHTML = `
+
 <div style="max-width:1000px;margin:auto;">
 
     <div class="translate-bar">
@@ -559,6 +560,40 @@ root.innerHTML = `
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
 <button id="autoConfirmBtn" onclick="toggleAutoConfirm()">Auto Confirm: ON</button>
 <button id="helpBtn" onclick="help()">Tutorial</button>
+<button id="settings-btn" class="settings-btn">⚙</button>
+
+<div id="settings-popup" class="help-overlay">
+  <div class="help-box">
+<div class="settings-header">
+    <h2>Settings</h2>
+    <button class="help-close" id="close-settings">&times;</button>
+</div>
+
+    <div class="settings-content">
+      <label>
+        Auto Confirm
+        <button id="autoConfirmToggle">ON</button>
+      </label>
+
+      <label>
+        Language
+        <select id="lang-select">
+          <option value="en">English</option>
+          <option value="id">Indonesia</option>
+        </select>
+      </label>
+
+<label>
+  Theme
+  <select id="theme-select">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</label>
+    </div>
+  </div>
+</div>
+
 </div>
 
             <div class="left-panel">
@@ -687,7 +722,7 @@ if(sound) sound.addEventListener("change",()=>{morseSound = sound.checked});
     to.addEventListener("change", performUniversalTranslate);
 
 }, 50);
-
+setTimeout(initSettings, 0);
 }
 }
 
@@ -1098,6 +1133,7 @@ window.addEventListener("DOMContentLoaded",()=>{
     resetAutoConfirmProgress();
 }, 0);
 });
+
 </script>
 
 <div id="help-overlay">
@@ -1129,6 +1165,145 @@ window.addEventListener("DOMContentLoaded",()=>{
 function closeHelp(){
     document.getElementById("help-overlay").style.display = "none";
 }
+
+
+
+
+
+const TEXT = {
+    en: {
+        title: "SignSmart",
+        subtitle: "Universal Translator",
+        start: "Start",
+        stop: "Stop",
+        freeze: "Freeze",
+        tutorial: "Tutorial",
+        detected: "Detected Text",
+        confirm: "Confirm",
+        space: "Space",
+        backspace: "Backspace"
+    },
+    id: {
+        title: "SignSmart",
+        subtitle: "Penerjemah Universal",
+        start: "Mulai",
+        stop: "Stop",
+        freeze: "Bekukan",
+        tutorial: "Tutorial",
+        detected: "Teks Terdeteksi",
+        confirm: "Konfirmasi",
+        space: "Spasi",
+        backspace: "Hapus"
+    }
+};
+
+// translation
+function applyLanguage(lang){
+    const t = TEXT[lang];
+
+    document.querySelector(".header-title").innerText = t.title;
+    document.querySelector(".header-subtitle").innerText = t.subtitle;
+
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const freezeBtn = document.getElementById("freezeBtn");
+    const helpBtn = document.getElementById("helpBtn");
+
+    if(startBtn) startBtn.innerText = t.start;
+    if(stopBtn) stopBtn.innerText = t.stop;
+    if(freezeBtn) freezeBtn.innerText = t.freeze;
+    if(helpBtn) helpBtn.innerText = t.tutorial;
+
+    const detected = document.getElementById("detected-label");
+    if(detected) detected.innerText = t.detected;
+
+    const buttons = document.querySelectorAll(".output-buttons button");
+    if(buttons[0]) buttons[0].innerText = t.confirm;
+    if(buttons[1]) buttons[1].innerText = t.space;
+    if(buttons[2]) buttons[2].innerText = t.backspace;
+}
+
+
+function initSettings(){
+
+    const settingsBtn = document.querySelector("#settings-btn");
+    const langSelect = document.getElementById("lang-select");
+    const themeBtn = document.getElementById("theme-toggle");
+    const autoToggle = document.getElementById("autoConfirmToggle");
+    const themeSelect = document.getElementById("theme-select");
+
+    const popup = document.getElementById("settings-popup");
+    const closeBtn = document.getElementById("close-settings");
+
+    if(!popup) return; // prevent null crash
+
+    // prevent duplicate binding
+    if(popup.dataset.ready === "true") return;
+    popup.dataset.ready = "true";
+
+    if(!settingsBtn) return;
+
+    // OPEN
+    settingsBtn.onclick = () => {
+        popup.style.display = "flex";
+    };
+
+    // CLOSE (X button)
+    closeBtn.onclick = () => {
+        popup.style.display = "none";
+    };
+
+    // CLOSE (click outside)
+    popup.onclick = (e) => {
+        if(e.target === popup){
+            popup.style.display = "none";
+        }
+    };
+
+    // language
+    const savedLang = localStorage.getItem("lang") || "en";
+    langSelect.value = savedLang;
+    applyLanguage(savedLang);
+
+    langSelect.onchange = (e)=>{
+        const lang = e.target.value;
+        localStorage.setItem("lang", lang);
+        applyLanguage(lang);
+    };
+
+    // theme
+if(themeSelect){
+    themeSelect.value = localStorage.getItem("theme") || "light";
+
+    themeSelect.addEventListener("change", () => {
+        const theme = themeSelect.value;
+        document.body.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+    });
+}
+
+const savedTheme = localStorage.getItem("theme") || "light";
+document.body.setAttribute("data-theme", savedTheme);
+
+    // auto confirm (settings button)
+    autoToggle.innerText = autoConfirmEnabled ? "ON" : "OFF";
+
+    autoToggle.onclick = ()=>{
+        autoConfirmEnabled = !autoConfirmEnabled;
+        autoToggle.innerText = autoConfirmEnabled ? "ON" : "OFF";
+
+        const mainBtn = document.getElementById("autoConfirmBtn");
+        if(mainBtn){
+            mainBtn.innerText = autoConfirmEnabled
+                ? "Auto Confirm: ON"
+                : "Auto Confirm: OFF";
+        }
+
+        resetAutoConfirmProgress();
+    };
+}
+
+
 
 </script>
 </body>
