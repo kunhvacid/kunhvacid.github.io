@@ -138,7 +138,7 @@ body, .settings-content, .tutorial-content {
     gap: 25px;
     flex-wrap: wrap; /* ADD */
 
-    background: rgba(255,255,255,0.08);
+    background: var(--panel);
     padding: 18px 30px;
     border-radius: 16px;
     width: fit-content;
@@ -646,6 +646,44 @@ opacity:1;
     }
 }
 
+#settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 45px;
+    height: 45px;
+    min-width: unset;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel);   /* instead of white */
+    color: var(--text);         /* controls SVG via currentColor */
+    border: none;
+}
+
+
+/* Control icon size + theme color */
+#settings-btn .gear-icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;     /* FIX */
+    color: var(--text);     /* ensures theme applies */
+    display: block;
+}
+
+/* Optional smooth rotation without shifting layout */
+#settings-btn:hover .gear-icon {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+#settings-btn:active .gear-icon {
+    transform: rotate(180deg) scale(0.9);
+}
+
 .settings-header {
     display: flex;
     justify-content: space-between;
@@ -666,24 +704,8 @@ opacity:1;
 }
 
 
-/* 4. Remove spacing issue from controls since settings is no longer inside flow */
 .controls #settings-btn {
     margin: 0;
-}
-
-#settings-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    width: 45px;
-    height: 45px;
-    min-width: unset;
-    padding: 0;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #settings-popup{
@@ -739,6 +761,136 @@ select {
     gap: 10px;
 }
 
+/* FIX: Auto Confirm toggle button */
+.settings-content input[type="checkbox"] {
+    width: auto;
+    min-width: unset;
+    margin: 0;
+    transform: scale(1.2);
+}
+
+/* FIX: Prevent global button styles from breaking layout inside settings */
+.settings-content button {
+    width: auto;
+    min-width: unset;
+    margin: 0;
+    padding: 6px 10px;
+}
+
+/* FIX: Labels spacing so they don’t stretch weirdly */
+.settings-content label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.settings-item {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    background: var(--panel);
+    transition: 0.2s;
+}
+
+.settings-item:hover {
+    opacity: 0.8;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--panel);
+    color: var(--text);
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+}
+
+#close-credits {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Toggle container */
+.toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Hide default checkbox */
+.toggle input {
+    display: none;
+}
+
+/* Slider base */
+.toggle .slider {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    background: var(--bg);
+    border-radius: 999px;
+    transition: 0.3s;
+}
+
+/* Circle */
+.toggle .slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    top: 3px;
+    background: var(--text);
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+/* ON state */
+.toggle input:checked + .slider {
+    background: #4cd964; /* iOS green */
+}
+
+/* Move circle when ON */
+.toggle input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* Smooth interaction */
+.toggle .slider:active::before {
+    width: 24px;
+}
+
+/* Close button follows theme text color */
+.help-close {
+    color: var(--text);
+}
+
+/* Ensure hover also stays consistent */
+.help-close:hover {
+    color: var(--text);
+    opacity: 0.8;
+}
+
+/* Optional: make sure all close buttons inside panels inherit properly */
+.help-box .help-close {
+    color: var(--text);
+}
 
 @media (max-width: 768px) {
 
@@ -837,3 +989,20 @@ select {
         transform: rotate(90deg);
     }
 }
+
+/* FIX: Settings close button (mobile + global override) */
+.help-close {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: unset !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: none !important;
+    border: none;
+}
+

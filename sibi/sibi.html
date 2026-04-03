@@ -503,6 +503,8 @@ function toggleAutoConfirm() {
     resetAutoConfirmProgress();
 }
 
+
+
 function setMode(mode){
     currentMode = mode;
     const root = document.getElementById("translator-root");
@@ -556,7 +558,11 @@ root.innerHTML = `
 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
 <button id="helpBtn" onclick="help()">Tutorial</button>
-<button id="settings-btn" class="settings-btn">⚙</button>
+<button id="settings-btn" class="settings-btn">
+    <svg class="gear-icon" viewBox="0 0 24 24">
+    <path d="M19.14,12.94a7.49,7.49,0,0,0,.05-.94,7.49,7.49,0,0,0-.05-.94l2.03-1.58a.5.5,0,0,0,.12-.64l-1.92-3.32a.5.5,0,0,0-.6-.22l-2.39.96a7.28,7.28,0,0,0-1.63-.94l-.36-2.54A.5.5,0,0,0,13.9,2H10.1a.5.5,0,0,0-.49.42L9.25,4.96a7.28,7.28,0,0,0-1.63.94l-2.39-.96a.5.5,0,0,0-.6.22L2.71,8.48a.5.5,0,0,0,.12.64L4.86,10.7a7.49,7.49,0,0,0-.05.94,7.49,7.49,0,0,0,.05.94L2.83,14.16a.5.5,0,0,0-.12.64l1.92,3.32a.5.5,0,0,0,.6.22l2.39-.96a7.28,7.28,0,0,0,1.63.94l.36,2.54a.5.5,0,0,0,.49.42h3.8a.5.5,0,0,0,.49-.42l.36-2.54a7.28,7.28,0,0,0,1.63-.94l2.39.96a.5.5,0,0,0,.6-.22l1.92-3.32a.5.5,0,0,0-.12-.64ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
+  </svg>
+  </button>
 
 <div id="settings-popup" class="help-overlay">
   <div class="help-box">
@@ -566,10 +572,11 @@ root.innerHTML = `
 </div>
 
     <div class="settings-content">
-      <label>
-        Auto Confirm
-        <button id="autoConfirmToggle">ON</button>
-      </label>
+      <label class="toggle">
+  <span>Auto Confirm</span>
+  <input type="checkbox" id="autoConfirm">
+  <span class="slider"></span>
+</label>
 
       <label>
         Language
@@ -591,14 +598,10 @@ root.innerHTML = `
 <option value="blue">Blue</option>
 <option value="purple">Purple</option>
 <option value="dark">Dark</option>
-
-  </select>
+</select>
 </label>
-    </div>
-  </div>
-</div>
 
-</div>
+</div></div></div></div>
 
             <div class="left-panel">
                 <h3>Predictions</h3>
@@ -1138,30 +1141,6 @@ window.addEventListener("DOMContentLoaded",()=>{
 }, 0);
 });
 
-</script>
-
-<div id="help-overlay">
-    <div class="help-box">
-        <button class="help-close" onclick="closeHelp()">×</button>
-        <h2>How to use</h2>
-        <p>
-        1. Press the "<b>START</b>" button.<br>
-        2. If there is a use camer permission pop up, press "<b>Allow</b>".<br>
-        3. Show a sign to the camera (must be Sistem Isyarat Bahasa Indonesia)<br>
-        4. The letter will automatically be translated!<br><br>
-        This website must use your webcam.<br><br>
-        - Use <b>Space</b> or <b>Backspace</b> buttons (or your keyboard) to edit text.<br>
-        - You can disable the auto confirm by clicking its button if you don't like it.<br>
-        - To translate manually, press the "<b>Confirm</b>" button (or enter on your keyboard).<br>
-
-        - To change translation mode, simply click the options above the tutorial button.<br><br>
-        Note:<br>J uses the letter I, tilted 135 degrees to the right (facing bottom-left/the battery icon on your taskbar)<br>
-        For Z, point your finger upwards and tilt 45 degrees to the left.<br><br><br><br>
-        Powered by Google's <b>MediaPipe Hands</b> engine, check them out <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank" style="color: #FFFFFF;">here</a>
-        </p>
-    </div>
-</div>
-<script>
     function help(){
     document.getElementById("help-overlay").style.display = "flex";
 }
@@ -1230,14 +1209,15 @@ function applyLanguage(lang){
 
 function initSettings(){
 
-    const settingsBtn = document.querySelector("#settings-btn");
-    const langSelect = document.getElementById("lang-select");
-    const themeBtn = document.getElementById("theme-toggle");
-    const autoToggle = document.getElementById("autoConfirmToggle");
-    const themeSelect = document.getElementById("theme-select");
+const settingsBtn = document.querySelector("#settings-btn");
+const langSelect = document.getElementById("lang-select");
+const themeBtn = document.getElementById("theme-toggle");
+const autoCheckbox = document.getElementById("autoConfirm");
+const themeSelect = document.getElementById("theme-select");
 
-    const popup = document.getElementById("settings-popup");
-    const closeBtn = document.getElementById("close-settings");
+
+const popup = document.getElementById("settings-popup");
+const closeBtn = document.getElementById("close-settings");
 
     if(!popup) return; // prevent null crash
 
@@ -1289,26 +1269,56 @@ if(themeSelect){
 const savedTheme = localStorage.getItem("theme") || "light";
 document.body.setAttribute("data-theme", savedTheme);
 
-    // auto confirm (settings button)
-    autoToggle.innerText = autoConfirmEnabled ? "ON" : "OFF";
+if(autoCheckbox){
+    const saved = localStorage.getItem("autoConfirm") === "true";
 
-    autoToggle.onclick = ()=>{
-        autoConfirmEnabled = !autoConfirmEnabled;
-        autoToggle.innerText = autoConfirmEnabled ? "ON" : "OFF";
+    autoCheckbox.checked = saved;
+    autoConfirmEnabled = saved;
 
-        const mainBtn = document.getElementById("autoConfirmBtn");
-        if(mainBtn){
-            mainBtn.innerText = autoConfirmEnabled
-                ? "Auto Confirm: ON"
-                : "Auto Confirm: OFF";
-        }
-
+    autoCheckbox.addEventListener("change", () => {
+        autoConfirmEnabled = autoCheckbox.checked;
+        localStorage.setItem("autoConfirm", autoCheckbox.checked);
         resetAutoConfirmProgress();
-    };
-}
+
+
+    });
+}}
+
 
 
 
 </script>
+
+<div id="help-overlay">
+    <div class="help-box">
+        <button class="help-close" onclick="closeHelp()">×</button>
+        <h2>How to use</h2>
+        <p>
+        1. Press the "<b>START</b>" button.<br>
+        2. If there is a use camer permission pop up, press "<b>Allow</b>".<br>
+        3. Show a sign to the camera (must be Sistem Isyarat Bahasa Indonesia)<br>
+        4. The letter will automatically be translated!<br><br>
+        This website must use your webcam.<br><br>
+        - Use <b>Space</b> or <b>Backspace</b> buttons (or your keyboard) to edit text.<br>
+        - You can disable the auto confirm by clicking its button if you don't like it.<br>
+        - To translate manually, press the "<b>Confirm</b>" button (or enter on your keyboard).<br>
+
+        - To change translation mode, simply click the options above the tutorial button.<br><br>
+        Note:<br>J uses the letter I, tilted 135 degrees to the right (facing bottom-left/the battery icon on your taskbar)<br>
+        For Z, point your finger upwards and tilt 45 degrees to the left.<br><br><br><br>
+        Powered by Google's <b>MediaPipe Hands</b> engine, check them out <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank" style="color: #FFFFFF;">here</a>
+        </p>
+    </div>
+</div>
+
+<div id="credits-modal" class="modal hidden">
+    <div class="modal-content">
+        <span id="close-credits">&times;</span>
+        <h2>Credits</h2>
+        <p>Developer: Your Name</p>
+        <p>Project: Sign Language Translator</p>
+        <p>Tools: HTML, CSS, JavaScript, Teachable Machine</p>
+    </div>
+</div>
 </body>
 </html>
