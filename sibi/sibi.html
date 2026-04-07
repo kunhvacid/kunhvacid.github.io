@@ -1,30 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"><head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SignSmart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="icon" href="favicon.ico">
+<meta property="og:type" content="website">
+<meta property="og:title" content="wonyoung from iz*one">
+<meta property="og:description" content="kamu bapak TESSSSSSSSSSSS">
+<meta property="og:url" content="https://kunhvacid.github.io/gallery.html">
+<meta property="og:image" content="https://bunny-wp-pullzone-fwyeoqiqu8.b-cdn.net/wp-content/uploads/2024/05/ive-50.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="sibi.css" />
+</head><body><main>
+<button id="settings-btn" class="settings-btn">
+    <svg class="gear-icon" viewBox="0 0 24 24">
+        <path d="M19.14,12.94a7.49,7.49,0,0,0,.05-.94,7.49,7.49,0,0,0-.05-.94l2.03-1.58a.5.5,0,0,0,.12-.64l-1.92-3.32a.5.5,0,0,0-.6-.22l-2.39.96a7.28,7.28,0,0,0-1.63-.94l-.36-2.54A.5.5,0,0,0,13.9,2H10.1a.5.5,0,0,0-.49.42L9.25,4.96a7.28,7.28,0,0,0-1.63.94l-2.39-.96a.5.5,0,0,0-.6.22L2.71,8.48a.5.5,0,0,0,.12.64L4.86,10.7a7.49,7.49,0,0,0-.05.94,7.49,7.49,0,0,0,.05.94L2.83,14.16a.5.5,0,0,0-.12.64l1.92,3.32a.5.5,0,0,0,.6.22l2.39-.96a7.28,7.28,0,0,0,1.63.94l.36,2.54a.5.5,0,0,0,.49.42h3.8a.5.5,0,0,0,.49-.42l.36-2.54a7.28,7.28,0,0,0,1.63-.94l2.39.96a.5.5,0,0,0,.6-.22l1.92-3.32a.5.5,0,0,0-.12-.64ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
+    </svg>
+</button>
+<div id="settings-popup" class="help-overlay">
+  <div class="help-box">
+<div class="settings-header">
+    <h2>Settings</h2>
+    <button class="help-close" id="close-settings">&times;</button>
+</div>
+    <div class="settings-content">
+      <label class="toggle">
+  <span>Auto Confirm</span>
+  <input type="checkbox" id="autoConfirm">
+  <span class="slider"></span>
+</label>
+    <label>
+    Language
+    <select id="lang-select">
+        <option value="en">English</option>
+        <option value="id">Indonesia</option>
+        </select>
+    </label>
+<label>
+Theme
+<select id="theme-select">
 
-
-<head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>SignSmart</title>
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
- <link rel="icon" href="favicon.ico">
- <meta property="og:type" content="website">
- <meta property="og:title" content="wonyoung from iz*one">
- <meta property="og:description" content="kamu bapak TESSSSSSSSSSSS">
- <meta property="og:url" content="https://kunhvacid.github.io/gallery.html">
- <meta property="og:image" content="https://bunny-wp-pullzone-fwyeoqiqu8.b-cdn.net/wp-content/uploads/2024/05/ive-50.jpg">
- <meta property="og:image:width" content="1280">
- <meta property="og:image:height" content="720">
- <meta name="twitter:card" content="summary_large_image">
- <link rel="stylesheet" href="sibi.css" />
-
-</head>
-<body>
-<main>
-
+<option value="light">Light</option>
+<option value="red">Red</option>
+<option value="orange">Orange</option>
+<option value="yellow">Yellow</option>
+<option value="green">Green</option>
+<option value="blue">Blue</option>
+<option value="purple">Purple</option>
+<option value="dark">Dark</option>
+</select>
+</label>
+</div></div></div>
 <div class="container-card">
 <div class="header-title">SignSmart</div>
 <div class="header-subtitle">Translator Universal </div>
@@ -32,12 +64,10 @@
 <div id="translator-root"></div>
 <div class="output-section">
 <div id="mode-container"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-
 <script>
 let model;
 let labels=[];
@@ -53,12 +83,8 @@ let canvas;
 let ctx;
 let autoConfirmInProgress = false;
 let autoConfirmEnabled = true;
-const CONFIDENCE_THRESHOLD = 0.50;
-
-
-
+const CONFIDENCE_THRESHOLD = 0.50;s
 async function init() {
-    
     if (isRunning) return;
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
@@ -79,113 +105,88 @@ async function init() {
         const text = await res.text();
         labels = text.trim().split("\n");
     }
-
     const video = document.getElementById("webcam");
     canvas = document.getElementById("handCanvas");
-
     if (!video || !canvas) {
         if (startBtn) startBtn.disabled = false;
         if (stopBtn) stopBtn.disabled = true;
         if (freezeBtn) freezeBtn.disabled = true;
         return;
     }
-
     ctx = canvas.getContext("2d");
     video.style.transform = "scaleX(-1)";
     video.muted = true;
     video.setAttribute("autoplay", true);
     video.setAttribute("playsinline", true);
-
     if (video.srcObject) {
         video.srcObject.getTracks().forEach(track => track.stop());
         video.srcObject = null;
     }
-
     const stream = await navigator.mediaDevices.getUserMedia({
         video: { width: 640, height: 480 }
     });
-
     video.srcObject = stream;
-
     await new Promise(resolve => {
         video.onloadedmetadata = () => resolve();
     });
-
     await video.play();
-
     canvas.width = video.videoWidth || 640;
     canvas.height = video.videoHeight || 480;
-
     if (!hands) {
         hands = new Hands({
             locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
         });
-
         hands.setOptions({
             maxNumHands: 1,
             modelComplexity: 1,
             minDetectionConfidence: 0.2,
             minTrackingConfidence: 0.5
         });
-
         let lastStablePrediction = "";
         let stableStartTime = null;
         const AUTO_CONFIRM_THRESHOLD = 0.75; //adjust
         const STABLE_DELAY = 750;
-
         hands.onResults((results) => {
             if (!isRunning || !ctx || !canvas) return;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
                 lastStablePrediction = "";
                 stableStartTime = null;
                 resetAutoConfirmProgress();
                 return;
             }
-
             ctx.save();
             ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
-
             for (const landmarks of results.multiHandLandmarks) {
                 drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: "#ff0000", lineWidth: 4 });
                 drawLandmarks(ctx, landmarks, { color: "#00ff00", lineWidth: 2, radius: 4 });
             }
-
             ctx.restore();
-
             const landmarks = results.multiHandLandmarks[0];
             const input = [];
             landmarks.forEach(p => input.push(p.x, p.y, p.z));
-
             const probs = tf.tidy(() => {
                 const tensor = tf.tensor([input]);
                 const prediction = model.predict(tensor);
                 return prediction.dataSync();
             });
-
             let maxIndex = 0;
             for (let i = 1; i < probs.length; i++) {
                 if (probs[i] > probs[maxIndex]) maxIndex = i;
             }
-
             currentPrediction = labels[maxIndex];
             currentConfidence = probs[maxIndex];
-
 if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
     if (currentPrediction === lastStablePrediction) {
         if (stableStartTime !== null) {
             const elapsed = Date.now() - stableStartTime;
             const progress = (elapsed / STABLE_DELAY) * 100;
             setAutoConfirmProgress(progress);
-
             if (!autoConfirmInProgress && elapsed >= STABLE_DELAY) {
                 autoConfirmInProgress = true;
                 setAutoConfirmProgress(100);
                 confirmLetter(true);
-
                 lastStablePrediction = "";
                 stableStartTime = null;
                 resetAutoConfirmProgress();
@@ -201,42 +202,34 @@ if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
     stableStartTime = null;
     resetAutoConfirmProgress();
 }
-
-            const container = document.getElementById("prediction-container");
-            if (container) {
-                for (let i = 0; i < probs.length; i++) {
-                    const row = container.children[i];
-                    if (!row) continue;
-
-                    const bar = row.querySelector(".bar");
-                    const percent = row.querySelector(".percent");
-                    const width = Math.round(probs[i] * 100) + "%";
-
-                    if (bar) bar.style.width = width;
-                    if (percent) percent.innerText = width;
-                    row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
-                }
-            }
-
-            const mostConfidentEl = document.getElementById("most-confident");
-            if (mostConfidentEl) {
-                mostConfidentEl.innerText = (currentConfidence >= 0.5)
-                    ? `Most Confident: ${currentPrediction} (${(currentConfidence * 100).toFixed(1)}%)`
-                    : "Most Confident: -";
-            }
+const container = document.getElementById("prediction-container");
+if (container) {
+    for (let i = 0; i < probs.length; i++) {
+        const row = container.children[i];
+        if (!row) continue;
+        const bar = row.querySelector(".bar");
+        const percent = row.querySelector(".percent");
+        const width = Math.round(probs[i] * 100) + "%";
+        if (bar) bar.style.width = width;
+        if (percent) percent.innerText = width;
+        row.style.fontWeight = (i === maxIndex) ? "bold" : "normal";
+    }
+}
+const mostConfidentEl = document.getElementById("most-confident");
+if (mostConfidentEl) {
+    mostConfidentEl.innerText = (currentConfidence >= 0.5)
+        ? `Most Confident: ${currentPrediction} (${(currentConfidence * 100).toFixed(1)}%)`
+        : "Most Confident: -";
+}
         });
-
         handsReady = true;
     }
-
     const container = document.getElementById("prediction-container");
     if (container) {
         container.innerHTML = "";
-
         labels.forEach(label => {
             const row = document.createElement("div");
             row.classList.add("row");
-
             row.innerHTML = `
                 <span class="label">${label}</span>
                 <div class="bar-container">
@@ -244,13 +237,10 @@ if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
                 </div>
                 <span class="percent">0%</span>
             `;
-
             container.appendChild(row);
         });
     }
-
     isRunning = true;
-
     camera = new Camera(video, {
         onFrame: async () => {
             if (!isRunning || isFrozen || !handsReady || !hands) return;
@@ -259,36 +249,28 @@ if (autoConfirmEnabled && currentConfidence >= AUTO_CONFIRM_THRESHOLD) {
         width: video.videoWidth || 640,
         height: video.videoHeight || 480
     });
-
     await camera.start();
-
     const outputSection = document.querySelector(".output-section");
     if (outputSection) outputSection.style.marginTop = "10px";
 }
-
 function stop() {
     if (!isRunning) return;
-
     isRunning = false;
     isFrozen = false;
     autoConfirmInProgress = false;
     currentPrediction = "";
     currentConfidence = 0;
-
     cancelAnimationFrame(animationId);
     resetAutoConfirmProgress();
-
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const freezeBtn = document.getElementById("freezeBtn");
-
     if (startBtn) startBtn.disabled = false;
     if (stopBtn) stopBtn.disabled = true;
     if (freezeBtn) {
         freezeBtn.disabled = true;
         freezeBtn.innerText = "Freeze";
     }
-
     const predictionContainer = document.getElementById("prediction-container");
     if (predictionContainer) {
         Array.from(predictionContainer.children).forEach(row => {
@@ -299,44 +281,34 @@ function stop() {
             row.style.fontWeight = "normal";
         });
     }
-
     if (camera) {
         try {
             camera.stop();
         } catch (e) {}
         camera = null;
     }
-
     const videoEl = document.getElementById("webcam");
     if (videoEl && videoEl.srcObject) {
         videoEl.srcObject.getTracks().forEach(track => track.stop());
         videoEl.srcObject = null;
     }
-
     if (ctx && canvas) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-
     const mostConfidentEl = document.getElementById("most-confident");
     if (mostConfidentEl) {
         mostConfidentEl.innerText = "Most Confident: -";
     }
 }
-
 function toggleFreeze(){
-
 const btn = document.getElementById("freezeBtn");
-
 isFrozen = !isFrozen;
-
 if(isFrozen){
 btn.innerText = "Unfreeze";
 }else{
 btn.innerText = "Freeze";
 }
-
 }
-
 function confirmLetter(isAuto = false) {
     resetAutoConfirmProgress();
 
@@ -344,15 +316,12 @@ function confirmLetter(isAuto = false) {
         if (isAuto) {
             flashAutoConfirmBar();
         }
-
         let letter = currentPrediction;
         if (!capsLock) letter = letter.toLowerCase();
         typeLetter(letter);
-
         if (currentMode === "universal") {
             performUniversalTranslate();
         }
-
         const container = document.getElementById("prediction-container");
         setTimeout(() => {
             currentPrediction = "";
@@ -367,22 +336,18 @@ function confirmLetter(isAuto = false) {
                 });
             }
         }, 200);
-
         autoConfirmInProgress = true;
         setTimeout(() => {
             autoConfirmInProgress = false;
         }, 500);
     }
 }
-
 function addSpace() {
     typeLetter(" ");
-
     if(currentMode === "universal"){
         performUniversalTranslate();
     }
 }
-
 function backspace(){
     const textBox = document.getElementById("text-box");
     if(textBox){
@@ -393,22 +358,16 @@ function backspace(){
         }
     }
 }
-
 function toggleCaps() {
     capsLock = !capsLock;
-
     const btn = document.getElementById("caps-btn");
     btn.innerText = capsLock ? "Caps:ON" : "Caps:OFF";
 }
-
     function typeLetter(letter) {
     if (isTyping) return;
     isTyping = true;
-
     const textBox = document.getElementById("text-box");
-
     let index = 0;
-
     function typeStep() {
         if (index < letter.length) {
             textBox.value += letter[index];
@@ -418,106 +377,76 @@ function toggleCaps() {
             isTyping = false;
         }
     }
-
     typeStep();
 }
-
 document.addEventListener("keydown", function(event) {
-
     if (
     currentMode !== "signToText" &&
     !(currentMode === "universal" &&
       document.getElementById("translate-from")?.value === "sign")
 ) return;
-
     if (event.key === "Enter") {
         event.preventDefault();
         confirmLetter();
     }
-
     if (event.key === "Backspace") {
     event.preventDefault();
     const box = document.getElementById("text-box");
     if(box){
         box.value = box.value.slice(0, -1);
-
         // Force update immediately
         if(typeof performUniversalTranslate === "function"){
             performUniversalTranslate();
         }
     }
 }
-
     if (event.key === " ") {
         event.preventDefault();
         addSpace();
     }
-
 });
-
-
 </script>
-
 </main>
 <script>
-
 // GLOBAL
 let isTranslating = false;
 let currentMode = "universal";
 let isFrozen = false;
 let handsReady = false;
-
 function setAutoConfirmProgress(percent){
     const bar = document.getElementById("auto-confirm-bar");
     if(bar){
         bar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
     }
 }
-
 function resetAutoConfirmProgress(){
     setAutoConfirmProgress(0);
-
     const bar = document.getElementById("auto-confirm-bar");
     if (bar) {
         bar.style.opacity = autoConfirmEnabled ? "1" : "0.35";
     }
 }
-
 function flashAutoConfirmBar() {
     const bar = document.getElementById("auto-confirm-bar");
     if (!bar) return;
-
     bar.classList.remove("auto-confirm-flash");
     void bar.offsetWidth;
     bar.classList.add("auto-confirm-flash");
-
     setTimeout(() => {
         bar.classList.remove("auto-confirm-flash");
     }, 350);
 }
-
 function toggleAutoConfirm() {
     autoConfirmEnabled = !autoConfirmEnabled;
-
-
-
     resetAutoConfirmProgress();
 }
-
-
-
 function setMode(mode){
     currentMode = mode;
     const root = document.getElementById("translator-root");
     root.innerHTML = "";
-
-
 if(mode === "universal"){
-
 root.innerHTML = `
-
 <div style="max-width:1000px;margin:auto;">
-
     <div class="translate-bar">
     <div class="translate-group">
         <span>Translate from</span>
@@ -527,11 +456,9 @@ root.innerHTML = `
             <option value="morse">Morse</option>
         </select>
     </div>
-
     <div class="translate-arrow">
         <i class="fa-solid fa-arrow-right"></i>
     </div>
-
     <div class="translate-group">
         <span>To</span>
         <select id="translate-to">
@@ -541,88 +468,34 @@ root.innerHTML = `
         </select>
     </div>
 </div>
-
-    <!-- TEXT / MORSE INPUT -->
     <div id="universal-text-input"
          style="display:none;text-align:center;margin-top:20px;">
         <textarea id="universal-input"
             style="width:100%;height:120px;padding:10px;border-radius:8px;border:none;"
             placeholder="Input"></textarea>
     </div>
-
-    <!-- SIGN ENGINE -->
     <div id="universal-sign-engine" style="display:none;">
         <div class="main-layout">
-
             <div class="controls bordered-panel">
 <button id="startBtn" onclick="init()">Start</button>
 <button id="stopBtn" onclick="stop()" disabled>Stop</button>
 <button id="freezeBtn" onclick="toggleFreeze()" disabled>Freeze</button>
 <button id="helpBtn" onclick="help()">Tutorial</button>
-<button id="settings-btn" class="settings-btn">
-    <svg class="gear-icon" viewBox="0 0 24 24">
-    <path d="M19.14,12.94a7.49,7.49,0,0,0,.05-.94,7.49,7.49,0,0,0-.05-.94l2.03-1.58a.5.5,0,0,0,.12-.64l-1.92-3.32a.5.5,0,0,0-.6-.22l-2.39.96a7.28,7.28,0,0,0-1.63-.94l-.36-2.54A.5.5,0,0,0,13.9,2H10.1a.5.5,0,0,0-.49.42L9.25,4.96a7.28,7.28,0,0,0-1.63.94l-2.39-.96a.5.5,0,0,0-.6.22L2.71,8.48a.5.5,0,0,0,.12.64L4.86,10.7a7.49,7.49,0,0,0-.05.94,7.49,7.49,0,0,0,.05.94L2.83,14.16a.5.5,0,0,0-.12.64l1.92,3.32a.5.5,0,0,0,.6.22l2.39-.96a7.28,7.28,0,0,0,1.63.94l.36,2.54a.5.5,0,0,0,.49.42h3.8a.5.5,0,0,0,.49-.42l.36-2.54a7.28,7.28,0,0,0,1.63-.94l2.39.96a.5.5,0,0,0,.6-.22l1.92-3.32a.5.5,0,0,0-.12-.64ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
-  </svg>
-  </button>
-
-<div id="settings-popup" class="help-overlay">
-  <div class="help-box">
-<div class="settings-header">
-    <h2>Settings</h2>
-    <button class="help-close" id="close-settings">&times;</button>
 </div>
-
-    <div class="settings-content">
-      <label class="toggle">
-  <span>Auto Confirm</span>
-  <input type="checkbox" id="autoConfirm">
-  <span class="slider"></span>
-</label>
-
-      <label>
-        Language
-        <select id="lang-select">
-          <option value="en">English</option>
-          <option value="id">Indonesia</option>
-        </select>
-      </label>
-
-<label>
-  Theme
-  <select id="theme-select">
-
-<option value="light">Light</option>
-<option value="red">Red</option>
-<option value="orange">Orange</option>
-<option value="yellow">Yellow</option>
-<option value="green">Green</option>
-<option value="blue">Blue</option>
-<option value="purple">Purple</option>
-<option value="dark">Dark</option>
-</select>
-</label>
-
-</div></div></div></div>
-
             <div class="left-panel">
                 <h3>Predictions</h3>
                 <div id="prediction-container"></div>
-            </div>
-
+</div>
             <div class="right-panel">
-
 <div class="camera-section bordered-panel">
-
 <div id="webcam-container">
     <video id="webcam" autoplay playsinline></video>
     <canvas id="handCanvas"></canvas>
 </div>
-
 <div id="most-confident"
      style="margin-top:10px;font-size:18px;font-weight:600;text-align:center;">
     Most Confident: -
 </div>
-
 <div id="auto-confirm-wrap">
     <div id="auto-confirm-label">Auto confirm</div>
     <div id="auto-confirm-bar-bg">
@@ -630,58 +503,39 @@ root.innerHTML = `
     </div>
 </div>
 </div>
-
-                <!-- DETECTED TEXT (this swaps with universal-output) -->
 <div class="output-section bordered-panel" id="detected-output">
     <h3 id="detected-label">Detected Text</h3>
-
     <input type="text" id="text-box" readonly />
-
     <div id="morse-output" style="display:none;">
         <h3>Morse Output</h3>
         <input type="text" id="morse-box" readonly />
     </div>
-
     <div class="output-buttons">
         <button onclick="confirmLetter()">Confirm</button>
         <button onclick="addSpace()">Space</button>
         <button onclick="backspace()">Backspace</button>
-        
-                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- UNIVERSAL OUTPUT (this will move) -->
-    <div id="universal-output"
-        style="margin-bottom:20px;
-               padding:15px;
-               background:rgba(255,255,255,0.1);
-               border-radius:10px;
-               min-height:60px;">
-        
+        </div></div></div></div></div>
+<!-- UNIVERSAL OUTPUT (this will move) -->
+<div id="universal-output"
+    style="margin-bottom:20px;
+           padding:15px;
+           background:rgba(255,255,255,0.1);
+           border-radius:10px;
+           min-height:60px;">
     </div>
 <div class="morse-controls">
-
 <button id="play-morse-btn">
 <i class="fa-solid fa-volume-high"></i> Play
 <span id="morse-lamp"></span>
 </button>
-</div>
-
-</div>
+</div></div>
 `;
-
 const from = document.getElementById("translate-from");
 const to = document.getElementById("translate-to");
-
 from.value = "sign";
 to.value = "text";
-
 updateInputMode();
 performUniversalTranslate();
-
 function interlock(){
     if(from.value === to.value){
         const options = ["sign","text","morse"];
@@ -691,14 +545,11 @@ function interlock(){
     updateInputMode();
     performUniversalTranslate();
 }
-
 from.addEventListener("change", interlock);
 to.addEventListener("change", interlock);
-
 function updateInputMode(){
     const signEngine = document.getElementById("universal-sign-engine");
     const textInput = document.getElementById("universal-text-input");
-
     if(from.value === "sign"){
         signEngine.style.display = "block";
         textInput.style.display = "none";
@@ -708,45 +559,29 @@ function updateInputMode(){
         if(isRunning) stop();
     }
 }
-
 updateInputMode();
-
 setTimeout(() => {
-
-    setTimeout(()=>{
-
+setTimeout(()=>{
 const sound = document.getElementById("toggle-sound");
-
 if(sound) sound.addEventListener("change",()=>{morseSound = sound.checked});
-
 },100);
-
     const input = document.getElementById("universal-input");
     const textBox = document.getElementById("text-box");
-
     if(input) input.addEventListener("input", performUniversalTranslate);
     if(textBox) textBox.addEventListener("input", performUniversalTranslate);
     from.addEventListener("change", performUniversalTranslate);
     to.addEventListener("change", performUniversalTranslate);
-
 }, 50);
 setTimeout(initSettings, 0);
 }
 }
-
 function renderAlphabet(text){
-
     const container = document.getElementById("universal-output");
     if(!container) return;
-
     container.innerHTML = "";
-
     if(!text) return;
-
     text = text.toLowerCase();
-
     for(let char of text){
-
         if(char === " "){
             const spacer = document.createElement("div");
             spacer.style.width = "20px";
@@ -754,7 +589,6 @@ function renderAlphabet(text){
             container.appendChild(spacer);
             continue;
         }
-
         if(/[a-z]/.test(char)){
             const img = document.createElement("img");
             img.src = `https://kunhvacid.github.io/sibi/alphabet/${char}.jpg`;
@@ -765,12 +599,10 @@ function renderAlphabet(text){
         }
     }
 }
-
 function clearAlphabet(){
     document.getElementById("tts-input").value = "";
     document.getElementById("alphabet-output").innerHTML = "";
 }
-
 const MORSE = {
 A:".-",B:"-...",C:"-.-.",D:"-..",E:".",
 F:"..-.",G:"--.",H:"....",I:"..",J:".---",
@@ -782,247 +614,165 @@ Z:"--..",
 4:"....-",5:".....",6:"-....",7:"--...",
 8:"---..",9:"----."
 };
-
 const REVERSE_MORSE = {};
 for(let key in MORSE){
     REVERSE_MORSE[MORSE[key]] = key;
 }
-
 let speaking = false;
 let speechUtterance;
-
 function speakText(text){
-
 if(!text) return;
-
 speechUtterance = new SpeechSynthesisUtterance(text);
 speechUtterance.lang = "en-US";
-
 speaking = true;
-
 const btn = document.getElementById("play-morse-btn");
 if(btn){
 btn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop`;
 }
-
 speechUtterance.onend = ()=>{
 speaking = false;
 updateAudioButton();
 };
-
 speechSynthesis.speak(speechUtterance);
-
 }
-
 function stopSpeech(){
-
 speechSynthesis.cancel();
 speaking = false;
-
 updateAudioButton();
-
 }
-
 let audioCtx;
 let morsePlaying = false;
 let activeOscillators = [];
-
 function beep(start, duration){
-
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-
     osc.type = "sine";
     osc.frequency.value = 700;
-
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-
     gain.gain.setValueAtTime(0.2, start);
-
     osc.start(start);
     osc.stop(start + duration);
-
     activeOscillators.push(osc);
 }
-
 function stopMorse(){
-
     morsePlaying = false;
-
     activeOscillators.forEach(o=>{
         try{o.stop()}catch(e){}
     });
-
     activeOscillators = [];
-
     const btn = document.getElementById("play-morse-btn");
     if(btn){
         btn.innerHTML = `<i class="fa-solid fa-volume-high"></i> Play <span id="morse-lamp"></span>`;
     }
 }
-
 function playMorse(code){
-
 if(!audioCtx){
 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
-
 morsePlaying = true;
-
 const btn = document.getElementById("play-morse-btn");
 if(btn){
 btn.innerHTML = `<i class="fa-solid fa-stop"></i> Stop <span id="morse-lamp"></span>`;
 }
-
 const dot = 0.1;
 const dash = 0.3;
 const gap = 0.1;
-
 let time = audioCtx.currentTime;
-
 for(let char of code){
-
 if(char === "."){
 beep(time, dot);
 flash(time, dot);
 time += dot + gap;
 }
-
 else if(char === "-"){
 beep(time, dash);
 flash(time, dash);
 time += dash + gap;
 }
-
 else if(char === " "){
 time += 0.2;
 }
-
 else if(char === "/"){
 time += 0.5;
 }
-
 }
-
 const duration = (time - audioCtx.currentTime) * 1000;
-
 setTimeout(()=>{
     stopMorse();
 }, duration);
-
 }
-
 function flash(start, duration){
-
 const lamp = document.getElementById("morse-lamp");
-
 const now = audioCtx.currentTime;
-
 const startDelay = (start - now) * 1000;
 const endDelay = (start - now + duration) * 1000;
-
 setTimeout(()=>{
 lamp.classList.add("on");
 }, startDelay);
-
 setTimeout(()=>{
 lamp.classList.remove("on");
 }, endDelay);
-
 }
-
 document.addEventListener("click",function(e){
-
 if(!e.target.closest("#play-morse-btn")) return;
-
 const from = document.getElementById("translate-from").value;
 const to = document.getElementById("translate-to").value;
-
 if(morsePlaying){
 stopMorse();
 return;
 }
-
 if(speaking){
 stopSpeech();
 return;
 }
-
 if((from==="sign" && to==="text") || (from==="text" && to==="sign")){
-
 let text="";
-
 if(from==="sign"){
 const box=document.getElementById("text-box");
 if(box) text=box.value;
 }
-
 if(from==="text"){
 const area=document.getElementById("universal-input");
 if(area) text=area.value;
 }
-
 if(text){
 speakText(text);
 }
-
 return;
 }
-
 let morseText="";
-
 const morseBox=document.getElementById("morse-box");
 const universal=document.getElementById("universal-output");
-
 if(morseBox && morseBox.value){
 morseText=morseBox.value;
 }else if(universal){
 morseText=universal.innerText.trim();
 }
-
 if(morseText){
 playMorse(morseText);
-}
-
-});
-
+}});
 function updateAudioButton(){
-
 const btn=document.getElementById("play-morse-btn");
 if(!btn) return;
-
 const from=document.getElementById("translate-from")?.value;
 const to=document.getElementById("translate-to")?.value;
-
 if((from==="sign" && to==="text") || (from==="text" && to==="sign")){
-
 btn.innerHTML=`<i class="fa-solid fa-volume-high"></i> Speak`;
-
 }else{
-
 btn.innerHTML=`<i class="fa-solid fa-volume-high"></i> Play <span id="morse-lamp"></span>`;
-
-}
-
-}
-
+}}
 function performUniversalTranslate(){
-
 updateAudioButton();
 if(isTranslating) return;
 isTranslating = true;
-
 const from = document.getElementById("translate-from").value;
 const to = document.getElementById("translate-to").value;
-
 const universalOutput = document.getElementById("universal-output");
 const detectedOutput = document.getElementById("detected-output");
 const morseOutput = document.getElementById("morse-output");
 const morseBox = document.getElementById("morse-box");
-
 let input = "";
-
 if(from === "sign"){
     const box = document.getElementById("text-box");
     input = box ? box.value.trim() : "";
@@ -1030,7 +780,6 @@ if(from === "sign"){
     const area = document.getElementById("universal-input");
     input = area ? area.value.trim() : "";
 }
-
 if(from==="sign" && to==="morse"){
     morseOutput.style.display = "block";
     detectedOutput.style.display = "block";
@@ -1040,9 +789,7 @@ else if(from==="text" && to==="morse"){
     morseOutput.style.display = "none";
     detectedOutput.style.display = "none";
     universalOutput.style.display = "block";
-    
     document.getElementById("detected-label").style.display = "none";
-
     const textBox = document.getElementById("text-box");
     if(textBox) textBox.style.display = "none";
 }
@@ -1051,7 +798,6 @@ else if(from==="sign" && to==="text"){
     detectedOutput.style.display = "block";
     universalOutput.style.display = "none";
     document.getElementById("detected-label").style.display = "block";
-
     const textBox = document.getElementById("text-box");
     if(textBox) textBox.style.display = "block";
 }
@@ -1060,35 +806,28 @@ else{
     detectedOutput.style.display = "none";
     universalOutput.style.display = "block";
     document.getElementById("detected-label").style.display = "none";
-
     const textBox = document.getElementById("text-box");
     if(textBox) textBox.style.display = "block";
 }
-
 if(!input){
     universalOutput.innerHTML = "";
     if(morseBox) morseBox.value = "";
     isTranslating = false;
     return;
 }
-
 if((from==="text" || from==="sign") && to==="morse"){
     const text = input.toUpperCase();
-
     const result = text.split("")
         .map(c => c===" " ? "/" : (MORSE[c] || ""))
         .join(" ");
-
 if(from === "sign" && morseBox){
     morseBox.value = result;
 } else {
     universalOutput.innerText = result;
 }
-
     isTranslating = false;
     return;
 }
-
 if(from==="morse" && to==="text"){
     const text = input
         .split("/")
@@ -1102,7 +841,6 @@ if(from==="morse" && to==="text"){
     isTranslating = false;
     return;
 }
-
 if(from==="morse" && to==="sign"){
     const text = input
         .split("/")
@@ -1116,21 +854,17 @@ if(from==="morse" && to==="sign"){
     isTranslating = false;
     return;
 }
-
 if(from==="text" && to==="sign"){
     renderAlphabet(input);
     isTranslating = false;
     return;
 }
-
 if(from==="sign" && to==="text"){
     isTranslating = false;
     return;
 }
-
 isTranslating = false;
 }
-
 window.addEventListener("DOMContentLoaded",()=>{
     setMode("universal");
     setTimeout(() => {
@@ -1141,18 +875,12 @@ window.addEventListener("DOMContentLoaded",()=>{
     resetAutoConfirmProgress();
 }, 0);
 });
-
     function help(){
     document.getElementById("help-overlay").style.display = "flex";
 }
-
 function closeHelp(){
     document.getElementById("help-overlay").style.display = "none";
 }
-
-
-
-
 
 const TEXT = {
     en: {
@@ -1180,71 +908,53 @@ const TEXT = {
         backspace: "Hapus"
     }
 };
-
 // translation
 function applyLanguage(lang){
     const t = TEXT[lang];
-
     document.querySelector(".header-title").innerText = t.title;
     document.querySelector(".header-subtitle").innerText = t.subtitle;
-
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const freezeBtn = document.getElementById("freezeBtn");
     const helpBtn = document.getElementById("helpBtn");
-
     if(startBtn) startBtn.innerText = t.start;
     if(stopBtn) stopBtn.innerText = t.stop;
     if(freezeBtn) freezeBtn.innerText = t.freeze;
     if(helpBtn) helpBtn.innerText = t.tutorial;
-
     const detected = document.getElementById("detected-label");
     if(detected) detected.innerText = t.detected;
-
     const buttons = document.querySelectorAll(".output-buttons button");
     if(buttons[0]) buttons[0].innerText = t.confirm;
     if(buttons[1]) buttons[1].innerText = t.space;
     if(buttons[2]) buttons[2].innerText = t.backspace;
 }
-
-
 function initSettings(){
-
 const settingsBtn = document.querySelector("#settings-btn");
 const langSelect = document.getElementById("lang-select");
 const themeBtn = document.getElementById("theme-toggle");
 const autoCheckbox = document.getElementById("autoConfirm");
 const themeSelect = document.getElementById("theme-select");
-
-
 const popup = document.getElementById("settings-popup");
 const closeBtn = document.getElementById("close-settings");
-
     if(!popup) return; // prevent null crash
-
     // prevent duplicate binding
     if(popup.dataset.ready === "true") return;
     popup.dataset.ready = "true";
-
     if(!settingsBtn) return;
-
     // OPEN
     settingsBtn.onclick = () => {
         popup.style.display = "flex";
     };
-
     // CLOSE (X button)
     closeBtn.onclick = () => {
         popup.style.display = "none";
     };
-
     // CLOSE (click outside)
     popup.onclick = (e) => {
         if(e.target === popup){
             popup.style.display = "none";
         }
     };
-
     // language
     const savedLang = localStorage.getItem("lang") || "en";
     langSelect.value = savedLang;
@@ -1255,7 +965,6 @@ const closeBtn = document.getElementById("close-settings");
         localStorage.setItem("lang", lang);
         applyLanguage(lang);
     };
-
     // theme
 if(themeSelect){
     themeSelect.value = localStorage.getItem("theme") || "light";
@@ -1266,30 +975,19 @@ if(themeSelect){
         localStorage.setItem("theme", theme);
     });
 }
-
 const savedTheme = localStorage.getItem("theme") || "light";
 document.body.setAttribute("data-theme", savedTheme);
-
 if(autoCheckbox){
     const saved = localStorage.getItem("autoConfirm") === "true";
-
     autoCheckbox.checked = saved;
     autoConfirmEnabled = saved;
-
     autoCheckbox.addEventListener("change", () => {
         autoConfirmEnabled = autoCheckbox.checked;
         localStorage.setItem("autoConfirm", autoCheckbox.checked);
         resetAutoConfirmProgress();
-
-
     });
 }}
-
-
-
-
 </script>
-
 <div id="help-overlay">
     <div class="help-box">
         <button class="help-close" onclick="closeHelp()">×</button>
