@@ -893,41 +893,106 @@ const TEXT = {
         detected: "Detected Text",
         confirm: "Confirm",
         space: "Space",
-        backspace: "Backspace"
+        backspace: "Backspace",
+        settings: "Settings",
+        autoConfirm: "Auto Confirm",
+        language: "Language",
+        theme: "Theme",
+        translateFrom: "Translate from",
+        translateTo: "To",
+        inputPlaceholder: "Input",
+        mostConfident: "Most Confident",
+        predictions: "Predictions"
     },
     id: {
         title: "SignSmart",
         subtitle: "Penerjemah Universal",
         start: "Mulai",
-        stop: "Stop",
+        stop: "Berhenti",
         freeze: "Bekukan",
-        tutorial: "Tutorial",
+        tutorial: "Panduan",
         detected: "Teks Terdeteksi",
         confirm: "Konfirmasi",
         space: "Spasi",
-        backspace: "Hapus"
+        backspace: "Hapus",
+        settings: "Pengaturan",
+        autoConfirm: "Konfirmasi Otomatis",
+        language: "Bahasa",
+        theme: "Tema",
+        translateFrom: "Dari",
+        translateTo: "Ke",
+        inputPlaceholder: "Masukkan teks",
+        mostConfident: "Prediksi Tertinggi",
+        predictions: "Prediksi"
     }
 };
 // translation
 function applyLanguage(lang){
     const t = TEXT[lang];
+
     document.querySelector(".header-title").innerText = t.title;
     document.querySelector(".header-subtitle").innerText = t.subtitle;
+
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const freezeBtn = document.getElementById("freezeBtn");
     const helpBtn = document.getElementById("helpBtn");
+
     if(startBtn) startBtn.innerText = t.start;
     if(stopBtn) stopBtn.innerText = t.stop;
     if(freezeBtn) freezeBtn.innerText = t.freeze;
     if(helpBtn) helpBtn.innerText = t.tutorial;
+
     const detected = document.getElementById("detected-label");
+    const predTitle = document.querySelector(".left-panel h3");
+if(predTitle) predTitle.innerText = t.predictions;
     if(detected) detected.innerText = t.detected;
+
     const buttons = document.querySelectorAll(".output-buttons button");
     if(buttons[0]) buttons[0].innerText = t.confirm;
     if(buttons[1]) buttons[1].innerText = t.space;
     if(buttons[2]) buttons[2].innerText = t.backspace;
+
+    // SETTINGS
+    const settingsTitle = document.querySelector(".settings-header h2");
+    if(settingsTitle) settingsTitle.innerText = t.settings;
+
+    const autoLabel = document.querySelector(".toggle span");
+    if(autoLabel) autoLabel.innerText = t.autoConfirm;
+
+    const labels = document.querySelectorAll(".settings-content label");
+    if(labels[1]) labels[1].childNodes[0].nodeValue = t.language + " ";
+    if(labels[2]) labels[2].childNodes[0].nodeValue = t.theme + " ";
+
+    // TRANSLATE BAR
+    const fromText = document.querySelector(".translate-group span:first-child");
+    const toText = document.querySelectorAll(".translate-group span")[1];
+
+    if(fromText) fromText.innerText = t.translateFrom;
+    if(toText) toText.innerText = t.translateTo;
+
+    // INPUT PLACEHOLDER
+    const input = document.getElementById("universal-input");
+    if(input) input.placeholder = t.inputPlaceholder;
+
+    // MOST CONFIDENT LABEL
+    const mc = document.getElementById("most-confident");
+    if(mc && mc.innerText.includes(":")){
+        mc.innerText = `${t.mostConfident}: -`;
+    document.querySelectorAll("#translate-from option, #translate-to option").forEach(opt=>{
+    if(lang === "id"){
+        if(opt.value === "sign") opt.text = "Bahasa Isyarat";
+        if(opt.value === "text") opt.text = "Teks";
+        if(opt.value === "morse") opt.text = "Morse";
+    } else {
+        if(opt.value === "sign") opt.text = "Sign Language";
+        if(opt.value === "text") opt.text = "Normal Text";
+        if(opt.value === "morse") opt.text = "Morse";
+    }
+});
+    }
 }
+
 function initSettings(){
 const settingsBtn = document.querySelector("#settings-btn");
 const langSelect = document.getElementById("lang-select");
@@ -1007,16 +1072,6 @@ if(autoCheckbox){
         For Z, point your finger upwards and tilt 45 degrees to the left.<br><br><br><br>
         Powered by Google's <b>MediaPipe Hands</b> engine, check them out <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank" style="color: #FFFFFF;">here</a>
         </p>
-    </div>
-</div>
-
-<div id="credits-modal" class="modal hidden">
-    <div class="modal-content">
-        <span id="close-credits">&times;</span>
-        <h2>Credits</h2>
-        <p>Developer: Your Name</p>
-        <p>Project: Sign Language Translator</p>
-        <p>Tools: HTML, CSS, JavaScript, Teachable Machine</p>
     </div>
 </div>
 </body>
