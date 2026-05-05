@@ -83,7 +83,7 @@ let canvas;
 let ctx;
 let autoConfirmInProgress = false;
 let autoConfirmEnabled = true;
-const CONFIDENCE_THRESHOLD = 0.50;s
+const CONFIDENCE_THRESHOLD = 0.50;
 async function init() {
     if (isRunning) return;
     const startBtn = document.getElementById("startBtn");
@@ -873,6 +873,7 @@ window.addEventListener("DOMContentLoaded",()=>{
         btn.innerText = autoConfirmEnabled ? "Auto Confirm: ON" : "Auto Confirm: OFF";
     }
     resetAutoConfirmProgress();
+    initWelcome();
 }, 0);
 });
     function help(){
@@ -989,6 +990,11 @@ if(predTitle) predTitle.innerText = t.predictions;
         if(opt.value === "text") opt.text = "Normal Text";
         if(opt.value === "morse") opt.text = "Morse";
     }
+
+    //WELCOME PANEL
+    if(typeof renderWelcome === "function"){
+    renderWelcome();
+}
 });
     }
 }
@@ -1049,6 +1055,8 @@ if(autoCheckbox){
     autoCheckbox.addEventListener("change", () => {
         autoConfirmEnabled = autoCheckbox.checked;
         localStorage.setItem("autoConfirm", autoCheckbox.checked);
+
+
         resetAutoConfirmProgress();
     });
 }}
@@ -1074,5 +1082,126 @@ if(autoCheckbox){
         </p>
     </div>
 </div>
+
+
+
+
+
+<div id="welcome-overlay" class="welcome-overlay">
+  <div class="welcome-box">
+
+    <img id="welcome-image" src="" />
+
+    <h2 id="welcome-title"></h2>
+    <p id="welcome-desc"></p>
+
+    <div class="welcome-dots" id="welcome-dots"></div>
+
+    <div class="welcome-actions">
+      <button id="welcome-back">Back</button>
+      <button id="welcome-next">Next</button>
+    </div>
+
+  </div>
+</div>
+
+
+
+<script>
+const WELCOME_STEPS = [
+  {
+    title:{en:"Welcome",id:"Selamat Datang"},
+    desc:{en:"SignSmart helps translate sign language.",id:"SignSmart membantu menerjemahkan bahasa isyarat."},
+    img:"https://kunhvacid.github.io/sibi/image/welcome.jpg"
+  },
+  {
+    title:{en:"How to Use ",id:"Cara Pakai "},
+    desc:{en:"Choose translation mode.",id:"Pilih mode translasi."},
+    img:"https://kunhvacid.github.io/sibi/image/step1.jpg"
+  },
+  {
+    title:{en:"How to Use ",id:"Cara Pakai "},
+    desc:{en:"Press the start button.",id:"Tekan tombol mulai."},
+    img:"https://kunhvacid.github.io/sibi/image/step2.jpg"
+  },
+  {
+    title:{en:"How to Use ",id:"Cara Pakai "},
+    desc:{en:"Show your hand pose. Use clear lighting and hand position.",id:"Tunjukkan pose tangan. Gunakan pencahayaan yang jelas."},
+    img:"https://kunhvacid.github.io/sibi/image/step3.jpg"
+  },
+  {
+    title:{en:"How to Use ",id:"Cara Pakai "},
+    desc:{en:"Translated text will automatically show here. Change your pose to make a scentence. \n Start now!",id:"Terjemahan teks akan otomatis muncul disini. Ganti pose tangan untuk membuat kalimat \n Mulai sekarang!"},
+    img:"https://kunhvacid.github.io/sibi/image/step4.jpg"
+  }
+];
+
+let welcomeIndex = 0;
+
+function renderWelcome(){
+  const lang = localStorage.getItem("lang") || "en";
+
+  const step = WELCOME_STEPS[welcomeIndex];
+
+  const imgEl = document.getElementById("welcome-image");
+  imgEl.src = step.img;
+
+  // TAMBAH DI SINI
+  imgEl.onerror = function(){
+    this.style.display = "none";
+  };
+
+  imgEl.style.display = "block"; // reset kalau sebelumnya hidden
+
+  document.getElementById("welcome-title").innerText = step.title[lang];
+  document.getElementById("welcome-desc").innerText = step.desc[lang];
+
+  const dots = document.getElementById("welcome-dots");
+  dots.innerHTML = "";
+  WELCOME_STEPS.forEach((_,i)=>{
+    const d = document.createElement("span");
+    if(i===welcomeIndex) d.classList.add("active");
+    dots.appendChild(d);
+  });
+
+  const nextBtn = document.getElementById("welcome-next");
+  nextBtn.innerText =
+    (welcomeIndex === WELCOME_STEPS.length-1)
+    ? (lang==="id" ? "Mulai" : "Start")
+    : (lang==="id" ? "Lanjut" : "Next");
+
+  document.getElementById("welcome-back").style.visibility =
+    (welcomeIndex===0) ? "hidden" : "visible";
+}
+
+function initWelcome(){
+  const overlay = document.getElementById("welcome-overlay");
+
+  overlay.style.display = "flex"; // paksa tampil
+  renderWelcome();
+
+  document.getElementById("welcome-next").onclick = ()=>{
+    if(welcomeIndex < WELCOME_STEPS.length-1){
+      welcomeIndex++;
+      renderWelcome();
+    }else{
+      overlay.style.display="none";
+    }
+  };
+
+  document.getElementById("welcome-back").onclick = ()=>{
+    if(welcomeIndex>0){
+      welcomeIndex--;
+      renderWelcome();
+    }
+  };
+}
+
+</script>
+
+
+
+
+
 </body>
 </html>
