@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Keeper - Landing Page</title>
+  <title>Data Keepers - World Of Relational</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="index.css" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Tailwind Custom Config -->
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -60,34 +58,12 @@
     }
   </script>
 
-  <!-- Custom CSS -->
-  <style>
-    :root {
-      --bg-primary: #0F172A;
-      --text-primary: #F8FAFC;
-    }
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .glass-panel {
-      background: rgba(30, 41, 59, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid #334155;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    }
-  </style>
-
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="selection:bg-blue-600 selection:text-white">
 
   <div class="min-h-screen bg-[var(--bg-primary)] flex flex-col items-center justify-center p-4 relative overflow-hidden">
     
-    <!-- Background Decor - Matrix Data Rain + Animated Floating Blobs -->
     <canvas id="dataRainCanvas" class="absolute inset-0 pointer-events-none z-0" style="display: block;"></canvas>
     
     <div class="absolute inset-0 pointer-events-none z-0">
@@ -96,10 +72,8 @@
       <div class="absolute top-[40%] left-[30%] w-[30%] h-[30%] bg-cyan-500/15 rounded-full blur-[100px] animate-pulse-slow"></div>
     </div>
 
-    <!-- Main Content -->
     <div class="z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-12">
       
-      <!-- Hero Section -->
       <div class="space-y-6 animate-fade-in-up">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 font-orbitron text-sm mb-4 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
           <i data-lucide="sparkles" class="w-4 h-4 animate-pulse-slow"></i>
@@ -113,9 +87,7 @@
         </p>
       </div>
 
-      <!-- Feature Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl animate-fade-in" style="animation-delay: 0.3s; opacity: 0;">
-        <!-- Card 1 -->
         <div class="group relative glass-panel p-6 rounded-2xl flex flex-col items-center gap-4 border border-blue-500/20 hover:border-blue-400/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] hover:-translate-y-1 overflow-hidden cursor-default">
           <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 translate-x-[-150%] skew-x-[-15deg] group-hover:animate-shimmer"></div>
           <div class="p-4 bg-blue-500/10 rounded-full text-blue-400 group-hover:scale-110 transition-transform">
@@ -124,7 +96,6 @@
           <h3 class="font-bold text-lg text-slate-100">Relasional</h3>
           <p class="text-sm text-slate-400">Pahami konsep dasar basis data dengan visualisasi interaktif.</p>
         </div>
-        <!-- Card 2 -->
         <div class="group relative glass-panel p-6 rounded-2xl flex flex-col items-center gap-4 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] hover:-translate-y-1 overflow-hidden cursor-default">
           <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 translate-x-[-150%] skew-x-[-15deg] group-hover:animate-shimmer"></div>
           <div class="p-4 bg-purple-500/10 rounded-full text-purple-400 group-hover:scale-110 transition-transform">
@@ -133,7 +104,6 @@
           <h3 class="font-bold text-lg text-slate-100">AI Mentor</h3>
           <p class="text-sm text-slate-400">Belajar dibimbing oleh AI yang siap membantu kapan saja.</p>
         </div>
-        <!-- Card 3 -->
         <div class="group relative glass-panel p-6 rounded-2xl flex flex-col items-center gap-4 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:-translate-y-1 overflow-hidden cursor-default">
           <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 translate-x-[-150%] skew-x-[-15deg] group-hover:animate-shimmer"></div>
           <div class="p-4 bg-cyan-500/10 rounded-full text-cyan-400 group-hover:scale-110 transition-transform">
@@ -144,10 +114,8 @@
         </div>
       </div>
 
-      <!-- Action Button -->
       <div class="animate-fade-in-up" style="animation-delay: 0.6s; opacity: 0;">
-        <!-- EDIT LINK HERE! GANTI '#' DENGAN LINK AI STUDIO ANDA -->
-        <a href="https://URL_APP_AI_STUDIO_ANDA_DISINI" target="_blank" class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold font-orbitron transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(59,130,246,0.6)] overflow-hidden hover:-translate-y-1">
+        <a href="https://datakeepers.ai.studio" target="_blank" class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold font-orbitron transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(59,130,246,0.6)] overflow-hidden hover:-translate-y-1">
           <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] skew-x-[-15deg] group-hover:animate-shimmer"></div>
           <span class="text-lg relative z-10">Mulai Perjalanan</span>
           <i data-lucide="arrow-right" class="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform"></i>
@@ -157,12 +125,9 @@
     </div>
   </div>
 
-  <!-- Scripts -->
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
 
-    // Data Rain Animation Logic
     const canvas = document.getElementById('dataRainCanvas');
     const ctx = canvas.getContext('2d');
 
